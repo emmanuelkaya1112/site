@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>outfit-shirt – Vêtements et accessoires streetwear à partir de 19 500 FC</title>
+<meta name="description" content="outfit-shirt : hauts, pantalons, sous-vêtements, chaussures et accessoires tendance à petits prix. À partir de 19 500 FC.">
+<script>
+  // Applique le thème avant l'affichage pour éviter un flash blanc
+  (function () {
+    try {
+      var t = localStorage.getItem('os-theme');
+      if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          bg: 'var(--bg)', surface: 'var(--surface)', ink: 'var(--ink)', muted: 'var(--muted)',
+          line: 'var(--line)', accent: 'var(--accent)', deep: 'var(--deep)', inv: 'var(--inv)', invink: 'var(--invink)'
+        },
+        fontFamily: { body: ['"Instrument Sans"', 'system-ui', 'sans-serif'], display: ['Archivo', 'Impact', 'sans-serif'] }
+      }
+    }
+  }
+</script>
+<style>
+  /* ===== Thèmes ===== */
+  :root, [data-theme="light"] {
+    color-scheme: light;
+    --bg: #F1F2F4; --surface: #FFFFFF; --ink: #000000; --muted: #5B6070;
+    --line: rgba(0,0,0,.14); --accent: #2B3BFF; --deep: #000000; --inv: #000000; --invink: #FFFFFF;
+  }
+  [data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #0E0F12; --surface: #181A20; --ink: #F2F3F5; --muted: #9BA1B0;
+    --line: rgba(255,255,255,.16); --accent: #4A5BFF; --deep: #181A20; --inv: #F2F3F5; --invink: #000000;
+  }
+  html { font-size: 15px; scroll-behavior: smooth; scroll-padding-top: 5.5rem; }
+  body { font-family: 'Instrument Sans', system-ui, sans-serif; background: var(--bg); color: var(--ink); transition: background-color .3s, color .3s; }
+  .display { font-family: 'Archivo', Impact, sans-serif; font-stretch: 125%; font-weight: 800; letter-spacing: -0.025em; line-height: .92; }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .glass { background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+  .icon-sun { display: none; }
+  [data-theme="dark"] .icon-sun { display: block; }
+  [data-theme="dark"] .icon-moon { display: none; }
+
+  /* ===== Tuile produit : fond blanc pur dans les deux thèmes ===== */
+  .tile { background: #fff; border: 1px solid var(--line); }
+
+  /* ===== Bascule recto / verso ===== */
+  .flipper { perspective: 900px; }
+  .flip-inner { position: absolute; inset: 0; transition: transform .6s cubic-bezier(.3,.7,.2,1); transform-style: preserve-3d; }
+  .flip-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+  .flip-back { transform: rotateY(180deg); }
+  .flipper.is-flipped .flip-inner { transform: rotateY(180deg); }
+  @media (hover: hover) { .hover-flip:hover .flip-inner { transform: rotateY(180deg); } }
+
+  .tee-hero { animation: drop .9s cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes drop { from { opacity: 0; transform: translateY(-40px) rotate(-8deg); } to { opacity: 1; transform: none; } }
+  .drawer { transition: transform .3s ease; }
+  .bump { animation: bump .35s ease; }
+  @keyframes bump { 50% { transform: scale(1.35); } }
+  dialog { color: var(--ink); }
+  dialog::backdrop { background: rgba(0,0,0,.6); }
+  /* Aperçu produit adapté aux petits écrans : dialogue scrollable et image moins haute. */
+  #viewer { max-height: calc(100dvh - 1rem); overflow-y: auto; overscroll-behavior: contain; }
+  #viewer > div { min-width: 0; }
+  #viewer #vFlip { width: 100%; }
+  @media (max-width: 767px) {
+    #viewer { margin: auto; width: calc(100% - 1rem); max-width: 30rem; border-radius: 1.25rem; }
+    #viewer > div { display: grid; grid-template-columns: minmax(0, 1fr); }
+    #viewer > div > div:first-of-type { padding: .75rem .75rem 0; }
+    #viewer #vFlip { max-height: min(42vh, 20rem); aspect-ratio: 1 / 1; }
+    #viewer > div > div:last-of-type { padding: .75rem 1rem 1rem; }
+    #viewer #vName { padding-right: 2.5rem; overflow-wrap: anywhere; }
+    #viewer label[for="vSize"] { margin-top: .75rem; }
+    #viewer #vSize, #viewer #vAdd { width: 100%; min-height: 2.75rem; }
+    #viewer .vSide { height: 2.25rem; }
+  }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tee-hero { animation: none; }
+    html { scroll-behavior: auto; }
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body class="antialiased">
+
+<div class="bg-accent text-white text-center text-[11px] sm:text-xs font-semibold px-4 py-1.5">Livraison gratuite sur les modèles signalés. Articles à partir de 19&nbsp;500&nbsp;FC.</div>
+
+<!-- ============ NAVBAR ============ -->
+<header class="glass sticky top-0 z-40 border-b border-line">
+  <div class="max-w-7xl mx-auto px-3 sm:px-6 h-16 flex items-center gap-2 sm:gap-4">
+    <button id="menuBtn" class="lg:hidden p-2 -ml-2" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobileMenu">
+      <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+
+    <a href="#top" class="display text-lg sm:text-xl shrink-0 lowercase" aria-label="outfit-shirt, accueil">outfit-shirt<span class="text-accent">.</span></a>
+
+    <nav class="hidden lg:flex items-center gap-7 ml-8 text-[13px] font-semibold" aria-label="Navigation principale">
+      <a href="#produits" data-filter="nouveautes" class="navlink hover:text-accent">Nouveautés</a>
+      <a href="#produits" data-filter="all" class="navlink hover:text-accent">Collections</a>
+      <a href="#produits" data-filter="promos" class="navlink hover:text-accent">Promos</a>
+      <a href="#livraison" class="hover:text-accent">Livraison</a>
+      <a href="#faq" class="hover:text-accent">FAQ</a>
+      <a href="#apropos" class="hover:text-accent">À propos</a>
+    </nav>
+
+    <form id="searchForm" class="hidden md:flex flex-1 max-w-sm ml-auto items-center bg-surface border border-line rounded-full px-4 h-10 focus-within:border-accent" role="search">
+      <svg class="shrink-0 text-muted" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="8" cy="8" r="6"/><path d="M13 13l4 4"/></svg>
+      <input id="searchInput" type="search" placeholder="Rechercher un article" aria-label="Rechercher un article" class="w-full bg-transparent outline-none px-3 text-sm placeholder:text-muted">
+    </form>
+
+    <div class="flex items-center ml-auto md:ml-0">
+      <button id="searchToggle" class="md:hidden p-2" aria-label="Rechercher">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10" cy="10" r="7"/><path d="M15.5 15.5l5 5"/></svg>
+      </button>
+      <button id="themeBtn" class="p-2 hover:text-accent" aria-label="Passer en mode sombre" aria-pressed="false">
+        <svg class="icon-moon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.800A9 9 0 1 1 11.200 3a7 7 0 0 0 9.800 9.800z"/></svg>
+        <svg class="icon-sun" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.900 4.900l1.400 1.400M17.700 17.700l1.400 1.400M2 12h2M20 12h2M4.900 19.100l1.400-1.400M17.700 6.300l1.400-1.400"/></svg>
+      </button>
+      <button id="accountBtn" class="hidden sm:block p-2 hover:text-accent" aria-label="Mon compte">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.400 3.600-7 8-7s8 2.600 8 7"/></svg>
+      </button>
+      <button id="cartBtn" class="relative p-2 hover:text-accent" aria-label="Ouvrir le panier">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.200 11.200a2 2 0 0 1-2 1.800H8.200a2 2 0 0 1-2-1.800L5 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+        <span id="cartCount" class="absolute -top-0.5 -right-0.5 min-w-[1.25rem] h-5 px-1 rounded-full bg-accent text-white text-xs font-bold grid place-items-center">0</span>
+      </button>
+    </div>
+  </div>
+
+  <form id="searchFormMobile" class="hidden md:hidden px-3 pb-3" role="search">
+    <input id="searchInputMobile" type="search" placeholder="Rechercher un article" aria-label="Rechercher un article" class="w-full bg-surface border border-line rounded-full px-4 h-11 text-base outline-none focus:border-accent placeholder:text-muted">
+  </form>
+
+  <nav id="mobileMenu" class="hidden lg:hidden border-t border-line px-4 py-1 text-sm font-semibold" aria-label="Navigation mobile">
+    <a href="#produits" data-filter="nouveautes" class="navlink block py-3 border-b border-line">Nouveautés</a>
+    <a href="#produits" data-filter="all" class="navlink block py-3 border-b border-line">Collections</a>
+    <a href="#produits" data-filter="promos" class="navlink block py-3 border-b border-line">Promos</a>
+    <a href="#livraison" class="block py-3 border-b border-line">Livraison</a>
+    <a href="#faq" class="block py-3 border-b border-line">FAQ</a>
+    <a href="#apropos" class="block py-3 border-b border-line">À propos</a>
+    <button id="accountBtnM" class="block w-full text-left py-3">Mon compte</button>
+  </nav>
+</header>
+
+<main id="top">
+
+<!-- ============ HERO ============ -->
+<section class="relative overflow-hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-10 pb-14 sm:pt-16 sm:pb-20 grid lg:grid-cols-12 gap-10 items-center">
+    <div class="lg:col-span-7 relative z-10">
+      <h1 class="display text-[clamp(1.6rem,7.6vw,2.4rem)] sm:text-5xl xl:text-7xl uppercase">Ton style.<br>Ton budget.</h1>
+      <p class="mt-4 text-sm sm:text-lg max-w-md font-medium leading-snug">Vêtements tendance <span class="whitespace-nowrap">à partir de <span class="bg-accent text-white px-2 py-0.5" data-hero-price>19&nbsp;500&nbsp;FC</span></span></p>
+      <p class="mt-3 max-w-md text-muted text-[13px] sm:text-sm">Nos modèles à petit prix, et des articles Nike, Adidas, Puma et Vans.</p>
+      <p class="mt-4 inline-flex items-center gap-2 bg-inv text-invink text-[12px] sm:text-[13px] font-bold px-3.5 py-1.5 rounded-full">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 6h12v10H2zM14 10h5l3 3v3h-8z"/><circle cx="7" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>
+        Livraison gratuite sur les modèles signalés
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="#produits" data-filter="all" class="navlink inline-flex items-center justify-center h-10 sm:h-12 px-5 sm:px-7 text-[13px] sm:text-sm rounded-full bg-inv text-invink font-bold hover:bg-accent hover:text-white transition-colors">Découvrir la collection</a>
+        <a href="#produits" data-filter="promos" class="navlink inline-flex items-center justify-center h-10 sm:h-12 px-5 sm:px-7 text-[13px] sm:text-sm rounded-full border-2 border-ink font-bold hover:bg-inv hover:text-invink transition-colors">Voir les promos</a>
+      </div>
+    </div>
+
+    <div class="lg:col-span-5 flex flex-col items-center">
+      <div class="tee-hero relative w-56 sm:w-72 lg:w-80">
+        <div id="heroFlip" class="flipper hover-flip tile relative aspect-[4/5] rounded-3xl overflow-hidden cursor-pointer shadow-[8px_8px_0_var(--accent)]" role="img" aria-label="Article en vedette, face et dos">
+          <div class="flip-inner" id="heroInner"></div>
+        </div>
+        <div class="absolute -right-3 -bottom-4 w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-surface border-2 border-ink grid place-items-center text-center rotate-12">
+          <div class="leading-tight">
+            <div class="text-[10px] font-semibold">dès</div>
+            <div class="display text-base" data-hero-price-num>19 500</div>
+            <div class="text-[10px] font-bold">FC</div>
+          </div>
+        </div>
+      </div>
+      <p class="mt-7 text-[11px] sm:text-xs text-muted text-center">Survole ou touche l’article pour voir le dos.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CATÉGORIES ============ -->
+<section id="categories" class="max-w-7xl mx-auto px-3 sm:px-6" aria-label="Catégories d'articles">
+  <h2 class="display text-base sm:text-2xl uppercase">Nos catégories</h2>
+  <div class="mt-4 grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-4">
+    <a href="#produits" data-filter="hauts" class="navlink group relative block h-32 sm:h-52 rounded-2xl overflow-hidden text-white" style="background:linear-gradient(135deg,#258cf4,#0b3d91)">
+      <svg viewBox="0 0 120 110" class="absolute left-1/2 top-3 sm:top-6 -translate-x-1/2 w-16 h-16 sm:w-28 sm:h-28 transition-transform duration-300 group-hover:scale-110" aria-hidden="true"><path d="M42 12 L22 22 L8 78 L24 82 L34 48 V98 H86 V48 L96 82 L112 78 L98 22 L78 12 Q60 30 42 12 Z" fill="#fff"/><path d="M8 78 L24 82 L22.500 90 L6.500 86 Z M112 78 L96 82 L97.500 90 L113.500 86 Z M34 90 H86 V98 H34 Z" fill="rgba(0,0,0,.2)"/><path d="M42 12 Q60 30 78 12" fill="none" stroke="rgba(0,0,0,.3)" stroke-width="5" stroke-linecap="round"/><path d="M60 36 V86" stroke="rgba(0,0,0,.12)" stroke-width="2"/></svg>
+      <span class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent h-14"></span>
+      <span class="absolute bottom-3 left-3 right-3 flex justify-between items-center display uppercase text-sm sm:text-lg"><span>Hauts</span><span aria-hidden="true">→</span></span>
+    </a>
+    <a href="#produits" data-filter="pantalons" class="navlink group relative block h-32 sm:h-52 rounded-2xl overflow-hidden text-white" style="background:linear-gradient(135deg,#7c3aed,#312e81)">
+      <svg viewBox="0 0 120 110" class="absolute left-1/2 top-3 sm:top-6 -translate-x-1/2 w-16 h-16 sm:w-28 sm:h-28 transition-transform duration-300 group-hover:scale-110" aria-hidden="true"><path d="M34 8 H86 L94 100 H66 L60 44 L54 100 H26 Z" fill="#fff"/><path d="M34 8 H86 V19 H34 Z" fill="rgba(0,0,0,.2)"/><path d="M60 19 V44" stroke="rgba(0,0,0,.25)" stroke-width="2"/></svg>
+      <span class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent h-14"></span>
+      <span class="absolute bottom-3 left-3 right-3 flex justify-between items-center display uppercase text-sm sm:text-lg"><span>Pantalons</span><span aria-hidden="true">→</span></span>
+    </a>
+    <a href="#produits" data-filter="sousvetements" class="navlink group relative block h-32 sm:h-52 rounded-2xl overflow-hidden text-white" style="background:linear-gradient(135deg,#ec4899,#831843)">
+      <svg viewBox="0 0 120 110" class="absolute left-1/2 top-3 sm:top-6 -translate-x-1/2 w-16 h-16 sm:w-28 sm:h-28 transition-transform duration-300 group-hover:scale-110" aria-hidden="true"><path d="M24 22 H96 L100 62 Q100 80 84 84 L68 84 L60 64 L52 84 L36 84 Q20 80 20 62 Z" fill="#fff"/><rect x="24" y="22" width="72" height="10" fill="rgba(0,0,0,.2)"/></svg>
+      <span class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent h-14"></span>
+      <span class="absolute bottom-3 left-3 right-3 flex justify-between items-center display uppercase text-sm sm:text-lg"><span>Sous-vêtements</span><span aria-hidden="true">→</span></span>
+    </a>
+    <a href="#produits" data-filter="chaussures" class="navlink group relative block h-32 sm:h-52 rounded-2xl overflow-hidden text-white" style="background:linear-gradient(135deg,#f59e0b,#b45309)">
+      <svg viewBox="0 0 120 110" class="absolute left-1/2 top-3 sm:top-6 -translate-x-1/2 w-16 h-16 sm:w-28 sm:h-28 transition-transform duration-300 group-hover:scale-110" aria-hidden="true"><path d="M8 72 V54 Q30 52 42 38 L54 46 Q64 52 80 56 Q104 60 112 74 V84 H8 Z" fill="#fff"/><rect x="8" y="84" width="104" height="10" rx="4" fill="rgba(0,0,0,.28)"/><path d="M46 44 L52 52 M54 48 L60 56 M62 52 L68 58" stroke="rgba(0,0,0,.3)" stroke-width="3" stroke-linecap="round"/></svg>
+      <span class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent h-14"></span>
+      <span class="absolute bottom-3 left-3 right-3 flex justify-between items-center display uppercase text-sm sm:text-lg"><span>Chaussures</span><span aria-hidden="true">→</span></span>
+    </a>
+    <a href="#produits" data-filter="accessoires" class="navlink group relative block h-32 sm:h-52 rounded-2xl overflow-hidden text-white col-span-2 sm:col-span-1" style="background:linear-gradient(135deg,#14b8a6,#0f5f57)">
+      <svg viewBox="0 0 120 110" class="absolute left-1/2 top-3 sm:top-6 -translate-x-1/2 w-16 h-16 sm:w-28 sm:h-28 transition-transform duration-300 group-hover:scale-110" aria-hidden="true"><path d="M16 50 Q16 14 52 14 Q88 14 88 50 Q88 62 76 64 L28 64 Q16 62 16 50 Z" fill="#fff"/><path d="M16 50 Q52 40 88 50" fill="none" stroke="rgba(0,0,0,.22)" stroke-width="3"/><path d="M84 52 L110 88 L100 94 L74 62 Z" fill="#fff"/><path d="M84 52 L110 88" stroke="rgba(0,0,0,.18)" stroke-width="2"/><g fill="#fff"><circle cx="30" cy="86" r="6"/><circle cx="43" cy="95" r="6"/><circle cx="58" cy="99" r="6"/><circle cx="73" cy="95" r="6"/><circle cx="86" cy="86" r="6"/></g><g fill="rgba(0,0,0,.18)"><circle cx="30" cy="86" r="2.200"/><circle cx="43" cy="95" r="2.200"/><circle cx="58" cy="99" r="2.200"/><circle cx="73" cy="95" r="2.200"/><circle cx="86" cy="86" r="2.200"/></g></svg>
+      <span class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent h-14"></span>
+      <span class="absolute bottom-3 left-3 right-3 flex justify-between items-center display uppercase text-sm sm:text-lg"><span>Accessoires</span><span aria-hidden="true">→</span></span>
+    </a>
+  </div>
+</section>
+
+<!-- ============ PRODUITS ============ -->
+<section id="produits" class="max-w-7xl mx-auto px-3 sm:px-6 py-10 sm:py-20">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-5">
+    <div>
+      <h2 class="display text-2xl sm:text-4xl uppercase">Bestsellers</h2>
+      <p class="mt-1.5 sm:mt-2 text-[13px] sm:text-sm text-muted">Nos articles à petits prix : hauts, pantalons, sous-vêtements, chaussures et accessoires.</p>
+    </div>
+    <div id="filters" class="flex gap-2 overflow-x-auto no-scrollbar -mx-3 px-3 sm:mx-0 sm:px-0" role="group" aria-label="Filtrer les produits"></div>
+  </div>
+
+  <p id="resultInfo" class="mt-5 text-xs text-muted" aria-live="polite"></p>
+  <div id="grid" class="mt-4 grid grid-cols-3 gap-x-2 gap-y-6 sm:gap-x-5 sm:gap-y-10"></div>
+  <div id="moreWrap" class="hidden mt-8 sm:mt-12 text-center"><button id="moreBtn" type="button" class="h-12 px-8 rounded-full border-2 border-inv font-bold hover:bg-inv hover:text-invink transition-colors">Voir plus d'articles</button></div>
+  <div id="empty" class="hidden mt-10 text-center py-16 border-2 border-dashed border-line rounded-3xl">
+    <p id="emptyText" class="font-bold text-lg">Aucun article ne correspond à ta recherche.</p>
+    <button id="resetBtn" class="mt-4 h-11 px-6 rounded-full bg-inv text-invink font-semibold hover:bg-accent hover:text-white">Voir tous les articles</button>
+  </div>
+</section>
+
+<!-- ============ À PROPOS + ENGAGEMENTS ============ -->
+<section id="apropos" class="bg-deep text-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-24">
+    <div class="grid lg:grid-cols-12 gap-8 sm:gap-10">
+      <div class="lg:col-span-5">
+        <h2 class="display text-2xl sm:text-4xl uppercase">Le style ne devrait pas coûter cher.</h2>
+        <p class="mt-5 text-white/70 max-w-md text-[13px] sm:text-sm">Sur outfit-shirt, on réunit des hauts (pulls, chemises, t-shirts), pantalons, sous-vêtements, chaussures et accessoires tendance à des prix doux : s'habiller streetwear sans vider son portefeuille. Pensé pour les jeunes, les étudiants et tous ceux qui vivent le style au quotidien.</p>
+      </div>
+
+      <div class="lg:col-span-7 grid sm:grid-cols-3 gap-3 sm:gap-4">
+        <article class="rounded-3xl bg-accent p-6 flex flex-col gap-6 sm:gap-10 sm:min-h-[19rem]">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="2.500" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h20v16H4zM24 17h8l4 5v6H24z"/><circle cx="12" cy="30" r="3"/><circle cx="30" cy="30" r="3"/></svg>
+          <div>
+            <h3 class="display text-base uppercase">Livraison rapide</h3>
+            <p class="mt-2 text-white/90 text-[13px]">Livraison en moins de 24 h. Offerte dès 4 articles ; sinon 6 000 FC.</p>
+          </div>
+        </article>
+        <article class="rounded-3xl bg-white text-black p-6 flex flex-col gap-6 sm:gap-10 sm:min-h-[19rem]">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#000" stroke-width="2.500" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 5c8 6 12 12 12 19a12 12 0 0 1-24 0C8 17 12 11 20 5z"/><path d="M20 14v20M20 22l-5-4M20 27l5-4"/></svg>
+          <div>
+            <h3 class="display text-base uppercase">Coton de qualité</h3>
+            <p class="mt-2 text-black/70 text-[13px]">Un tissu doux, épais et résistant au lavage. Il garde sa forme et ses couleurs.</p>
+          </div>
+        </article>
+        <article class="rounded-3xl bg-[#E2E5EB] text-black p-6 flex flex-col gap-6 sm:gap-10 sm:min-h-[19rem]">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#000" stroke-width="2.500" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="20" cy="20" r="15"/><path d="M14 22h12M14 17h12M17 12v16"/></svg>
+          <div>
+            <h3 class="display text-base uppercase">Accessible à tous les budgets</h3>
+            <p class="mt-2 text-black/70 text-[13px]">Des prix clairs en francs congolais, dès <span data-hero-price>19 500 FC</span>. Des promos réservées aux étudiants.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+
+<!-- Informations utiles : livraison, retours et FAQ -->
+<section id="livraison" class="border-t border-line bg-surface">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+    <p class="text-xs uppercase tracking-widest text-muted font-bold">Informations pratiques</p>
+    <h2 class="display text-3xl sm:text-4xl mt-2">Livraison & commandes</h2>
+    <div class="grid md:grid-cols-3 gap-4 mt-7">
+      <article class="rounded-2xl border border-line p-5"><h3 class="font-bold">Livraison rapide</h3><p class="text-sm text-muted mt-2">La livraison est annoncée en moins de 24 heures. Le délai peut dépendre de la zone et de la disponibilité du livreur.</p></article>
+      <article class="rounded-2xl border border-line p-5"><h3 class="font-bold">Frais de livraison</h3><p class="text-sm text-muted mt-2">À partir de 4 articles, la livraison est offerte. Pour 1 à 3 articles, les frais sont de 6 000 FC. Pour une commande de 3 articles, chaque article doit coûter au moins 19 500 FC.</p></article>
+      <article class="rounded-2xl border border-line p-5"><h3 class="font-bold">Suivi de commande</h3><p class="text-sm text-muted mt-2">Connecte-toi à ton compte puis ouvre l’onglet « Commandes » pour voir le statut et le code de suivi lorsqu’il est disponible.</p><button type="button" id="deliveryAccountBtn" class="mt-4 rounded-full bg-inv text-invink px-5 py-2 font-bold">Mon compte</button></article>
+    </div>
+  </div>
+</section>
+<section id="faq" class="border-t border-line">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+    <p class="text-xs uppercase tracking-widest text-muted font-bold">Besoin d’aide ?</p><h2 class="display text-3xl sm:text-4xl mt-2">Questions fréquentes</h2>
+    <div class="mt-7 divide-y divide-line border-y border-line">
+      <details class="py-4"><summary class="font-bold cursor-pointer">Comment choisir la taille ?</summary><p class="text-sm text-muted mt-3">Consulte les tailles disponibles sur la fiche de l’article. Si une taille n’apparaît pas ou est indiquée en rupture, elle n’est pas disponible à la commande.</p></details>
+      <details class="py-4"><summary class="font-bold cursor-pointer">Comment suivre ma commande ?</summary><p class="text-sm text-muted mt-3">Ouvre « Mon compte », connecte-toi puis sélectionne « Commandes ». Le statut et le code de suivi s’affichent dès que la boutique les renseigne.</p></details>
+      <details class="py-4"><summary class="font-bold cursor-pointer">Quand la livraison est-elle gratuite ?</summary><p class="text-sm text-muted mt-3">La livraison est offerte à partir de 4 articles. Pour moins de 4 articles, elle coûte 6 000 FC.</p></details>
+      <details class="py-4"><summary class="font-bold cursor-pointer">Comment demander de l’aide ?</summary><p class="text-sm text-muted mt-3">Utilise le bouton WhatsApp « Aide » affiché en bas de la page, ou écris-nous à <a data-contact-mail href="mailto:outfitshirt@gmail.com" class="underline underline-offset-4 hover:text-accent">outfitshirt@gmail.com</a>.</p></details>
+      <details class="py-4"><summary class="font-bold cursor-pointer">Que faire si ma taille est épuisée ?</summary><p class="text-sm text-muted mt-3">Choisis une autre taille disponible ou contacte le service client pour demander si un réapprovisionnement est prévu.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="border-t border-line">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-14 grid md:grid-cols-12 gap-10">
+    <div class="md:col-span-5">
+      <a href="#top" class="display text-xl lowercase">outfit-shirt<span class="text-accent">.</span></a>
+      <p class="mt-3 text-muted max-w-xs">Vêtements et accessoires tendance, bonne qualité, petits prix.</p>
+      <p class="mt-3 text-sm"><span class="text-muted">Nous contacter : </span><a data-contact-mail href="mailto:outfitshirt@gmail.com" class="font-semibold underline underline-offset-4 hover:text-accent">outfitshirt@gmail.com</a></p>
+      <div class="mt-6 flex gap-3">
+        <a href="https://www.instagram.com/outfitshirt4" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="w-11 h-11 rounded-full border-2 border-ink grid place-items-center hover:bg-inv hover:text-invink transition-colors">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.500" cy="6.500" r="1" fill="currentColor"/></svg>
+        </a>
+        <a href="https://www.tiktok.com/@outfitshirt4" target="_blank" rel="noopener noreferrer" aria-label="TikTok" class="w-11 h-11 rounded-full border-2 border-ink grid place-items-center hover:bg-inv hover:text-invink transition-colors">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16.600 3c.3 2.500 1.800 4.200 4.400 4.400v3.200c-1.600.1-3-.4-4.400-1.300v6.100c0 3.900-3 6.100-6 6.100a6 6 0 0 1-6-6c0-3.800 3.300-6.600 7.200-5.900v3.300c-1.800-.6-3.500.5-3.500 2.400 0 1.500 1.200 2.700 2.700 2.700 1.700 0 2.800-1.100 2.800-3.100V3h3.800z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="md:col-span-7">
+      <h3 class="font-bold text-base">Reste dans le coup</h3>
+      <p class="mt-1 text-muted text-sm">Reçois les nouveaux drops et les promos étudiantes en premier.</p>
+      <form id="newsletterForm" class="mt-4 flex flex-col sm:flex-row gap-3 max-w-lg" novalidate>
+        <label for="nlEmail" class="sr-only">Adresse e-mail</label>
+        <input id="nlEmail" type="email" required placeholder="ton@email.com" class="flex-1 h-12 px-5 rounded-full bg-surface border border-line outline-none focus:border-accent placeholder:text-muted">
+        <button type="submit" class="h-12 px-7 rounded-full bg-accent text-white font-bold hover:opacity-90 transition-opacity">Je m'inscris</button>
+      </form>
+      <p id="nlMsg" class="mt-2 text-sm min-h-[1.25rem]" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <div class="border-t border-line">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between text-sm text-muted">
+      <p>© 2026 outfit-shirt. Tous droits réservés.</p>
+      <div class="flex flex-wrap gap-x-5 gap-y-2">
+        <button class="legalBtn hover:text-ink underline-offset-4 hover:underline" data-doc="mentions">Mentions légales</button>
+        <button class="legalBtn hover:text-ink underline-offset-4 hover:underline" data-doc="cgv">Conditions de vente</button>
+        <button class="legalBtn hover:text-ink underline-offset-4 hover:underline" data-doc="privacy">Confidentialité</button>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ PANIER ============ -->
+<div id="overlay" class="hidden fixed inset-0 z-40 bg-black/60"></div>
+<aside id="drawer" class="drawer fixed top-0 right-0 z-50 h-full w-full max-w-md bg-surface text-ink translate-x-full flex flex-col" aria-label="Panier" aria-hidden="true">
+  <div class="flex items-center justify-between px-5 h-16 border-b border-line">
+    <h2 class="display text-base uppercase">Ton panier</h2>
+    <button id="closeCart" class="p-2" aria-label="Fermer le panier">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linecap="round"><path d="M4 4l14 14M18 4L4 18"/></svg>
+    </button>
+  </div>
+  <div id="cartItems" class="flex-1 overflow-y-auto px-5 py-4"></div>
+  <div class="border-t border-line p-5">
+    <div class="flex justify-between items-baseline">
+      <span class="font-semibold">Total</span>
+      <span id="cartTotal" class="display text-xl">0 FC</span>
+    </div>
+    <p id="deliveryInfo" class="mt-1 text-xs text-muted">Livraison en moins de 24 h. 4 articles ou plus : livraison offerte ; sinon 6 000 FC.</p>
+    <button id="checkoutBtn" class="mt-4 w-full h-14 rounded-full bg-inv text-invink font-bold hover:bg-accent hover:text-white transition-colors disabled:opacity-40 disabled:hover:bg-inv disabled:hover:text-invink" disabled>Commander</button>
+  </div>
+</aside>
+
+<!-- Aperçu produit (face / dos) -->
+<dialog id="viewer" class="rounded-3xl p-0 w-[calc(100%-1.5rem)] max-w-3xl bg-surface">
+  <div class="relative grid md:grid-cols-2">
+    <button id="viewerClose" class="absolute top-3 right-3 z-10 w-10 h-10 rounded-full bg-surface border border-line grid place-items-center" aria-label="Fermer l'aperçu">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linecap="round"><path d="M3 3l12 12M15 3L3 15"/></svg>
+    </button>
+    <div class="p-4 sm:p-6">
+      <div id="vFlip" class="flipper tile relative aspect-square rounded-2xl overflow-hidden">
+        <div class="flip-inner" id="vInner"></div>
+      </div>
+      <div class="mt-3 flex justify-center gap-2" role="group" aria-label="Choisir la vue">
+        <button data-side="front" aria-pressed="true" class="vSide h-10 px-6 rounded-full border-2 text-sm font-bold">Face</button>
+        <button data-side="back" aria-pressed="false" class="vSide h-10 px-6 rounded-full border-2 text-sm font-bold">Dos</button>
+      </div>
+    </div>
+    <div class="p-5 sm:p-8 flex flex-col justify-center">
+      <p id="vBrand" class="text-sm text-muted font-semibold"></p>
+      <h2 id="vName" class="display text-xl sm:text-2xl uppercase mt-1"></h2>
+      <p class="mt-3 flex items-baseline gap-3"><span id="vPrice" class="text-lg font-extrabold"></span><s id="vOld" class="text-sm text-muted"></s></p>
+      <p id="vFree" class="hidden mt-3 self-start items-center gap-2 bg-inv text-invink text-xs font-bold px-3 py-1.5 rounded-full">Livraison gratuite</p>
+      <label for="vSize" class="mt-5 text-sm font-semibold">Taille</label>
+      <select id="vSize" class="mt-1 h-11 rounded-full border-2 border-line bg-surface text-base font-semibold px-4 focus:border-accent outline-none" aria-label="Choisir une taille">
+        <option value="">Choisir une taille</option>
+      </select>
+      <button id="vAdd" class="mt-5 h-12 rounded-full bg-inv text-invink font-bold hover:bg-accent hover:text-white transition-colors">Ajouter au panier</button>
+    </div>
+  </div>
+</dialog>
+
+<a id="whatsappHelp" href="https://wa.me/243906049174?text=Bonjour%20Outfit-Shirt%2C%20j%E2%80%99ai%20besoin%20d%E2%80%99aide%20avec%20ma%20commande." target="_blank" rel="noopener noreferrer" class="fixed bottom-5 right-5 z-40 rounded-full bg-green-600 text-white font-bold shadow-lg px-5 py-3" aria-label="Obtenir de l’aide sur WhatsApp">WhatsApp · Aide</a>
+
+<div id="toast" class="fixed left-1/2 bottom-6 -translate-x-1/2 z-[60] bg-inv text-invink text-sm font-semibold px-5 py-3 rounded-full opacity-0 pointer-events-none transition-opacity duration-300 max-w-[calc(100%-2rem)] text-center" role="status" aria-live="polite"></div>
+
+<dialog id="accountDialog" class="rounded-3xl p-0 max-w-md w-[calc(100%-2rem)] max-h-[92vh] overflow-y-auto bg-surface text-ink">
+  <div class="p-6 sm:p-8">
+    <div class="flex justify-between items-start gap-4">
+      <div><p class="text-xs uppercase tracking-widest text-muted">outfit-shirt</p><h2 id="accountTitle" class="display text-2xl uppercase mt-1">Mon compte</h2></div>
+      <button id="accountClose" class="p-1" aria-label="Fermer"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 4l14 14M18 4L4 18"/></svg></button>
+    </div>
+    <p id="accountIntro" class="mt-3 text-sm text-muted">Connecte-toi ou crée ton compte client.</p>
+    <div id="accountTabs" class="grid grid-cols-2 gap-2 mt-5">
+      <button type="button" id="showLogin" class="h-10 rounded-full border-2 border-line font-semibold">Connexion</button>
+      <button type="button" id="showRegister" class="h-10 rounded-full border-2 border-line font-semibold">Créer un compte</button>
+    </div>
+    <form id="accountForm" class="mt-5 space-y-3" novalidate>
+      <div id="accountNameWrap"><label for="accountName" class="block text-sm font-semibold mb-1">Prénom</label><input id="accountName" name="firstName" autocomplete="given-name" maxlength="60" class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent" placeholder="Ton prénom"></div>
+      <div id="accountExtraWrap" class="hidden space-y-3">
+      <div><label for="rLast" class="block text-sm font-semibold mb-1">Nom</label><input id="rLast" autocomplete="family-name" maxlength="60" class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
+      <div><label for="rPost" class="block text-sm font-semibold mb-1">Postnom (facultatif)</label><input id="rPost" maxlength="60" class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
+      <div><label for="rPhone" class="block text-sm font-semibold mb-1">Téléphone</label><input id="rPhone" type="tel" autocomplete="tel" maxlength="30" placeholder="+243 ..." class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
+      <div><label for="rBirth" class="block text-sm font-semibold mb-1">Date de naissance (facultatif)</label><input id="rBirth" type="date" autocomplete="bday" class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
+      <div><label for="rAddr" class="block text-sm font-semibold mb-1">Adresse de livraison</label><input id="rAddr" autocomplete="street-address" maxlength="300" placeholder="Avenue, numéro, quartier, commune, ville" class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
+      </div>
+      <div><label for="accountEmail" class="block text-sm font-semibold mb-1">Adresse e-mail</label><input id="accountEmail" name="email" type="email" autocomplete="email" required maxlength="254" class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent" placeholder="ton@email.com"></div>
+      <div><label for="accountPassword" class="block text-sm font-semibold mb-1">Mot de passe</label><input id="accountPassword" name="password" type="password" autocomplete="current-password" required minlength="12" maxlength="128" class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent" placeholder="12 caractères minimum"></div>
+      <label id="rememberWrap" class="flex items-center gap-2 text-sm text-muted"><input id="accountRemember" type="checkbox" class="accent-current"> Rester connecté sur cet appareil</label>
+      <p id="accountPasswordHint" class="text-xs text-muted">12 caractères minimum, avec une minuscule, une majuscule, un chiffre et un symbole.</p>
+      <p id="accountMessage" class="text-sm font-semibold min-h-5" role="status" aria-live="polite"></p>
+      <button id="accountSubmit" type="submit" class="w-full h-12 rounded-full bg-inv text-invink font-bold hover:bg-accent hover:text-white transition-colors">Créer mon compte</button>
+      <button id="forgotPasswordBtn" type="button" class="w-full text-sm underline text-muted">Mot de passe oublié ?</button>
+    </form>
+    <form id="forgotPasswordForm" class="hidden mt-5 space-y-3" novalidate>
+      <p class="text-sm text-muted">Indique l’adresse e-mail de ton compte. Si un compte correspond, tu recevras un lien valable 30 minutes.</p>
+      <label for="forgotEmail" class="block text-sm font-semibold">Adresse e-mail</label>
+      <input id="forgotEmail" type="email" required maxlength="254" autocomplete="email" class="w-full h-12 px-4 rounded-xl bg-surface border border-line" placeholder="ton@email.com">
+      <p id="forgotMessage" class="text-sm font-semibold" role="status" aria-live="polite"></p>
+      <button id="forgotSubmit" type="submit" class="w-full h-12 rounded-full bg-inv text-invink font-bold">Envoyer le lien</button>
+      <button id="forgotBackBtn" type="button" class="w-full text-sm underline">Retour à la connexion</button>
+    </form>
+    <form id="resetPasswordForm" class="hidden mt-5 space-y-3" novalidate>
+      <p class="text-sm text-muted">Choisis un nouveau mot de passe. Le lien est valable 30 minutes et ne peut être utilisé qu’une fois.</p>
+      <label for="resetNewPassword" class="block text-sm font-semibold">Nouveau mot de passe</label>
+      <input id="resetNewPassword" type="password" required minlength="12" maxlength="128" autocomplete="new-password" class="w-full h-12 px-4 rounded-xl bg-surface border border-line" placeholder="12 caractères minimum">
+      <label for="resetConfirmPassword" class="block text-sm font-semibold">Confirmer le mot de passe</label>
+      <input id="resetConfirmPassword" type="password" required minlength="12" maxlength="128" autocomplete="new-password" class="w-full h-12 px-4 rounded-xl bg-surface border border-line">
+      <p id="resetMessage" class="text-sm font-semibold" role="status" aria-live="polite"></p>
+      <button id="resetSubmit" type="submit" class="w-full h-12 rounded-full bg-inv text-invink font-bold">Changer le mot de passe</button>
+    </form>
+    <div id="accountSignedIn" class="hidden mt-5 space-y-3"><button type="button" id="myOrdersTab" class="w-full h-10 rounded-full border-2 border-line font-semibold">Commandes</button><section id="myOrdersPanel" class="hidden border border-line rounded-xl p-3"><h3 class="font-bold mb-2">Suivi de mes commandes</h3><div id="myOrdersList" class="space-y-3 text-sm"></div></section><p id="accountWelcome" class="font-semibold"></p><p id="accountEmailShown" class="text-sm text-muted"></p><form id="profileForm" class="space-y-3 border-t border-line pt-4" novalidate>
+      <h3 class="font-bold">Mes informations</h3>
+      <p class="text-xs text-muted">Elles pré-remplissent ta commande. Tu peux les modifier à tout moment.</p>
+      <div><label for="pFirst" class="block text-sm font-semibold mb-1">Prénom</label><input id="pFirst" autocomplete="given-name" maxlength="60" class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
+      <div><label for="pLast" class="block text-sm font-semibold mb-1">Nom</label><input id="pLast" autocomplete="family-name" maxlength="60" class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
+      <div><label for="pPost" class="block text-sm font-semibold mb-1">Postnom (facultatif)</label><input id="pPost" maxlength="60" class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
+      <div><label for="pPhone" class="block text-sm font-semibold mb-1">Téléphone</label><input id="pPhone" type="tel" autocomplete="tel" maxlength="30" placeholder="+243 ..." class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
+      <div><label for="pBirth" class="block text-sm font-semibold mb-1">Date de naissance (facultatif)</label><input id="pBirth" type="date" autocomplete="bday" class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
+      <div><label for="pAddr" class="block text-sm font-semibold mb-1">Adresse de livraison</label><input id="pAddr" autocomplete="street-address" maxlength="300" placeholder="Avenue, numéro, quartier, commune, ville" class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
+      <p id="profileMessage" class="text-sm font-semibold min-h-5" role="status" aria-live="polite"></p>
+      <button id="profileSave" type="submit" class="w-full h-12 rounded-full bg-inv text-invink font-bold hover:bg-accent hover:text-white transition-colors">Enregistrer mes informations</button>
+    </form>
+    <button id="accountLogout" type="button" class="w-full h-12 rounded-full border-2 border-line font-bold">Se déconnecter</button></div>
+  </div>
+</dialog>
+
+<dialog id="orderDialog" class="rounded-3xl p-0 max-w-md w-[calc(100%-2rem)] bg-surface text-ink">
+  <div class="p-6 sm:p-8">
+    <div class="flex justify-between items-start gap-4">
+      <div><p class="text-xs uppercase tracking-widest text-muted">outfit-shirt</p><h2 class="display text-2xl uppercase mt-1">Finaliser ma commande</h2></div>
+      <button id="orderClose" type="button" class="p-1" aria-label="Fermer"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 4l14 14M18 4L4 18"/></svg></button>
+    </div>
+    <form id="orderForm" class="mt-4 space-y-3" novalidate>
+      <p class="text-xs text-muted">Livraison en moins de 24 h. 4 articles ou plus : offerte ; sinon 6 000 FC. Pour exactement 3 articles, chaque article doit coûter au moins 19 500 FC.</p>
+      <ul id="orderRecap" class="text-sm space-y-1.5 border-y border-line py-3"></ul>
+      <p class="flex justify-between font-bold"><span>Total</span><span id="orderTotal"></span></p>
+      <div><label for="orderName" class="block text-sm font-semibold mb-1">Nom et prénom</label><input id="orderName" autocomplete="name" maxlength="100" required class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
+      <div><label for="orderPhone" class="block text-sm font-semibold mb-1">Téléphone</label><input id="orderPhone" type="tel" autocomplete="tel" maxlength="30" required placeholder="+243 ..." class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
+      <div><label for="orderAddress" class="block text-sm font-semibold mb-1">Adresse de livraison</label><input id="orderAddress" autocomplete="street-address" maxlength="300" required placeholder="Avenue, numéro, quartier, commune, ville" class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
+      <p id="orderMessage" class="text-sm font-semibold min-h-5" role="status" aria-live="polite"></p>
+      <button id="orderSubmit" type="submit" class="w-full h-12 rounded-full bg-inv text-invink font-bold hover:bg-accent hover:text-white transition-colors">Valider la commande</button>
+      <p class="text-xs text-muted">Nous te contactons pour confirmer le paiement et la livraison.</p>
+    </form>
+    <div id="orderDone" class="hidden mt-5 space-y-3">
+      <p class="font-bold text-lg">Merci, ta commande est enregistrée !</p>
+      <p class="text-sm text-muted">Numéro de commande : <strong id="orderRef" class="text-ink"></strong>. Nous te contactons très vite pour la livraison et le paiement.</p>
+      <button id="payNow" type="button" class="w-full h-12 rounded-full bg-accent text-white font-bold">Payer en ligne</button>
+      <button id="orderDoneClose" type="button" class="w-full h-12 rounded-full bg-inv text-invink font-bold hover:bg-accent hover:text-white transition-colors">Continuer mes achats</button>
+    </div>
+  </div>
+</dialog>
+<dialog id="payDialog" class="rounded-3xl p-0 max-w-md w-[calc(100%-2rem)] bg-surface text-ink">
+  <div class="p-6 sm:p-8">
+    <div class="flex justify-between items-start gap-4">
+      <div><p class="text-xs uppercase tracking-widest text-muted">outfit-shirt</p><h2 class="display text-2xl uppercase mt-1">Paiement</h2></div>
+      <button id="payClose" type="button" class="p-1" aria-label="Fermer"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 4l14 14M18 4L4 18"/></svg></button>
+    </div>
+    <p id="payTest" class="hidden mt-3 rounded-lg bg-amber-100 text-amber-900 text-sm font-semibold p-2">Mode test : ce paiement n’est pas un vrai paiement.</p>
+    <form id="payForm" class="mt-4 space-y-4" novalidate>
+      <fieldset>
+        <legend class="font-bold">Choisissez votre moyen de paiement</legend>
+        <div id="payProviders" class="mt-2 grid gap-2" role="radiogroup" aria-label="Moyen de paiement"></div>
+      </fieldset>
+      <div id="payPhoneBox" class="hidden">
+        <label for="payPhone" class="text-sm font-semibold">Numéro Mobile Money</label>
+        <div class="mt-1 flex items-center rounded-xl border border-line overflow-hidden"><span class="px-3 text-muted font-semibold">+243</span><input id="payPhone" inputmode="tel" autocomplete="tel-national" maxlength="14" placeholder="9X XXX XXXX" class="flex-1 h-12 bg-transparent px-2 outline-none"></div>
+      </div>
+      <dl class="rounded-xl bg-bg p-3 text-sm grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
+        <dt class="text-muted">Commande</dt><dd id="paySumOrder" class="font-bold text-right"></dd>
+        <dt class="text-muted">Montant à payer</dt><dd id="paySumAmount" class="font-bold text-right"></dd>
+        <dt class="text-muted">Opérateur</dt><dd id="paySumProvider" class="font-bold text-right">—</dd>
+        <dt class="text-muted">Numéro utilisé</dt><dd id="paySumPhone" class="font-bold text-right">—</dd>
+      </dl>
+      <p id="payInactive" class="hidden rounded-lg bg-amber-100 text-amber-900 text-sm font-semibold p-2">Le paiement en ligne n’est pas encore activé : les opérateurs ci-dessus seront disponibles très bientôt. Ta commande est bien enregistrée ; nous te contactons pour le paiement et la livraison.</p>
+      <p id="payHelp" class="text-sm text-muted">Outfit-Shirt ne te demande jamais ton code PIN Mobile Money. Ne le communique à personne.</p>
+      <p id="payMessage" class="text-sm font-semibold min-h-5 text-muted" role="status"></p>
+      <button id="paySubmit" type="submit" class="w-full h-12 rounded-full bg-accent text-white font-bold disabled:opacity-60">Payer</button>
+    </form>
+    <div id="payStatus" class="hidden mt-4 space-y-3" aria-live="polite">
+      <div class="flex items-center gap-3"><span id="paySpin" class="inline-block w-5 h-5 rounded-full border-2 border-line border-t-accent animate-spin" aria-hidden="true"></span><p id="payStatusTitle" class="font-bold text-lg"></p></div>
+      <p id="payStatusText" class="text-sm text-muted"></p>
+      <dl id="payStatusDetails" class="rounded-xl bg-bg p-3 text-sm grid grid-cols-[auto_1fr] gap-x-4 gap-y-1"></dl>
+      <a id="payOpenLink" class="hidden w-full h-12 rounded-full bg-accent text-white font-bold flex items-center justify-center" rel="noopener">Continuer sur Orange Money</a>
+      <button id="payRetry" type="button" class="hidden w-full h-12 rounded-full bg-accent text-white font-bold">Réessayer</button>
+      <button id="payDone" type="button" class="w-full h-12 rounded-full bg-inv text-invink font-bold hover:bg-accent hover:text-white transition-colors">Fermer</button>
+    </div>
+  </div>
+</dialog>
+
+
+<dialog id="legalDialog" class="rounded-3xl p-0 max-w-lg w-[calc(100%-2rem)] bg-surface">
+  <div class="p-6 sm:p-8">
+    <div class="flex justify-between items-start gap-4">
+      <h2 id="legalTitle" class="display text-2xl uppercase"></h2>
+      <button id="legalClose" class="p-1" aria-label="Fermer">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linecap="round"><path d="M4 4l14 14M18 4L4 18"/></svg>
+      </button>
+    </div>
+    <div id="legalBody" class="mt-4 text-sm text-muted space-y-3"></div>
+  </div>
+</dialog>
+
+<script>
+(() => {
+  /* =====================================================================
+     CONFIGURATION
+     ---------------------------------------------------------------------
+     Les articles sont gérés depuis l'administration (onglet « Articles »).
+     L'article d'accueil, le numéro WhatsApp et l'e-mail de contact se
+     modifient dans l'onglet « Site » de l'administration, sans redéployer.
+     ===================================================================== */
+
+  const CATS = ['hauts', 'pantalons', 'sousvetements', 'chaussures', 'accessoires'];
+  const withTags = p => { const t = (p.tags || []).map(x => x === 'tshirts' ? 'hauts' : x); /* ancien nom de catégorie */ return { ...p, free: false, tags: [...t, ...(p.brand ? [p.brand.toLowerCase(), 'marques'] : []), ...(CATS.some(c => t.includes(c)) ? [] : ['hauts'])] }; };
+  let PRODUCTS = [];
+  let productsState = 'loading'; // loading | ok | error
+  async function loadRemoteProducts() {
+    try {
+      const response = await fetch('/api/products', { credentials: 'same-origin' });
+      if (!response.ok) throw new Error('products');
+      const data = await response.json();
+      PRODUCTS = (data.products || []).filter(p => p.active !== false).map(withTags);
+      productsState = 'ok';
+      // Retire du panier d'anciens articles qui n'existent plus (ex. anciens modèles de démonstration).
+      const kept = cart.filter(i => PRODUCTS.some(p => p.id === i.id));
+      if (kept.length !== cart.length) { cart = kept; save(); }
+    } catch { productsState = 'error'; }
+    renderGrid(); renderCart();
+  }
+  const FILTERS = [
+    ['all','Tous'], ['hauts','Hauts'], ['pantalons','Pantalons'], ['sousvetements','Sous-vêtements'], ['chaussures','Chaussures'], ['accessoires','Accessoires'],
+    ['promos','Promos'], ['gratuite','Livraison gratuite'], ['nouveautes','Nouveautés']
+  ];
+
+  /* ---------- Utilitaires ---------- */
+  const $ = (s, el = document) => el.querySelector(s);
+  const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+  const fc = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '\u202F') + '\u00A0FC';
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const fullName = p => p.brand ? p.brand + ' ' + p.name : p.name;
+  const pid = v => /^\d+$/.test(v) ? +v : v;
+  const canHover = () => matchMedia('(hover: hover)').matches;
+
+  const brandMark = b => `<span>${esc(b)}</span>`;
+
+  /* ---------- T-shirt dessiné sur fond blanc (face / dos) ---------- */
+  function teeSVG(p, side = 'front') {
+    if ((p.tags || []).includes('accessoires')) {
+      const ink = p.ink || '#000000', col = p.color || '#FFFFFF';
+      return `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="w-full h-full" aria-hidden="true"><rect width="200" height="200" fill="#fff"/><g transform="translate(14,14) scale(1.45)"><path d="M16 50 Q16 14 52 14 Q88 14 88 50 Q88 62 76 64 L28 64 Q16 62 16 50 Z" fill="${col}" stroke="rgba(0,0,0,.2)" stroke-width="1.5"/><path d="M84 52 L110 88 L100 94 L74 62 Z" fill="${col}" stroke="rgba(0,0,0,.2)" stroke-width="1.5"/><path d="M16 50 Q52 40 88 50" fill="none" stroke="${ink}" stroke-width="3" opacity=".6"/><g fill="${ink}"><circle cx="30" cy="86" r="6"/><circle cx="43" cy="95" r="6"/><circle cx="58" cy="99" r="6"/><circle cx="73" cy="95" r="6"/><circle cx="86" cy="86" r="6"/></g></g></svg>`;
+    }
+    const front = {
+      block:   `<text x="100" y="108" text-anchor="middle" font-family="Archivo, Impact, sans-serif" font-weight="800" font-size="19" fill="${p.ink}">STREET</text><rect x="68" y="116" width="64" height="4" fill="${p.ink}"/>`,
+      wave:    `<g fill="none" stroke="${p.ink}" stroke-width="4" stroke-linecap="round"><path d="M72 92q7-9 14 0t14 0 14 0 14 0"/><path d="M72 106q7-9 14 0t14 0 14 0 14 0"/><path d="M72 120q7-9 14 0t14 0 14 0 14 0"/></g>`,
+      campus:  `<circle cx="100" cy="102" r="26" fill="none" stroke="${p.ink}" stroke-width="4"/><text x="100" y="109" text-anchor="middle" font-family="Archivo, Impact, sans-serif" font-weight="800" font-size="20" fill="${p.ink}">24</text>`,
+      stripes: `<g stroke="${p.ink}" stroke-width="5"><path d="M72 128l36-40"/><path d="M88 134l40-44"/><path d="M106 136l30-33"/></g>`
+    };
+    const nape = `<rect x="90" y="40" width="20" height="9" rx="2" fill="${p.ink}" opacity=".85"/>`;
+    const back = nape + (front[p.print] ? `<g transform="translate(0,-14)">${front[p.print]}</g>` : '');
+    const body = side === 'front'
+      ? 'M70 22L44 32 8 64l24 28 20-16v108h96V76l20 16 24-28-36-32-26-10q-30 20-60 0z'
+      : 'M70 22L44 32 8 64l24 28 20-16v108h96V76l20 16 24-28-36-32-26-10q-30 6-60 0z';
+    const collar = side === 'front' ? 'M70 22q30 22 60 0' : 'M70 22q30 6 60 0';
+    return `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="w-full h-full" aria-hidden="true">
+      <rect width="200" height="200" fill="#fff"/>
+      <path d="${body}" fill="${p.color}" stroke="rgba(0,0,0,.2)" stroke-width="1.500" stroke-linejoin="round"/>
+      <path d="M52 76V60l-20 32M148 76V60l20 32" fill="none" stroke="rgba(0,0,0,.10)" stroke-width="1.500"/>
+      <path d="${collar}" fill="none" stroke="rgba(0,0,0,.28)" stroke-width="5" stroke-linecap="round"/>
+      ${side === 'front' ? (front[p.print] || '') : back}
+    </svg>`;
+  }
+
+  /* Une face = dessin + photo réelle par-dessus si une URL est fournie */
+  function faceHTML(p, side, pad = 'p-3 pb-7 sm:p-6 sm:pb-9') {
+    const url = p.img && p.img[side];
+    return `<div class="flip-face ${side === 'back' ? 'flip-back' : ''} ${pad}">
+      ${teeSVG(p, side)}
+      ${url ? `<img src="${esc(url)}" alt="${esc(fullName(p))}, ${side === 'front' ? 'face' : 'dos'}" class="absolute inset-0 w-full h-full object-contain bg-white" loading="lazy" onerror="this.remove()">` : ''}
+    </div>`;
+  }
+
+  /* ---------- Hero ---------- */
+  const SITE = { heroPrice: 19500, heroFront: '', heroBack: '', heroColor: '#2B3BFF', heroInk: '#FFFFFF', heroPrint: 'block', whatsapp: '243906049174', contactEmail: 'outfitshirt@gmail.com' };
+  function renderHero() {
+    const heroTee = { brand: '', name: 'Article', color: SITE.heroColor, ink: SITE.heroInk, print: SITE.heroPrint, img: { front: SITE.heroFront, back: SITE.heroBack } };
+    $('#heroInner').innerHTML = faceHTML(heroTee, 'front', 'p-5') + faceHTML(heroTee, 'back', 'p-5');
+  }
+  renderHero();
+  function applySettings() {
+    renderHero();
+    const price = fc(SITE.heroPrice);
+    $$('[data-hero-price]').forEach(el => { el.textContent = price; });
+    $$('[data-hero-price-num]').forEach(el => { el.textContent = price.replace(/\u00A0FC$/, ''); });
+    document.title = 'outfit-shirt – Vêtements et accessoires streetwear à partir de ' + price;
+    const wa = $('#whatsappHelp');
+    if (wa) wa.href = 'https://wa.me/' + SITE.whatsapp + '?text=' + encodeURIComponent('Bonjour Outfit-Shirt, j’ai besoin d’aide avec ma commande.');
+    $$('[data-contact-mail]').forEach(a => { a.href = 'mailto:' + SITE.contactEmail; a.textContent = SITE.contactEmail; });
+  }
+  async function loadSettings() {
+    try {
+      const r = await fetch('/api/settings', { credentials: 'same-origin' });
+      if (!r.ok) return;
+      const d = await r.json();
+      if (d && d.settings) { Object.assign(SITE, d.settings); applySettings(); }
+    } catch {}
+  }
+
+  /* ---------- État ---------- */
+  let cart = [];
+  let filter = 'all';
+  const PAGE = 6; let shown = PAGE, lastKey = '';
+  let query = '';
+  try { cart = JSON.parse(localStorage.getItem('outfit-shirt-cart') || '[]'); } catch (e) { cart = []; }
+  const save = () => { try { localStorage.setItem('outfit-shirt-cart', JSON.stringify(cart)); } catch (e) {} };
+
+  /* ---------- Thème sombre / clair ---------- */
+  function applyTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    const b = $('#themeBtn');
+    b.setAttribute('aria-pressed', t === 'dark');
+    b.setAttribute('aria-label', t === 'dark' ? 'Passer en mode clair' : 'Passer en mode sombre');
+    try { localStorage.setItem('os-theme', t); } catch (e) {}
+  }
+  applyTheme(document.documentElement.getAttribute('data-theme') || 'light');
+  $('#themeBtn').addEventListener('click', () => {
+    applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
+
+  /* ---------- Filtres ---------- */
+  function renderFilters() {
+    $('#filters').innerHTML = FILTERS.map(([key, label]) => `
+      <button data-f="${key}" aria-pressed="${filter === key}" class="shrink-0 h-8 px-4 rounded-full text-xs sm:text-[13px] font-semibold border-2 transition-colors ${filter === key ? 'bg-inv text-invink border-inv' : 'border-line hover:border-ink'}">${label}</button>`).join('');
+  }
+
+  /* ---------- Grille ---------- */
+  function renderGrid() {
+    const q = query.trim().toLowerCase();
+    const list = PRODUCTS.filter(p =>
+      (filter === 'all' || p.tags.includes(filter)) &&
+      (!q || fullName(p).toLowerCase().includes(q) || (p.badge || '').toLowerCase().includes(q))
+    );
+    const key = filter + '|' + q; if (key !== lastKey) { shown = PAGE; lastKey = key; }
+    $('#grid').innerHTML = list.slice(0, shown).map(p => `
+      <article class="group flex flex-col min-w-0">
+        <div class="relative">
+          <div class="flipper hover-flip tile relative aspect-[4/5] rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer" data-pid="${p.id}" tabindex="0" role="img" aria-label="${esc(fullName(p))}, touche pour voir le dos">
+            <div class="flip-inner">${faceHTML(p, 'front')}${faceHTML(p, 'back')}</div>
+          </div>
+          ${p.badge ? `<span class="absolute top-1.5 left-1.5 sm:top-3 sm:left-3 z-10 text-[10px] sm:text-xs font-bold leading-none px-2 py-1 sm:px-3 sm:py-1.5 rounded-full ${p.badge === 'Bon Plan' ? 'bg-accent text-white' : p.badge === 'Nouveau' ? 'bg-black text-white' : 'bg-white text-black border border-black'}">${p.badge}</span>` : ''}
+          ${p.free ? `<div class="pointer-events-none absolute bottom-0 inset-x-0 z-10 rounded-b-2xl sm:rounded-b-3xl bg-black text-white text-[9px] sm:text-xs font-bold leading-none text-center py-1.5 sm:py-2 flex items-center justify-center gap-1"><svg class="hidden sm:block" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.500" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 6h12v10H2zM14 10h5l3 3v3h-8z"/><circle cx="7" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>Livraison gratuite</div>` : ''}
+        </div>
+        <div class="mt-2 flex-1 min-w-0">
+          ${p.brand ? `<p class="text-[10px] sm:text-xs text-muted font-semibold truncate">${brandMark(p.brand)}</p>` : ''}
+          <h3 class="text-[12px] sm:text-sm font-bold leading-tight">${esc(p.name)}</h3>
+          <p class="mt-1 flex flex-col sm:flex-row sm:items-baseline sm:gap-2">
+            <span class="text-[12px] sm:text-sm font-extrabold whitespace-nowrap">${fc(p.price)}</span>
+            ${p.old ? `<s class="text-[10px] sm:text-xs text-muted whitespace-nowrap">${fc(p.old)}</s>` : ''}
+          </p>
+        </div>
+        <div class="mt-2 flex items-center gap-1.5">
+          <label class="sr-only" for="size-${p.id}">Taille</label>
+          <select id="size-${p.id}" class="h-7 w-[2.7rem] shrink-0 rounded-full border border-line bg-surface text-ink text-[16px] leading-none font-semibold pl-2 pr-0 focus:border-accent outline-none">
+            ${[...new Set([...(p.sizes||['S','M','L','XL','XXL']),'XXL'])].map((z,i)=>{const stock=p.sizeStock&&Object.keys(p.sizeStock).length?Number(p.sizeStock[z]||0):Number(p.quantity??1);return `<option value="${esc(z)}" ${stock<=0?'disabled':''}${stock>0&&(z==='M'||(!([...new Set([...(p.sizes||['S','M','L','XL','XXL']),'XXL'])].includes('M'))&&i===0))?' selected':''}>${esc(z)}${stock<=0?' — Rupture de stock':''}</option>`}).join('')}
+          </select>
+          <button data-add="${p.id}" ${(p.sizeStock&&Object.keys(p.sizeStock).length?Object.values(p.sizeStock).some(n=>Number(n)>0):Number(p.quantity??1)>0)?'':'disabled'} class="w-[3.2rem] h-7 shrink-0 rounded-full bg-inv text-invink grid place-items-center hover:bg-accent hover:text-white active:scale-95 transition" aria-label="Ajouter au panier" title="Ajouter au panier">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.200 11.200a2 2 0 0 1-2 1.800H8.200a2 2 0 0 1-2-1.800L5 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/><path d="M12 12v5M9.500 14.500h5"/></svg>
+          </button>
+        </div>
+      </article>`).join('');
+    $('#moreWrap').classList.toggle('hidden', list.length <= shown);
+    $('#empty').classList.toggle('hidden', list.length > 0);
+    if (!list.length) {
+      const none = PRODUCTS.length === 0;
+      $('#emptyText').textContent = productsState === 'loading' ? 'Chargement des articles…' : productsState === 'error' ? 'Impossible de charger les articles pour le moment. Réessaie dans un instant.' : none ? 'Les nouveaux articles arrivent très bientôt.' : 'Aucun article ne correspond à ta recherche.';
+      $('#resetBtn').classList.toggle('hidden', none);
+    }
+    $('#resultInfo').textContent = q ? `${list.length} résultat${list.length > 1 ? 's' : ''} pour « ${query.trim()} »` : '';
+  }
+
+  /* ---------- Aperçu face / dos ---------- */
+  const viewer = $('#viewer');
+  function setSide(side) {
+    $('#vFlip').classList.toggle('is-flipped', side === 'back');
+    $$('.vSide').forEach(b => {
+      const on = b.dataset.side === side;
+      b.setAttribute('aria-pressed', on);
+      b.className = 'vSide h-10 px-6 rounded-full border-2 text-sm font-bold ' + (on ? 'bg-inv text-invink border-inv' : 'border-line');
+    });
+  }
+  function openViewer(id) {
+    const p = PRODUCTS.find(x => x.id === id);
+    viewer.dataset.pid = id;
+    $('#vInner').innerHTML = faceHTML(p, 'front', 'p-6') + faceHTML(p, 'back', 'p-6');
+    $('#vBrand').innerHTML = p.brand ? brandMark(p.brand) : '';
+    $('#vName').textContent = p.name;
+    $('#vPrice').textContent = fc(p.price);
+    $('#vOld').textContent = p.old ? fc(p.old) : '';
+    const free = $('#vFree');
+    free.classList.toggle('hidden', !p.free);
+    free.classList.toggle('inline-flex', !!p.free);
+
+    // Les options de taille doivent être construites en JavaScript pour l’article aperçu.
+    const sizeSelect = $('#vSize');
+    const sizes = [...new Set([...(Array.isArray(p.sizes) && p.sizes.length ? p.sizes : ['S', 'M', 'L', 'XL', 'XXL']), 'XXL'])];
+    const hasSizeStock = p.sizeStock && Object.keys(p.sizeStock).length > 0;
+    sizeSelect.innerHTML = '<option value="">Choisir une taille</option>' + sizes.map(z => {
+      const stock = hasSizeStock ? Number(p.sizeStock[z] || 0) : Number(p.quantity ?? 1);
+      return `<option value="${esc(z)}" ${stock <= 0 ? 'disabled' : ''}>${esc(z)}${stock <= 0 ? ' — Rupture de stock' : ''}</option>`;
+    }).join('');
+    const preferredSize = sizes.includes('M') ? 'M' : sizes[0];
+    const firstAvailable = sizes.find(z => (hasSizeStock ? Number(p.sizeStock[z] || 0) : Number(p.quantity ?? 1)) > 0);
+    sizeSelect.value = firstAvailable && (hasSizeStock ? Number(p.sizeStock[preferredSize] || 0) : Number(p.quantity ?? 1)) > 0 ? preferredSize : (firstAvailable || '');
+    $('#vAdd').disabled = !firstAvailable;
+    $('#vAdd').classList.toggle('opacity-50', !firstAvailable);
+    $('#vAdd').textContent = firstAvailable ? 'Ajouter au panier' : 'Rupture de stock';
+    setSide('front');
+    viewer.showModal();
+  }
+  $$('.vSide').forEach(b => b.addEventListener('click', () => setSide(b.dataset.side)));
+  $('#viewerClose').addEventListener('click', () => viewer.close());
+  viewer.addEventListener('click', e => { if (e.target === viewer) viewer.close(); });
+  $('#vSize').addEventListener('change', () => {
+    const canAdd = !!$('#vSize').value;
+    $('#vAdd').disabled = !canAdd;
+    $('#vAdd').classList.toggle('opacity-50', !canAdd);
+    $('#vAdd').textContent = canAdd ? 'Ajouter au panier' : 'Choisir une taille';
+  });
+  $('#vAdd').addEventListener('click', () => {
+    const size = $('#vSize').value;
+    if (!size) { toast('Choisis une taille disponible.'); return; }
+    addToCart(pid(viewer.dataset.pid), size);
+    viewer.close();
+  });
+
+  /* ---------- Panier ---------- */
+  function renderCart(bump) {
+    const count = cart.reduce((a, i) => a + i.qty, 0);
+    const total = cart.reduce((a, i) => a + (PRODUCTS.find(x => x.id === i.id)?.price || 0) * i.qty, 0);
+    const badge = $('#cartCount');
+    badge.textContent = count;
+    if (bump) { badge.classList.remove('bump'); void badge.offsetWidth; badge.classList.add('bump'); }
+    const delivery = count >= 4 ? 0 : 6000;
+    $('#cartTotal').textContent = fc(total + delivery);
+    $('#deliveryInfo').textContent = count >= 4 ? 'Livraison en moins de 24 h · Livraison offerte (4 articles ou plus).' : `Livraison en moins de 24 h · Frais : ${fc(delivery)}${count===3 ? ' · Pour 3 articles, chaque article doit coûter au moins 19 500 FC.' : ''}`;
+    $('#checkoutBtn').disabled = count === 0;
+
+    $('#cartItems').innerHTML = cart.length ? cart.map((i, idx) => {
+      const p = PRODUCTS.find(x => x.id === i.id);
+      if (!p) return '';
+      return `<div class="flex gap-4 py-4 border-b border-line">
+        <div class="tile w-20 h-24 shrink-0 rounded-2xl overflow-hidden p-1">${teeSVG(p, 'front')}</div>
+        <div class="flex-1 min-w-0">
+          <div class="flex justify-between gap-2">
+            <h3 class="font-bold">${esc(fullName(p))}</h3>
+            <button data-remove="${idx}" class="text-muted hover:text-ink" aria-label="Retirer ${esc(fullName(p))}">
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4l10 10M14 4L4 14"/></svg>
+            </button>
+          </div>
+          <p class="text-sm text-muted">Taille ${i.size}</p>
+          <div class="mt-2 flex items-center justify-between">
+            <div class="inline-flex items-center border-2 border-line rounded-full">
+              <button data-dec="${idx}" class="w-9 h-9 text-lg font-bold" aria-label="Diminuer la quantité">−</button>
+              <span class="w-6 text-center text-sm font-bold">${i.qty}</span>
+              <button data-inc="${idx}" class="w-9 h-9 text-lg font-bold" aria-label="Augmenter la quantité">+</button>
+            </div>
+            <span class="font-bold">${fc(p.price * i.qty)}</span>
+          </div>
+        </div>
+      </div>`;
+    }).join('') : `<div class="text-center py-20">
+        <p class="font-bold text-lg">Ton panier est vide.</p>
+        <p class="mt-1 text-muted text-sm">Ajoute un article pour commencer.</p>
+        <button id="startShopping" class="mt-5 h-11 px-6 rounded-full bg-inv text-invink font-semibold hover:bg-accent hover:text-white">Voir les articles</button>
+      </div>`;
+    save();
+  }
+  function addToCart(id, size) {
+    const product=PRODUCTS.find(x=>x.id===id); const stock=product?.sizeStock&&Object.keys(product.sizeStock).length?Number(product.sizeStock[size]||0):Number(product?.quantity??1);
+    const found = cart.find(i => i.id === id && i.size === size);
+    if(stock<=0 || (found&&found.qty>=stock)){toast('Rupture de stock pour cette taille.');return;}
+    if (found) found.qty++; else cart.push({ id, size, qty: 1 });
+    renderCart(true);
+    toast(`Ajouté au panier : ${fullName(PRODUCTS.find(x => x.id === id))} (${size})`);
+  }
+
+  const drawer = $('#drawer'), overlay = $('#overlay');
+  function openCart() {
+    overlay.classList.remove('hidden');
+    drawer.classList.remove('translate-x-full');
+    drawer.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    $('#closeCart').focus();
+  }
+  function closeCart() {
+    overlay.classList.add('hidden');
+    drawer.classList.add('translate-x-full');
+    drawer.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  let toastTimer;
+  function toast(msg) {
+    const t = $('#toast');
+    t.textContent = msg;
+    t.classList.remove('opacity-0');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.add('opacity-0'), 2200);
+  }
+
+  /* ---------- Événements ---------- */
+  function resetSearch() { query = ''; $('#searchInput').value = ''; $('#searchInputMobile').value = ''; }
+
+  document.addEventListener('click', e => {
+    const add = e.target.closest('[data-add]');
+    if (add) { const id = pid(add.dataset.add); addToCart(id, $('#size-' + id).value); return; }
+
+    // Clic sur la photo : souris = aperçu agrandi (le dos s'affiche déjà au survol) ; tactile = bascule face / dos
+    const tile = e.target.closest('.flipper[data-pid]');
+    if (tile) { canHover() ? openViewer(pid(tile.dataset.pid)) : tile.classList.toggle('is-flipped'); return; }
+    if (e.target.closest('#heroFlip')) { $('#heroFlip').classList.toggle('is-flipped'); return; }
+
+    const f = e.target.closest('[data-f]');
+    if (f) { filter = f.dataset.f; renderFilters(); renderGrid(); return; }
+
+    const nav = e.target.closest('.navlink');
+    if (nav) { filter = nav.dataset.filter || 'all'; resetSearch(); renderFilters(); renderGrid(); $('#mobileMenu').classList.add('hidden'); $('#menuBtn').setAttribute('aria-expanded', 'false'); }
+
+    const inc = e.target.closest('[data-inc]'), dec = e.target.closest('[data-dec]'), rem = e.target.closest('[data-remove]');
+    if (inc) { cart[+inc.dataset.inc].qty++; renderCart(); }
+    if (dec) { const i = cart[+dec.dataset.dec]; i.qty--; if (i.qty <= 0) cart.splice(+dec.dataset.dec, 1); renderCart(); }
+    if (rem) { cart.splice(+rem.dataset.remove, 1); renderCart(); }
+
+    if (e.target.closest('#startShopping')) { closeCart(); location.hash = '#produits'; }
+  });
+
+  document.addEventListener('keydown', e => { const t = e.target.closest && e.target.closest('.flipper[data-pid]'); if (t && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); t.click(); } });
+  $('#cartBtn').addEventListener('click', openCart);
+  $('#closeCart').addEventListener('click', closeCart);
+  overlay.addEventListener('click', closeCart);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCart(); });
+  /* ---------- Comptes clients (API server.js) ---------- */
+  const accountDialog = $('#accountDialog');
+  let accountMode = 'login';
+  let csrfToken = null;
+  let signedInUser = null;
+  function accountMessage(message, error = false) {
+    const el = $('#accountMessage'); el.textContent = message || '';
+    el.className = 'text-sm font-semibold min-h-5 ' + (error ? 'text-red-500' : 'text-accent');
+  }
+  function setAccountMode(mode) {
+    accountMode = mode;
+    const registering = mode === 'register';
+    $('#accountNameWrap').classList.toggle('hidden', !registering);
+    $('#accountName').required = registering;
+    $('#accountExtraWrap').classList.toggle('hidden', !registering);
+    $('#accountPassword').autocomplete = registering ? 'new-password' : 'current-password';
+    $('#accountPasswordHint').classList.toggle('hidden', !registering);
+    $('#accountTitle').textContent = registering ? 'Créer un compte' : 'Connexion';
+    $('#accountIntro').textContent = registering ? 'Crée ton compte client outfit-shirt.' : 'Connecte-toi à ton compte client.';
+    $('#accountSubmit').textContent = registering ? 'Créer mon compte' : 'Me connecter';
+    $('#showLogin').classList.toggle('bg-inv', !registering);
+    $('#showLogin').classList.toggle('text-invink', !registering);
+    $('#showRegister').classList.toggle('bg-inv', registering);
+    $('#showRegister').classList.toggle('text-invink', registering);
+    $('#accountMessage').textContent = '';
+  }
+  async function accountRequest(path, body) {
+    const headers = { 'Content-Type': 'application/json' };
+    if (csrfToken && path !== '/api/register' && path !== '/api/login') headers['X-CSRF-Token'] = csrfToken;
+    const response = await fetch(path, { method: body ? 'POST' : 'GET', credentials: 'same-origin', headers, ...(body ? { body: JSON.stringify(body) } : {}) });
+    let data = {};
+    try { data = await response.json(); } catch {}
+    if (!response.ok) throw new Error(data.message || 'Une erreur est survenue. Réessaie.');
+    return data;
+  }
+  async function loadMyOrders() {
+    const panel=$('#myOrdersPanel'), list=$('#myOrdersList'); panel.classList.remove('hidden'); list.textContent='Chargement des commandes…';
+    try { const data=await accountRequest('/api/my-orders'); const orders=data.orders||[]; if(!payProviders) await loadPayProviders(); list.innerHTML=orders.length?orders.map(o=>`<article class="rounded-lg border border-line p-3"><div class="flex justify-between gap-2"><strong>Commande ${esc(o.ref)}</strong><span class="font-bold rounded-full px-2 py-1 ${({'En attente':'bg-amber-100 text-amber-800','Payée':'bg-blue-100 text-blue-800','Expédiée':'bg-violet-100 text-violet-800','Livrée':'bg-green-100 text-green-800','Annulée':'bg-red-100 text-red-800'}[o.status]||'bg-gray-100 text-gray-800')}">${esc(o.status)}</span></div><p class="text-muted mt-1">${new Date(o.createdAt).toLocaleString('fr-FR')}</p><p class="mt-2">${(o.items||[]).map(i=>`${esc(i.name)} · ${esc(i.size)} × ${i.qty}`).join('<br>')}</p><p class="font-bold mt-2">Total : ${fc(o.total)}</p>${o.status==='En attente'?`<button type="button" data-pay-order="${esc(o.ref)}" data-pay-total="${Number(o.total)}" class="mt-3 h-10 px-4 rounded-full bg-accent text-white font-bold text-sm">Payer maintenant</button>`:''}${o.status==='En attente'?'<p class="mt-2 text-amber-700">Étape 1/4 · Commande reçue, en attente de traitement.</p>':o.status==='Payée'?'<p class="mt-2 text-blue-700">Étape 2/4 · Commande confirmée, préparation en cours.</p>':o.status==='Expédiée'?`<p class="mt-2 text-violet-700">Étape 3/4 · Colis expédié.</p>${o.trackingCode?`<p class="mt-2 rounded-lg bg-surface p-2"><strong>Code de suivi :</strong> ${esc(o.trackingCode)}</p>`:'<p class="mt-2">Le code de suivi sera affiché ici dès qu’il sera ajouté par la boutique.</p>'}`:o.status==='Livrée'?`<p class="mt-2 text-green-700">Étape 4/4 · Commande livrée.</p>${o.trackingCode?`<p class="mt-2 rounded-lg bg-surface p-2"><strong>Code de suivi :</strong> ${esc(o.trackingCode)}</p>`:''}`:'<p class="mt-2 text-red-700">Cette commande a été annulée.</p>'}</article>`).join(''):'Tu n’as pas encore de commande.'; }
+    catch(e){list.textContent=e.message;}
+  }
+  $('#myOrdersTab').addEventListener('click',()=>{if($('#myOrdersPanel').classList.contains('hidden'))loadMyOrders();else $('#myOrdersPanel').classList.add('hidden')});
+  function renderAccount(user) {
+    signedInUser = user || null;
+    const signed = !!user;
+    $('#accountTabs').classList.toggle('hidden', signed);
+    $('#accountForm').classList.toggle('hidden', signed);
+    $('#accountSignedIn').classList.toggle('hidden', !signed);
+    if (signed) {
+      $('#accountTitle').textContent = 'Mon compte';
+      $('#accountIntro').textContent = 'Tu es connecté(e).';
+      $('#accountWelcome').textContent = 'Bonjour ' + user.firstName + ' !';
+      $('#accountEmailShown').textContent = user.email;
+      $('#pFirst').value = user.firstName || ''; $('#pLast').value = user.lastName || ''; $('#pPost').value = user.postName || '';
+      $('#pPhone').value = user.phone || ''; $('#pBirth').value = user.birthDate || ''; $('#pAddr').value = user.address || '';
+      $('#accountBtn').textContent = 'Mon compte · ' + user.firstName;
+      $('#accountBtnM').textContent = 'Mon compte · ' + user.firstName;
+    } else {
+      $('#accountBtn').textContent = 'Mon compte';
+      $('#accountBtnM').textContent = 'Mon compte';
+    }
+  }
+  async function loadAccount() {
+    try { const data = await accountRequest('/api/me'); csrfToken = data.csrfToken || null; renderAccount(data.user); }
+    catch { renderAccount(null); }
+  }
+  function openAccount() {
+    accountMessage('');
+    if (!signedInUser) setAccountMode('login');
+    accountDialog.showModal();
+    loadAccount();
+  }
+  $('#accountBtn').addEventListener('click', openAccount);
+  $('#deliveryAccountBtn')?.addEventListener('click',()=>$('#accountBtn')?.click());
+  $('#accountBtnM').addEventListener('click', () => { $('#mobileMenu').classList.add('hidden'); openAccount(); });
+  $('#accountClose').addEventListener('click', () => accountDialog.close());
+  accountDialog.addEventListener('click', e => { if (e.target === accountDialog) accountDialog.close(); });
+  $('#showLogin').addEventListener('click', () => { $('#forgotPasswordForm').classList.add('hidden'); $('#resetPasswordForm').classList.add('hidden'); $('#accountForm').classList.remove('hidden'); $('#accountTabs').classList.remove('hidden'); setAccountMode('login'); });
+  $('#showRegister').addEventListener('click', () => { $('#forgotPasswordForm').classList.add('hidden'); $('#resetPasswordForm').classList.add('hidden'); $('#accountForm').classList.remove('hidden'); $('#accountTabs').classList.remove('hidden'); setAccountMode('register'); });
+  $('#forgotPasswordBtn').addEventListener('click', () => {
+    if (accountMode !== 'login') setAccountMode('login');
+    $('#forgotEmail').value = $('#accountEmail').value.trim();
+    $('#accountForm').classList.add('hidden'); $('#forgotPasswordForm').classList.remove('hidden'); $('#accountTabs').classList.add('hidden');
+    $('#accountTitle').textContent = 'Mot de passe oublié'; $('#accountIntro').textContent = 'Nous allons t’aider à retrouver l’accès à ton compte.';
+  });
+  $('#forgotBackBtn').addEventListener('click', () => { $('#forgotPasswordForm').classList.add('hidden'); $('#accountForm').classList.remove('hidden'); $('#accountTabs').classList.remove('hidden'); setAccountMode('login'); });
+  $('#forgotPasswordForm').addEventListener('submit', async e => {
+    e.preventDefault(); const b=$('#forgotSubmit'); b.disabled=true; $('#forgotMessage').textContent='Envoi en cours…';
+    try { const r=await fetch('/api/forgot-password',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:$('#forgotEmail').value.trim()})}); const d=await r.json().catch(()=>({})); if(!r.ok) throw new Error(d.message||'Impossible d’envoyer la demande. Réessaie plus tard.'); $('#forgotMessage').textContent=d.message||'Si un compte correspond à cette adresse, un e-mail de réinitialisation sera envoyé.'; $('#forgotMessage').className='text-sm font-semibold text-accent'; }
+    catch(err){$('#forgotMessage').textContent=err.message;$('#forgotMessage').className='text-sm font-semibold text-red-500';} finally {b.disabled=false;}
+  });
+  const resetToken = new URLSearchParams(location.search).get('resetToken');
+  if (resetToken) {
+    history.replaceState({}, '', location.pathname);
+    $('#accountDialog').showModal(); $('#accountTabs').classList.add('hidden'); $('#accountForm').classList.add('hidden'); $('#forgotPasswordForm').classList.add('hidden'); $('#resetPasswordForm').classList.remove('hidden');
+    $('#accountTitle').textContent='Choisir un nouveau mot de passe'; $('#accountIntro').textContent='Réinitialisation sécurisée de ton compte.';
+  }
+  $('#resetPasswordForm').addEventListener('submit', async e => {
+    e.preventDefault(); const pw=$('#resetNewPassword').value, confirmPw=$('#resetConfirmPassword').value, b=$('#resetSubmit');
+    if(pw!==confirmPw){$('#resetMessage').textContent='Les deux mots de passe ne correspondent pas.';$('#resetMessage').className='text-sm font-semibold text-red-500';return;}
+    b.disabled=true; $('#resetMessage').textContent='Modification en cours…';
+    try { const r=await fetch('/api/reset-password',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:resetToken,password:pw})}); const d=await r.json().catch(()=>({})); if(!r.ok) throw new Error(d.message||'Lien invalide ou expiré.'); $('#resetMessage').textContent=d.message||'Mot de passe modifié. Tu peux maintenant te connecter.'; $('#resetMessage').className='text-sm font-semibold text-accent'; $('#resetPasswordForm').reset(); history.replaceState({},'',location.pathname); setTimeout(()=>{ $('#resetPasswordForm').classList.add('hidden'); $('#accountForm').classList.remove('hidden'); $('#accountTabs').classList.remove('hidden'); setAccountMode('login'); },1800); }
+    catch(err){$('#resetMessage').textContent=err.message;$('#resetMessage').className='text-sm font-semibold text-red-500';} finally {b.disabled=false;}
+  });
+  $('#accountForm').addEventListener('submit', async e => {
+    e.preventDefault(); accountMessage('');
+    const submit = $('#accountSubmit'); submit.disabled = true; submit.classList.add('opacity-60');
+    const email = $('#accountEmail').value.trim();
+    const password = $('#accountPassword').value;
+    const body = accountMode === 'register'
+      ? { firstName: $('#accountName').value.trim(), lastName: $('#rLast').value.trim(), postName: $('#rPost').value.trim(), phone: $('#rPhone').value.trim(), birthDate: $('#rBirth').value, address: $('#rAddr').value.trim(), email, password, remember: $('#accountRemember').checked }
+      : { email, password, remember: $('#accountRemember').checked };
+    try {
+      const data = await accountRequest(accountMode === 'register' ? '/api/register' : '/api/login', body);
+      csrfToken = data.csrfToken || null;
+      renderAccount(data.user);
+      $('#accountForm').reset();
+      accountMessage(accountMode === 'register' ? 'Compte créé avec succès !' : 'Connexion réussie !');
+      toast(accountMode === 'register' ? 'Ton compte a été créé.' : 'Tu es connecté(e).');
+      setTimeout(() => { if (accountDialog.open) accountDialog.close(); if (pendingCheckout) { pendingCheckout = false; openOrderForm(); } }, 900);
+    } catch (err) { accountMessage(err.message, true); }
+    finally { submit.disabled = false; submit.classList.remove('opacity-60'); }
+  });
+  $('#accountLogout').addEventListener('click', async () => {
+    try { await accountRequest('/api/logout', {}); csrfToken = null; renderAccount(null); setAccountMode('login'); accountMessage('Tu es déconnecté(e).'); }
+    catch (err) { accountMessage(err.message, true); }
+  });
+  /* ---------- Commande : connexion obligatoire ---------- */
+  const orderDialog = $('#orderDialog');
+  let pendingCheckout = false;
+  const orderLines = () => cart.map(i => ({ ...i, p: PRODUCTS.find(x => x.id === i.id) })).filter(l => l.p);
+  async function startCheckout() {
+    if (!orderLines().length) return;
+    await loadAccount();
+    if (!signedInUser) {
+      pendingCheckout = true;
+      closeCart();
+      setAccountMode('login');
+      accountDialog.showModal();
+      accountMessage('Veuillez vous connecter ou créer un compte pour finaliser votre commande.');
+      return;
+    }
+    openOrderForm();
+  }
+  function openOrderForm() {
+    const lines = orderLines(); if (!lines.length) return;
+    $('#orderRecap').innerHTML = lines.map(l => `<li class="flex justify-between gap-3"><span>${esc(fullName(l.p))} · ${esc(l.size)} × ${l.qty}</span><span class="font-semibold whitespace-nowrap">${fc(l.p.price * l.qty)}</span></li>`).join('');
+    const itemCount = lines.reduce((a,l)=>a+l.qty,0); const subtotal = lines.reduce((a, l) => a + l.p.price * l.qty, 0); const delivery = itemCount >= 4 ? 0 : 6000;
+    $('#orderTotal').textContent = fc(subtotal + delivery) + (delivery ? ` (dont ${fc(delivery)} de livraison)` : ' (livraison offerte)');
+    if(itemCount===3 && lines.some(l=>l.p.price < 19500)){ $('#orderMessage').textContent='Pour une commande de 3 articles, chaque article doit coûter au moins 19 500 FC.'; $('#orderSubmit').disabled=true; } else { $('#orderMessage').textContent=''; $('#orderSubmit').disabled=false; }
+    const u = signedInUser || {};
+    $('#orderName').value = [u.firstName, u.postName, u.lastName].filter(Boolean).join(' ');
+    $('#orderPhone').value = u.phone || ''; $('#orderAddress').value = u.address || '';
+    $('#orderMessage').textContent = '';
+    $('#orderForm').classList.remove('hidden'); $('#orderDone').classList.add('hidden');
+    closeCart(); if (!orderDialog.open) orderDialog.showModal();
+  }
+  accountDialog.addEventListener('close', () => { if (!signedInUser) pendingCheckout = false; });
+  $('#checkoutBtn').addEventListener('click', startCheckout);
+  $('#orderClose').addEventListener('click', () => orderDialog.close());
+  $('#orderDoneClose').addEventListener('click', () => { orderDialog.close(); location.hash = '#produits'; });
+  orderDialog.addEventListener('click', e => { if (e.target === orderDialog) orderDialog.close(); });
+  $('#orderForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const btn = $('#orderSubmit'), msg = $('#orderMessage');
+    btn.disabled = true; btn.classList.add('opacity-60');
+    msg.className = 'text-sm font-semibold min-h-5 text-muted'; msg.textContent = 'Envoi de ta commande…';
+    try {
+      const data = await accountRequest('/api/orders', {
+        fullName: $('#orderName').value.trim(), phone: $('#orderPhone').value.trim(), address: $('#orderAddress').value.trim(),
+        items: orderLines().map(l => ({ id: l.id, size: l.size, qty: l.qty }))
+      });
+      cart = []; renderCart();
+      $('#orderRef').textContent = data.ref;
+      $('#orderForm').classList.add('hidden'); $('#orderDone').classList.remove('hidden');
+      payCtx = { orderRef: data.ref, total: Number(data.total) };
+    } catch (err) { msg.className = 'text-sm font-semibold min-h-5 text-red-500'; msg.textContent = err.message; }
+    finally { btn.disabled = false; btn.classList.remove('opacity-60'); }
+  });
+  // ---------- Paiement Mobile Money (Airtel Money, Vodacom M-Pesa, Orange Money) ----------
+  // Aucun code PIN n'est demandé ici. Le montant et le statut viennent toujours du serveur.
+  const payDialog = $('#payDialog');
+  const logo = (bg, text) => `<svg viewBox="0 0 64 36" class="w-14 h-8 shrink-0" aria-hidden="true"><rect width="64" height="36" rx="8" fill="${bg}"/><text x="32" y="23" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="14" fill="#fff">${text}</text></svg>`;
+  const PAY_LOGOS = { airtel: logo('#E60000', 'airtel'), mpesa: logo('#43B02A', 'M-PESA'), orange: logo('#FF7900', 'orange') };
+  const PAY_OPEN = ['pending_payment', 'processing', 'needs_review'];
+  let payProviders = null, payCtx = null, payTimer = null, payChoice = '', payBusy = false;
+  const PAY_DEFAULTS = [{ id: 'airtel', label: 'Airtel Money', available: false }, { id: 'mpesa', label: 'Vodacom M-Pesa', available: false }, { id: 'orange', label: 'Orange Money', available: false }];
+  async function loadPayProviders() { try { const r = await fetch('/api/payments/providers', { credentials: 'same-origin' }); payProviders = (await r.json()).providers || []; } catch { payProviders = []; } if (!payProviders.length) payProviders = PAY_DEFAULTS; }
+  const payAvailable = () => (payProviders || []).some(p => p.available);
+  const payStop = () => { clearInterval(payTimer); payTimer = null; };
+  const payDigits = () => { let d = $('#payPhone').value.replace(/\D/g, ''); if (d.startsWith('243')) d = d.slice(3); if (d.startsWith('0')) d = d.slice(1); return d; };
+  function payShow(view) { $('#payForm').classList.toggle('hidden', view !== 'form'); $('#payStatus').classList.toggle('hidden', view !== 'status'); }
+  function payMsg(text, error) { const m = $('#payMessage'); m.className = 'text-sm font-semibold min-h-5 ' + (error ? 'text-red-500' : 'text-muted'); m.textContent = text || ''; }
+  function updatePaySummary() {
+    const p = (payProviders || []).find(x => x.id === payChoice), d = payDigits();
+    $('#paySumOrder').textContent = payCtx ? payCtx.orderRef : '';
+    $('#paySumAmount').textContent = payCtx ? fc(payCtx.total) : '';
+    $('#paySumProvider').textContent = p ? p.label : '—';
+    $('#paySumPhone').textContent = d ? '+243 ' + d : '—';
+    $('#payPhoneBox').classList.toggle('hidden', !p);
+    $('#paySubmit').textContent = payCtx ? 'Payer ' + fc(payCtx.total) : 'Payer';
+    $('#payHelp').textContent = payChoice === 'orange'
+      ? 'Tu seras redirigé vers la page sécurisée Orange Money pour confirmer. Ne saisis ton code PIN que sur cette page officielle. Outfit-Shirt ne te le demande jamais.'
+      : 'Tu recevras une demande de paiement sur ton téléphone : valide-la avec ton code secret. Ne communique jamais ton code PIN, ni ici ni à un tiers.';
+  }
+  function renderPayChoices() {
+    $('#payProviders').innerHTML = (payProviders || []).map(p => `<button type="button" role="radio" aria-checked="${payChoice === p.id}" data-provider="${esc(p.id)}" ${p.available ? '' : 'disabled'} class="flex items-center gap-3 w-full rounded-xl border-2 p-3 text-left transition-colors ${payChoice === p.id ? 'border-accent bg-accent/10' : 'border-line'} ${p.available ? 'hover:border-accent' : 'opacity-50 cursor-not-allowed'}">${PAY_LOGOS[p.id] || ''}<span class="font-bold flex-1">${esc(p.label)}</span><span class="text-xs text-muted">${p.available ? (payChoice === p.id ? 'Sélectionné' : '') : 'Bientôt disponible'}</span></button>`).join('');
+    updatePaySummary();
+  }
+  async function openPay(orderRef, total) {
+    payCtx = { orderRef, total }; payChoice = ''; payStop();
+    if (!payProviders) await loadPayProviders();
+    payShow('form'); payMsg(''); $('#payPhone').value = '';
+    $('#payTest').classList.toggle('hidden', !(payProviders || []).some(p => p.available && p.testMode));
+    renderPayChoices();
+    $('#payInactive').classList.toggle('hidden', payAvailable()); $('#paySubmit').disabled = !payAvailable();
+    if (!payDialog.open) payDialog.showModal();
+  }
+  function showPayStatus(p) {
+    payShow('status');
+    const open = PAY_OPEN.includes(p.status);
+    $('#payStatusTitle').textContent = p.statusLabel;
+    $('#payStatusTitle').className = 'font-bold text-lg ' + (p.status === 'success' ? 'text-green-600' : ['failed', 'cancelled', 'expired'].includes(p.status) ? 'text-red-500' : '');
+    $('#payStatusText').textContent = p.message || '';
+    $('#paySpin').classList.toggle('hidden', !open);
+    $('#payTest').classList.toggle('hidden', !p.testMode);
+    $('#payStatusDetails').innerHTML = [['Commande', p.orderRef], ['Montant', fc(p.amount)], ['Opérateur', p.providerLabel], ['Numéro utilisé', p.phone]].map(([k, v]) => `<dt class="text-muted">${k}</dt><dd class="font-bold text-right">${esc(v)}</dd>`).join('');
+    const link = $('#payOpenLink');
+    if (p.payUrl && open) { link.href = p.payUrl; link.classList.remove('hidden'); } else link.classList.add('hidden');
+    $('#payRetry').classList.toggle('hidden', !['failed', 'cancelled', 'expired'].includes(p.status));
+    if (open) startPayPoll(p.ref); else payStop();
+  }
+  function startPayPoll(ref) {
+    if (payTimer) return; let n = 0;
+    payTimer = setInterval(async () => {
+      n++;
+      try { const d = await accountRequest('/api/payments/status?ref=' + encodeURIComponent(ref)); showPayStatus(d.payment); } catch {}
+      if (n >= 45 && payTimer) { payStop(); $('#payStatusText').textContent += ' La vérification continue : tu peux fermer cette fenêtre et consulter « Mes commandes » plus tard.'; }
+    }, 4000);
+  }
+  $('#payProviders').addEventListener('click', e => { const b = e.target.closest('[data-provider]'); if (!b || b.disabled) return; payChoice = b.dataset.provider; payMsg(''); renderPayChoices(); $('#payPhone').focus(); });
+  $('#payPhone').addEventListener('input', updatePaySummary);
+  $('#payForm').addEventListener('submit', async e => {
+    e.preventDefault(); if (payBusy || !payCtx) return;
+    if (!payChoice) return payMsg('Choisis un moyen de paiement.', true);
+    const d = payDigits(); if (!/^\d{9}$/.test(d)) return payMsg('Entre ton numéro Mobile Money : 9 chiffres après +243.', true);
+    payBusy = true; $('#paySubmit').disabled = true; payMsg('Envoi de la demande de paiement…');
+    try {
+      const data = await accountRequest('/api/payments/initiate', { orderRef: payCtx.orderRef, provider: payChoice, phone: '+243' + d });
+      showPayStatus(data.payment);
+      if (data.payment.payUrl && data.payment.status === 'processing') setTimeout(() => { if (payDialog.open) location.assign(data.payment.payUrl); }, 1500);
+    } catch (err) { payMsg(err.message, true); }
+    finally { payBusy = false; $('#paySubmit').disabled = !payAvailable(); }
+  });
+  $('#payRetry').addEventListener('click', () => { payStop(); payShow('form'); payMsg(''); renderPayChoices(); $('#paySubmit').disabled = !payAvailable(); });
+  const payCloseAll = () => { payStop(); if (payDialog.open) payDialog.close(); };
+  $('#payClose').addEventListener('click', payCloseAll); $('#payDone').addEventListener('click', payCloseAll);
+  payDialog.addEventListener('close', payStop);
+  $('#payNow').addEventListener('click', () => { if (!payCtx) return; orderDialog.close(); openPay(payCtx.orderRef, payCtx.total); });
+  document.addEventListener('click', e => { const b = e.target.closest('[data-pay-order]'); if (b) openPay(b.dataset.payOrder, Number(b.dataset.payTotal)); });
+  // Retour depuis la page Orange Money : on affiche l'état réel (vérifié par le serveur), jamais une simple redirection.
+  const payReturn = new URLSearchParams(location.search).get('pay');
+  if (payReturn) {
+    history.replaceState({}, '', location.pathname);
+    (async () => {
+      await loadAccount();
+      if (!signedInUser) { setAccountMode('login'); accountDialog.showModal(); accountMessage('Connecte-toi pour voir l’état de ton paiement.'); return; }
+      try { const d = await accountRequest('/api/payments/status?ref=' + encodeURIComponent(payReturn)); payCtx = { orderRef: d.payment.orderRef, total: d.payment.amount }; payShow('status'); if (!payDialog.open) payDialog.showModal(); showPayStatus(d.payment); } catch {}
+    })();
+  }
+  loadAccount();
+  $('#moreBtn').addEventListener('click', () => { shown += PAGE; renderGrid(); });
+  $('#profileForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const btn = $('#profileSave'), msg = $('#profileMessage');
+    btn.disabled = true; btn.classList.add('opacity-60'); msg.className = 'text-sm font-semibold min-h-5 text-muted'; msg.textContent = 'Enregistrement…';
+    try {
+      const data = await accountRequest('/api/profile', { firstName: $('#pFirst').value.trim(), lastName: $('#pLast').value.trim(), postName: $('#pPost').value.trim(), phone: $('#pPhone').value.trim(), birthDate: $('#pBirth').value, address: $('#pAddr').value.trim() });
+      renderAccount(data.user);
+      msg.className = 'text-sm font-semibold min-h-5 text-accent'; msg.textContent = 'Informations enregistrées.';
+    } catch (err) { msg.className = 'text-sm font-semibold min-h-5 text-red-500'; msg.textContent = err.message; }
+    finally { btn.disabled = false; btn.classList.remove('opacity-60'); }
+  });
+  $('#resetBtn').addEventListener('click', () => { filter = 'all'; resetSearch(); renderFilters(); renderGrid(); });
+
+  $('#menuBtn').addEventListener('click', () => {
+    const open = $('#mobileMenu').classList.toggle('hidden') === false;
+    $('#menuBtn').setAttribute('aria-expanded', open);
+  });
+  $('#searchToggle').addEventListener('click', () => { $('#searchFormMobile').classList.toggle('hidden'); $('#searchInputMobile').focus(); });
+
+  function onSearch(val) { query = val; renderGrid(); if (val.trim()) document.getElementById('produits').scrollIntoView({ behavior: 'smooth' }); }
+  $('#searchForm').addEventListener('submit', e => { e.preventDefault(); onSearch($('#searchInput').value); });
+  $('#searchFormMobile').addEventListener('submit', e => { e.preventDefault(); onSearch($('#searchInputMobile').value); });
+  $('#searchInput').addEventListener('input', e => { query = e.target.value; renderGrid(); });
+  $('#searchInputMobile').addEventListener('input', e => { query = e.target.value; renderGrid(); });
+
+  $('#newsletterForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const email = $('#nlEmail').value.trim(), msg = $('#nlMsg');
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      msg.textContent = 'Merci ! Tu es inscrit(e). Tu recevras bientôt nos prochains drops.';
+      msg.className = 'mt-2 text-sm min-h-[1.25rem] text-accent font-semibold';
+      $('#nlEmail').value = '';
+    } else {
+      msg.textContent = 'Entre une adresse e-mail valide, par exemple ton@email.com.';
+      msg.className = 'mt-2 text-sm min-h-[1.25rem] text-red-500 font-semibold';
+    }
+  });
+
+  const DOCS = {
+    mentions: ['Mentions légales', ["Éditeur : outfit-shirt. À compléter avec la raison sociale, l'adresse, le numéro d'enregistrement (RCCM / Id. Nat.) et le contact.", 'Hébergeur : à compléter.', 'Tous les prix sont indiqués en francs congolais (FC).']],
+    cgv: ['Conditions de vente', ['Les commandes sont confirmées après validation du paiement.', 'Livraison annoncée en moins de 24 heures. Livraison offerte dès 4 articles ; sinon 6 000 FC.', "Politique d'échange et de retour : à compléter."]],
+    privacy: ['Confidentialité', ["Nous utilisons ton adresse e-mail uniquement pour t'envoyer nos actualités et promos.", 'Tu peux te désinscrire à tout moment.', 'Texte complet à compléter.']]
+  };
+  const dlg = $('#legalDialog');
+  $$('.legalBtn').forEach(b => b.addEventListener('click', () => {
+    const [title, paras] = DOCS[b.dataset.doc];
+    $('#legalTitle').textContent = title;
+    const extra = b.dataset.doc === 'mentions' ? ['Contact : ' + SITE.contactEmail + ' · WhatsApp : +' + SITE.whatsapp + '.'] : [];
+    $('#legalBody').innerHTML = [...paras, ...extra].map(p => `<p>${esc(p)}</p>`).join('');
+    dlg.showModal();
+  }));
+  $('#legalClose').addEventListener('click', () => dlg.close());
+  dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+
+  /* ---------- Init ---------- */
+  renderFilters();
+  renderGrid();
+  renderCart();
+  loadRemoteProducts();
+  loadSettings();
+})();
+</script>
+</body>
+</html>
