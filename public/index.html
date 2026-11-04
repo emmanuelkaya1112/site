@@ -240,7 +240,23 @@
     <div id="filters" class="flex gap-2 overflow-x-auto no-scrollbar -mx-3 px-3 sm:mx-0 sm:px-0" role="group" aria-label="Filtrer les produits"></div>
   </div>
 
-  <p id="resultInfo" class="mt-5 text-xs text-muted" aria-live="polite"></p>
+  <div id="collectionsWrap" class="hidden mt-6">
+    <h3 class="text-[11px] sm:text-xs uppercase tracking-widest text-muted font-bold">Collections</h3>
+    <div id="collections" class="mt-2 flex gap-2 overflow-x-auto no-scrollbar -mx-3 px-3 sm:mx-0 sm:px-0 pb-1"></div>
+  </div>
+  <div class="mt-5 flex items-center justify-between gap-3">
+    <p id="resultInfo" class="text-xs text-muted" aria-live="polite"></p>
+    <label class="flex items-center gap-2 text-xs font-semibold shrink-0">Trier par
+      <select id="sortSel" class="h-9 rounded-full border-2 border-line bg-surface text-ink text-[16px] sm:text-xs font-semibold px-3 focus:border-accent outline-none">
+        <option value="default">Pertinence</option>
+        <option value="new">Nouveautés</option>
+        <option value="pop">Popularité</option>
+        <option value="rating">Mieux notés</option>
+        <option value="price_asc">Prix croissant</option>
+        <option value="price_desc">Prix décroissant</option>
+      </select>
+    </label>
+  </div>
   <div id="grid" class="mt-4 grid grid-cols-3 gap-x-2 gap-y-6 sm:gap-x-5 sm:gap-y-10"></div>
   <div id="moreWrap" class="hidden mt-8 sm:mt-12 text-center"><button id="moreBtn" type="button" class="h-12 px-8 rounded-full border-2 border-inv font-bold hover:bg-inv hover:text-invink transition-colors">Voir plus d'articles</button></div>
   <div id="empty" class="hidden mt-10 text-center py-16 border-2 border-dashed border-line rounded-3xl">
@@ -422,7 +438,7 @@
   </div>
 </dialog>
 
-<a id="whatsappHelp" href="https://wa.me/243906049174?text=Bonjour%20Outfit-Shirt%2C%20j%E2%80%99ai%20besoin%20d%E2%80%99aide%20avec%20ma%20commande." target="_blank" rel="noopener noreferrer" class="fixed bottom-5 right-5 z-40 rounded-full bg-green-600 text-white font-bold shadow-lg px-5 py-3" aria-label="Obtenir de l’aide sur WhatsApp">WhatsApp · Aide</a>
+<a id="whatsappHelp" href="https://wa.me/243906049174?text=Bonjour%20Outfit-Shirt%2C%20j%E2%80%99ai%20besoin%20d%E2%80%99aide%20avec%20ma%20commande." target="_blank" rel="noopener noreferrer" class="fixed bottom-3 right-3 z-30 inline-flex items-center gap-1.5 rounded-full bg-green-600/90 text-white font-semibold text-[11px] shadow-md px-3 py-1.5 opacity-90 hover:opacity-100" aria-label="Obtenir de l’aide sur WhatsApp"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.800A8 8 0 1 1 21 12z"/></svg>Aide</a>
 
 <div id="toast" class="fixed left-1/2 bottom-6 -translate-x-1/2 z-[60] bg-inv text-invink text-sm font-semibold px-5 py-3 rounded-full opacity-0 pointer-events-none transition-opacity duration-300 max-w-[calc(100%-2rem)] text-center" role="status" aria-live="polite"></div>
 
@@ -504,6 +520,10 @@
       <div><label for="orderPhone" class="block text-sm font-semibold mb-1">Téléphone</label><input id="orderPhone" type="tel" autocomplete="tel" maxlength="30" required placeholder="+243 ..." class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
       <div><label for="orderWa" class="block text-sm font-semibold mb-1">Numéro WhatsApp <span class="text-red-500" aria-hidden="true">*</span></label><input id="orderWa" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" required placeholder="+243 900 000 000" class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"><p class="text-xs text-muted mt-1">Avec l’indicatif du pays. Utilisé pour te contacter au sujet de ta commande.</p></div>
       <div><label for="orderAddress" class="block text-sm font-semibold mb-1">Adresse de livraison</label><input id="orderAddress" autocomplete="street-address" maxlength="300" required placeholder="Avenue, numéro, quartier, commune, ville" class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
+      <fieldset class="space-y-2"><legend class="block text-sm font-semibold mb-1">Mode de paiement</legend>
+        <label class="flex items-start gap-3 rounded-xl border border-line p-3 cursor-pointer"><input type="radio" name="orderPay" value="mobile_money" checked class="mt-1"><span><strong class="block text-sm">Payer en ligne (Mobile Money)</strong><span class="text-xs text-muted">Airtel Money, M-Pesa ou Orange Money, juste après la commande.</span></span></label>
+        <label id="orderPayCashBox" class="flex items-start gap-3 rounded-xl border border-line p-3 cursor-pointer"><input type="radio" name="orderPay" value="cash" class="mt-1"><span><strong class="block text-sm">Payer en espèces à la réception</strong><span class="text-xs text-muted">Tu paies le livreur quand tu reçois ta commande. Nous te contactons pour confirmer la livraison.</span></span></label>
+      </fieldset>
       <p id="orderMessage" class="text-sm font-semibold min-h-5" role="status" aria-live="polite"></p>
       <button id="orderSubmit" type="submit" class="w-full h-12 rounded-full bg-inv text-invink font-bold hover:bg-accent hover:text-white transition-colors">Valider la commande</button>
       <p class="text-xs text-muted">Nous te contactons pour confirmer le paiement et la livraison.</p>
@@ -511,6 +531,7 @@
     <div id="orderDone" class="hidden mt-5 space-y-3">
       <p class="font-bold text-lg">Merci, ta commande est enregistrée !</p>
       <p class="text-sm text-muted">Numéro de commande : <strong id="orderRef" class="text-ink"></strong>. Nous te contactons très vite pour la livraison et le paiement.</p>
+      <p id="orderDoneCash" class="hidden rounded-xl bg-surface border border-line p-3 text-sm"></p>
       <button id="payNow" type="button" class="w-full h-12 rounded-full bg-accent text-white font-bold">Payer en ligne</button>
       <button id="orderDoneClose" type="button" class="w-full h-12 rounded-full bg-inv text-invink font-bold hover:bg-accent hover:text-white transition-colors">Continuer mes achats</button>
     </div>
@@ -719,16 +740,51 @@
   function renderFilters() {
     $('#filters').innerHTML = FILTERS.map(([key, label]) => `
       <button data-f="${key}" aria-pressed="${filter === key}" class="shrink-0 h-8 px-4 rounded-full text-xs sm:text-[13px] font-semibold border-2 transition-colors ${filter === key ? 'bg-inv text-invink border-inv' : 'border-line hover:border-ink'}">${label}</button>`).join('');
+    renderCollections();
   }
+
+  /* ---------- Tri, collections, tailles disponibles ---------- */
+  let sortKey = 'default';
+  let COLLECTIONS = [];
+  const collName = id => (COLLECTIONS.find(c => c.id === id) || {}).name || id;
+  function inStockP(p) { return p.sizeStock && Object.keys(p.sizeStock).length ? Object.values(p.sizeStock).some(n => Number(n) > 0) : Number(p.quantity ?? 1) > 0; }
+  function availSizes(p) { const has = p.sizeStock && Object.keys(p.sizeStock).length; return sizeList(p).filter(z => (has ? Number(p.sizeStock[z] || 0) : Number(p.quantity ?? 1)) > 0); }
+  function sortList(list) {
+    const a = [...list];
+    switch (sortKey) {
+      case 'new': return a.sort((x, y) => (y.createdAt || 0) - (x.createdAt || 0));
+      case 'pop': return a.sort((x, y) => (x.popRank ?? 9999) - (y.popRank ?? 9999));
+      case 'rating': return a.sort((x, y) => (y.rating || 0) - (x.rating || 0) || (y.reviewCount || 0) - (x.reviewCount || 0));
+      case 'price_asc': return a.sort((x, y) => x.price - y.price);
+      case 'price_desc': return a.sort((x, y) => y.price - x.price);
+      default: return a;
+    }
+  }
+  function renderCollections() {
+    const box = $('#collections'); if (!box) return;
+    const list = COLLECTIONS.filter(c => c.count > 0);
+    $('#collectionsWrap').classList.toggle('hidden', !list.length);
+    box.innerHTML = list.map(c => { const on = filter === 'col:' + c.id; return `<button type="button" data-f="col:${esc(c.id)}" aria-pressed="${on}" class="shrink-0 flex items-center gap-2 h-11 pl-1.5 pr-4 rounded-full border-2 text-sm font-bold transition-colors ${on ? 'bg-inv text-invink border-inv' : 'border-line hover:border-ink'}">${c.image ? `<img src="${esc(c.image)}" alt="" class="w-8 h-8 rounded-full object-cover bg-white" loading="lazy" onerror="this.remove()">` : `<span class="w-8 h-8 rounded-full bg-accent text-white grid place-items-center text-xs">${esc(c.name.slice(0, 1).toUpperCase())}</span>`}<span>${esc(c.name)}</span><span class="text-xs font-semibold opacity-70">${c.count}</span></button>`; }).join('');
+  }
+  async function loadCollections() {
+    try {
+      const r = await fetch('/api/collections', { credentials: 'same-origin' }); if (!r.ok) return;
+      COLLECTIONS = (await r.json()).collections || [];
+      const want = new URLSearchParams(location.search).get('collection');
+      if (want && COLLECTIONS.some(c => c.id === want)) filter = 'col:' + want;
+      renderFilters(); renderGrid();
+    } catch {}
+  }
+  $('#sortSel').addEventListener('change', e => { sortKey = e.target.value; renderGrid(); });
 
   /* ---------- Grille ---------- */
   function renderGrid() {
     const q = query.trim().toLowerCase();
-    const list = PRODUCTS.filter(p =>
+    const list = sortList(PRODUCTS.filter(p =>
       (filter === 'all' || p.tags.includes(filter)) &&
-      (!q || fullName(p).toLowerCase().includes(q) || (p.badge || '').toLowerCase().includes(q))
-    );
-    const key = filter + '|' + q; if (key !== lastKey) { shown = PAGE; lastKey = key; }
+      (!q || fullName(p).toLowerCase().includes(q) || (p.badge || '').toLowerCase().includes(q) || p.tags.some(t => t.startsWith('col:') && collName(t.slice(4)).toLowerCase().includes(q)))
+    ));
+    const key = filter + '|' + q + '|' + sortKey; if (key !== lastKey) { shown = PAGE; lastKey = key; }
     $('#grid').innerHTML = list.slice(0, shown).map(p => `
       <article class="group flex flex-col min-w-0">
         <div class="relative">
@@ -748,13 +804,10 @@
             ${p.old ? `<s class="text-[10px] sm:text-xs text-muted whitespace-nowrap">${fc(p.old)}</s>` : ''}
           </p>
         </div>
-        <div class="mt-2 flex items-center gap-1.5">
-          <label class="sr-only" for="size-${p.id}">Taille</label>
-          <select id="size-${p.id}" class="h-7 w-[2.7rem] shrink-0 rounded-full border border-line bg-surface text-ink text-[16px] leading-none font-semibold pl-2 pr-0 focus:border-accent outline-none">
-            ${sizeList(p).map((z,i)=>{const stock=p.sizeStock&&Object.keys(p.sizeStock).length?Number(p.sizeStock[z]||0):Number(p.quantity??1);return `<option value="${esc(z)}" ${stock<=0?'disabled':''}${stock>0&&(z==='M'||(!(sizeList(p).includes('M'))&&i===0))?' selected':''}>${esc(z)}${stock<=0?' — Rupture de stock':''}</option>`}).join('')}
-          </select>
-          <button data-add="${p.id}" ${(p.sizeStock&&Object.keys(p.sizeStock).length?Object.values(p.sizeStock).some(n=>Number(n)>0):Number(p.quantity??1)>0)?'':'disabled'} class="w-[3.2rem] h-7 shrink-0 rounded-full bg-inv text-invink grid place-items-center hover:bg-accent hover:text-white active:scale-95 transition" aria-label="Ajouter au panier" title="Ajouter au panier">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.200 11.200a2 2 0 0 1-2 1.800H8.200a2 2 0 0 1-2-1.800L5 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/><path d="M12 12v5M9.500 14.500h5"/></svg>
+        <div class="mt-2">
+          <button data-add="${p.id}" ${inStockP(p)?'':'disabled'} class="w-full h-9 rounded-full bg-inv text-invink inline-flex items-center justify-center gap-1.5 text-xs font-bold hover:bg-accent hover:text-white active:scale-95 transition disabled:opacity-40" aria-label="${inStockP(p)?'Ajouter au panier':'Rupture de stock'}" title="${inStockP(p)?'Ajouter au panier':'Rupture de stock'}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.200 11.200a2 2 0 0 1-2 1.800H8.200a2 2 0 0 1-2-1.800L5 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/><path d="M12 12v5M9.500 14.500h5"/></svg>
+            <span class="hidden sm:inline">${inStockP(p)?'Ajouter':'Épuisé'}</span>
           </button>
         </div>
       </article>`).join('');
@@ -841,7 +894,7 @@
       const p = PRODUCTS.find(x => x.id === i.id);
       if (!p) return '';
       return `<div class="flex gap-4 py-4 border-b border-line">
-        <div class="tile w-20 h-24 shrink-0 rounded-2xl overflow-hidden p-1">${teeSVG(p, 'front')}</div>
+        <div class="tile relative w-20 h-24 shrink-0 rounded-2xl overflow-hidden p-1">${teeSVG(p, 'front')}${p.img && p.img.front ? `<img src="${esc(p.img.front)}" alt="${esc(fullName(p))}" class="absolute inset-0 w-full h-full object-contain bg-white" loading="lazy" onerror="this.remove()">` : ''}</div>
         <div class="flex-1 min-w-0">
           <div class="flex justify-between gap-2">
             <h3 class="font-bold">${esc(fullName(p))}</h3>
@@ -905,7 +958,7 @@
 
   document.addEventListener('click', e => {
     const add = e.target.closest('[data-add]');
-    if (add) { const id = pid(add.dataset.add); addToCart(id, $('#size-' + id).value); return; }
+    if (add) { const id = pid(add.dataset.add), pr = PRODUCTS.find(x => x.id === id); const av = pr ? availSizes(pr) : []; if (av.length === 1) addToCart(id, av[0]); else if (pr) { toast('Choisis ta taille pour ajouter l’article.'); openViewer(id); } return; }
 
     // Clic sur la photo : souris = aperçu agrandi (le dos s'affiche déjà au survol) ; tactile = bascule face / dos
     const tile = e.target.closest('.flipper[data-pid]');
@@ -1081,7 +1134,8 @@
     if(itemCount===3 && lines.some(l=>l.p.price < 19500)){ $('#orderMessage').textContent='Pour une commande de 3 articles, chaque article doit coûter au moins 19 500 FC.'; $('#orderSubmit').disabled=true; } else { $('#orderMessage').textContent=''; $('#orderSubmit').disabled=false; }
     const u = signedInUser || {};
     $('#orderName').value = [u.firstName, u.postName, u.lastName].filter(Boolean).join(' ');
-    $('#orderPhone').value = u.phone || u.whatsapp || ''; $('#orderWa').value = u.whatsapp || ''; $('#orderAddress').value = u.address || '';
+    $('#orderPhone').value = u.phone || u.whatsapp || ''; $('#orderWa').value = u.whatsapp || '';
+    $('#orderPayCashBox').classList.toggle('hidden', SITE.codEnabled === false); document.querySelector('input[name=orderPay][value=mobile_money]').checked = true; $('#orderAddress').value = u.address || '';
     $('#orderMessage').textContent = '';
     $('#orderForm').classList.remove('hidden'); $('#orderDone').classList.add('hidden');
     closeCart(); if (!orderDialog.open) orderDialog.showModal();
@@ -1100,12 +1154,17 @@
     try {
       const data = await accountRequest('/api/orders', {
         fullName: $('#orderName').value.trim(), phone: $('#orderPhone').value.trim(), whatsapp: composeWa('+243', $('#orderWa').value), address: $('#orderAddress').value.trim(),
-        items: orderLines().map(l => ({ id: l.id, size: l.size, qty: l.qty }))
+        items: orderLines().map(l => ({ id: l.id, size: l.size, qty: l.qty })),
+        paymentMethod: (document.querySelector('input[name=orderPay]:checked') || {}).value === 'cash' ? 'cash' : 'mobile_money'
       });
       cart = []; renderCart();
       $('#orderRef').textContent = data.ref;
       $('#orderForm').classList.add('hidden'); $('#orderDone').classList.remove('hidden');
-      payCtx = { orderRef: data.ref, total: Number(data.total) };
+      const isCash = data.paymentMethod === 'cash';
+      $('#payNow').classList.toggle('hidden', isCash);
+      $('#orderDoneCash').classList.toggle('hidden', !isCash);
+      if (isCash) $('#orderDoneCash').innerHTML = `<strong>Paiement en espèces à la réception.</strong> Prévois <strong>${fc(Number(data.total))}</strong> pour le livreur, si possible l’appoint. Nous te contactons pour confirmer la livraison ; un e-mail de confirmation t’est envoyé.`;
+      payCtx = isCash ? null : { orderRef: data.ref, total: Number(data.total) };
     } catch (err) { msg.className = 'text-sm font-semibold min-h-5 text-red-500'; msg.textContent = err.message; }
     finally { btn.disabled = false; btn.classList.remove('opacity-60'); }
   });
@@ -1261,6 +1320,7 @@
   renderGrid();
   renderCart();
   loadRemoteProducts();
+  loadCollections();
 
   /* =====================================================================
      LOT 2 : favoris, fiche produit complète, avis, factures, retours, WhatsApp, textes
@@ -1306,7 +1366,6 @@
       <div class="min-w-0 flex-1"><p class="font-bold text-sm truncate">${esc(fullName(p))}</p><p class="text-sm font-extrabold">${fc(p.price)}</p>${out ? '<p class="text-xs text-red-600 font-semibold">Rupture de stock</p>' : ''}</div>
       <div class="flex flex-col gap-1"><button type="button" data-open-product="${esc(p.id)}" class="h-9 px-3 rounded-full bg-inv text-invink text-xs font-bold">Voir</button><button type="button" data-fav="${esc(p.id)}" aria-pressed="true" class="h-9 px-3 rounded-full border border-line text-xs font-bold text-accent">Retirer<svg class="hidden" fill="currentColor"></svg></button></div></article>`; }).join('') : '<p class="text-muted text-sm">Tu n’as pas encore de favori. Touche le cœur d’un article pour le retrouver ici.</p>';
   }
-  function inStockP(p) { return p.sizeStock && Object.keys(p.sizeStock).length ? Object.values(p.sizeStock).some(n => Number(n) > 0) : Number(p.quantity ?? 1) > 0; }
   $('#favBtn').addEventListener('click', () => { renderFavs(); $('#favDialog').showModal(); });
   $('#favClose').addEventListener('click', () => $('#favDialog').close());
   $('#favDialog').addEventListener('click', e => { if (e.target === $('#favDialog')) $('#favDialog').close(); });
@@ -1377,16 +1436,20 @@
   function renderMyOrders(orders) {
     return orders.length ? orders.map(o => {
       const gone = o.items.some(i => i.cancelled), live = o.items.filter(i => !i.cancelled);
-      const step = o.status === 'En attente' ? '<p class="mt-2 text-amber-700">Étape 1/4 · Commande reçue, en attente de paiement.</p>'
+      const cash = o.paymentMethod === 'cash', due = gone ? o.adjustedTotal : o.total;
+      const step = cash && o.status === 'En attente' ? '<p class="mt-2 text-amber-700">Étape 1/4 · Commande reçue, nous te contactons pour confirmer la livraison.</p>'
+        : cash && o.status === 'Expédiée' ? `<p class="mt-2 text-violet-700">Étape 3/4 · En cours de livraison${o.cashCollected ? '' : ' · prévois ' + fc(due) + ' en espèces'}.</p>`
+        : cash && o.status === 'Livrée' ? '<p class="mt-2 text-green-700">Étape 4/4 · Commande livrée.</p>'
+        : o.status === 'En attente' ? '<p class="mt-2 text-amber-700">Étape 1/4 · Commande reçue, en attente de paiement.</p>'
         : o.status === 'Payée' ? '<p class="mt-2 text-blue-700">Étape 2/4 · Paiement confirmé, préparation en cours.</p>'
         : o.status === 'Expédiée' ? '<p class="mt-2 text-violet-700">Étape 3/4 · Colis expédié.</p>'
         : o.status === 'Livrée' ? '<p class="mt-2 text-green-700">Étape 4/4 · Commande livrée.</p>' : '<p class="mt-2 text-red-700">Cette commande a été annulée.</p>';
-      const track = ['Payée', 'Expédiée', 'Livrée'].includes(o.status) ? `<p class="mt-1">Livraison : <strong>${esc(o.deliveryStatus || 'En attente de préparation')}</strong></p>${o.trackingCode ? `<p class="mt-2 rounded-lg bg-surface p-2"><strong>Code de suivi :</strong> ${esc(o.trackingCode)}</p>` : ''}` : '';
-      return `<article class="rounded-lg border border-line p-3"><div class="flex justify-between gap-2"><strong>Commande ${esc(o.ref)}</strong><span class="font-bold rounded-full px-2 py-1 ${STATUS_STYLE[o.status] || 'bg-gray-100 text-gray-800'}">${esc(o.status)}</span></div><p class="text-muted mt-1">${new Date(o.createdAt).toLocaleString('fr-FR')}</p>
+      const track = (['Payée', 'Expédiée', 'Livrée'].includes(o.status) || (cash && o.status !== 'Annulée')) ? `<p class="mt-1">Livraison : <strong>${esc(o.deliveryStatus || 'En attente de préparation')}</strong></p>${o.trackingCode ? `<p class="mt-2 rounded-lg bg-surface p-2"><strong>Code de suivi :</strong> ${esc(o.trackingCode)}</p>` : ''}` : '';
+      return `<article class="rounded-lg border border-line p-3"><div class="flex justify-between gap-2"><strong>Commande ${esc(o.ref)}</strong><span class="font-bold rounded-full px-2 py-1 ${STATUS_STYLE[o.status] || 'bg-gray-100 text-gray-800'}">${esc(o.status)}</span></div><p class="text-muted mt-1">${new Date(o.createdAt).toLocaleString('fr-FR')}${cash ? ' · <strong>Paiement en espèces à la réception</strong>' : ''}</p>
       <ul class="mt-2 space-y-2">${o.items.map(i => `<li class="${i.cancelled ? 'opacity-60' : ''}"><span class="${i.cancelled ? 'line-through' : ''}">${esc(i.name)} · ${esc(i.size)} × ${i.qty}</span>${i.cancelled ? ' <span class="text-xs font-bold text-red-700">Annulé</span>' : ''}
         ${!i.cancelled && o.canReview ? (i.reviewed ? '<span class="ml-2 text-xs text-green-700 font-semibold">Avis envoyé ✓</span>' : `<button type="button" data-review-order="${esc(o.id)}" data-review-product="${esc(i.id)}" data-review-name="${esc(i.name)}" class="ml-2 text-xs font-bold underline text-accent">Donner mon avis</button>`) : ''}</li>`).join('')}</ul>
-      <p class="font-bold mt-2">Total : ${fc(gone ? o.adjustedTotal : o.total)}${gone ? ` <span class="text-xs font-normal text-muted">(au lieu de ${fc(o.total)} : article(s) annulé(s))</span>` : ''}</p>${o.refundedAmount ? `<p class="text-green-700">Remboursé : ${fc(o.refundedAmount)}</p>` : ''}
-      ${o.status === 'En attente' ? `<button type="button" data-pay-order="${esc(o.ref)}" data-pay-total="${Number(o.total)}" class="mt-3 h-10 px-4 rounded-full bg-accent text-white font-bold text-sm">Payer maintenant</button>` : ''}${step}${track}
+      <p class="font-bold mt-2">Total : ${fc(gone ? o.adjustedTotal : o.total)}${gone ? ` <span class="text-xs font-normal text-muted">(au lieu de ${fc(o.total)} : article(s) annulé(s))</span>` : ''}</p>${cash && o.status !== 'Annulée' ? (o.cashCollected ? '<p class="text-green-700 font-semibold">Payé en espèces ✓</p>' : `<p class="font-semibold text-amber-700">À payer au livreur : ${fc(due)}</p>`) : ''}${o.refundedAmount ? `<p class="text-green-700">Remboursé : ${fc(o.refundedAmount)}</p>` : ''}
+      ${o.status === 'En attente' && !cash ? `<button type="button" data-pay-order="${esc(o.ref)}" data-pay-total="${Number(o.total)}" class="mt-3 h-10 px-4 rounded-full bg-accent text-white font-bold text-sm">Payer maintenant</button>` : ''}${step}${track}
       <div class="mt-3 flex flex-wrap gap-2">${o.invoiceAvailable ? `<a href="/api/my-invoice?id=${esc(o.id)}" target="_blank" rel="noopener" class="h-9 px-4 rounded-full border-2 border-line text-xs font-bold inline-flex items-center">Facture (PDF)</a>` : ''}${o.canReturn ? `<button type="button" data-return-order="${esc(o.id)}" class="h-9 px-4 rounded-full border-2 border-line text-xs font-bold">Retour / échange</button>` : ''}</div></article>`;
     }).join('') : 'Tu n’as pas encore de commande.';
   }
