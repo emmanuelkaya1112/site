@@ -28,7 +28,7 @@ const REQUIRED_COLUMNS = [
   'users.last_name', 'users.post_name', 'users.phone', 'users.birth_date', 'users.address', 'users.account_blocked',
   'sessions.id_hash', 'password_reset_tokens.token_hash', 'admin_sessions.id_hash',
   'products.quantity', 'products.sizes', 'products.size_stock',
-  'orders.id', 'orders.tracking_code', 'orders.stock_state', 'orders.reserved_until', 'orders.delivery_company_id', 'orders.delivery_status', 'orders.delivery_cost', 'products.supplier_id', 'products.cost_price', 'users.deleted_at', 'users.whatsapp', 'orders.whatsapp', 'orders.payment_fees', 'orders.other_costs', 'orders.refunded_amount', 'orders.delivered_at', 'products.description', 'products.img_mode', 'products.gallery', 'products.size_type', 'invoices.order_id', 'order_emails.order_id', 'order_events.order_id', 'returns.order_id', 'reviews.product_id', 'reviews.reports', 'favorites.user_id', 'carts.user_id', 'suppliers.id', 'supplier_payments.supplier_id', 'delivery_companies.id', 'order_supplier_parts.order_id', 'site_settings.key',
+  'orders.id', 'orders.tracking_code', 'orders.stock_state', 'orders.reserved_until', 'orders.payment_method', 'orders.cash_collected_at', 'orders.cash_amount', 'orders.delivery_company_id', 'orders.delivery_status', 'orders.delivery_cost', 'products.supplier_id', 'products.cost_price', 'users.deleted_at', 'users.whatsapp', 'orders.whatsapp', 'orders.payment_fees', 'orders.other_costs', 'orders.refunded_amount', 'orders.delivered_at', 'products.description', 'products.img_mode', 'products.gallery', 'products.size_type', 'invoices.order_id', 'order_emails.order_id', 'order_events.order_id', 'returns.order_id', 'reviews.product_id', 'reviews.reports', 'favorites.user_id', 'carts.user_id', 'suppliers.id', 'supplier_payments.supplier_id', 'delivery_companies.id', 'order_supplier_parts.order_id', 'site_settings.key',
   'payments.reference', 'payments.status', 'payment_events.payment_id', 'provider_tokens.provider',
 ];
 const REQUIRED_INDEXES = ['sessions_user_idx', 'sessions_exp_idx', 'password_reset_user_idx', 'password_reset_exp_idx', 'orders_created_idx', 'orders_reserved_idx', 'payments_order_idx', 'payments_active_uniq', 'payments_success_uniq', 'payments_created_idx', 'payment_events_pay_idx', 'products_supplier_idx', 'supplier_payments_idx', 'order_events_idx', 'returns_order_idx', 'reviews_product_idx'];
@@ -110,6 +110,10 @@ const SCHEMA_STATEMENTS = [
   `ALTER TABLE orders ADD COLUMN IF NOT EXISTS delivery_notes TEXT NOT NULL DEFAULT ''`,
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS deleted_at BIGINT`,
   // Lot 2 : WhatsApp, factures, e-mails, historique, retours, avis, favoris, paniers, fiches produits (ajouts uniquement).
+  // Paiement en espèces à la réception : les commandes existantes restent en 'mobile_money'.
+  `ALTER TABLE orders ADD COLUMN IF NOT EXISTS payment_method TEXT NOT NULL DEFAULT 'mobile_money'`,
+  `ALTER TABLE orders ADD COLUMN IF NOT EXISTS cash_collected_at BIGINT`,
+  `ALTER TABLE orders ADD COLUMN IF NOT EXISTS cash_amount INTEGER NOT NULL DEFAULT 0`,
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS whatsapp TEXT NOT NULL DEFAULT ''`,
   `ALTER TABLE orders ADD COLUMN IF NOT EXISTS whatsapp TEXT NOT NULL DEFAULT ''`,
   `ALTER TABLE orders ADD COLUMN IF NOT EXISTS payment_fees INTEGER NOT NULL DEFAULT 0`,
@@ -283,7 +287,7 @@ function requireAdmin(req,admin,mutating) {
   if(!admin) throw new HttpError(401,'admin_unauthenticated','Connecte-toi à l’administration.');
   if(mutating&&!safeEqual(req.headers.get('x-csrf-token')||'',admin.row.csrf)) throw new HttpError(403,'bad_csrf','Session administrateur invalide. Recharge la page.');
 }
-const productPublic = r => ({id:r.id,brand:r.brand,name:r.name,price:Number(r.price),old:r.old_price==null?null:Number(r.old_price),badge:r.badge,free:!!r.free,color:r.color,ink:r.ink,print:r.print,tags:Array.isArray(r.tags)?r.tags:[],img:{front:r.img_front||'',back:r.img_back||''},quantity:Number(r.quantity??1),sizes:Array.isArray(r.sizes)?r.sizes:['S','M','L','XL'],sizeStock:r.size_stock&&typeof r.size_stock==='object'&&!Array.isArray(r.size_stock)?r.size_stock:{},description:r.description||'',imgMode:r.img_mode==='galerie'?'galerie':'face_dos',gallery:Array.isArray(r.gallery)?r.gallery:[],sizeType:['alpha','numeric','shoe'].includes(r.size_type)?r.size_type:'alpha',active:!!r.active});
+const productPublic = r => ({id:r.id,brand:r.brand,name:r.name,price:Number(r.price),old:r.old_price==null?null:Number(r.old_price),badge:r.badge,free:!!r.free,color:r.color,ink:r.ink,print:r.print,tags:Array.isArray(r.tags)?r.tags:[],img:{front:r.img_front||'',back:r.img_back||''},quantity:Number(r.quantity??1),sizes:Array.isArray(r.sizes)?r.sizes:['S','M','L','XL'],sizeStock:r.size_stock&&typeof r.size_stock==='object'&&!Array.isArray(r.size_stock)?r.size_stock:{},description:r.description||'',imgMode:r.img_mode==='galerie'?'galerie':'face_dos',gallery:Array.isArray(r.gallery)?r.gallery:[],sizeType:['alpha','numeric','shoe'].includes(r.size_type)?r.size_type:'alpha',createdAt:Number(r.created_at||0),active:!!r.active});
 async function readJson(req, max = 10000) { const ct=(req.headers.get('content-type')||'').split(';')[0].trim().toLowerCase(); if(ct!=='application/json') throw new HttpError(415,'unsupported_media_type','Format de requête invalide.'); const raw=await req.text(); if(raw.length>max) throw new HttpError(413,'too_large','Requête trop volumineuse.'); try { const b=JSON.parse(raw); if(!b||typeof b!=='object'||Array.isArray(b)) throw 0; return b; } catch { throw new HttpError(400,'bad_json','Requête invalide.'); } }
 function guardMutation(req) { const origin=req.headers.get('origin'); const requestOrigin=new URL(req.url).origin; if(origin!==requestOrigin) throw new HttpError(403,'bad_origin','Requête refusée.'); const site=req.headers.get('sec-fetch-site'); if(site && site!=='same-origin') throw new HttpError(403,'bad_origin','Requête refusée.'); }
 function requireAuth(req,auth,mutating) { if(!auth) throw new HttpError(401,'unauthenticated','Connecte-toi pour continuer.'); if(mutating&&!safeEqual(req.headers.get('x-csrf-token')||'',auth.row.csrf)) throw new HttpError(403,'bad_csrf','Session invalide, recharge la page.'); }
@@ -329,7 +333,7 @@ async function notifyAdminOrder(order) {
       body: JSON.stringify({
         from: process.env.MAIL_FROM || 'onboarding@resend.dev',
         to: ADMIN_EMAIL,
-        subject: `Nouvelle commande ${order.ref} — ${order.total} FC`,
+        subject: `Nouvelle commande ${order.ref} — ${order.total} FC${order.paymentMethod === 'cash' ? ' (espèces à la réception)' : ''}`,
         text: `Client : ${order.customerName}\nE-mail : ${order.email}\nTéléphone : ${order.phone}\nLivraison : ${order.address}\n\n${lines}\n\nTotal : ${order.total} FC`
       })
     });
@@ -337,7 +341,7 @@ async function notifyAdminOrder(order) {
 }
 // Réglages modifiables depuis l'administration (sans redéploiement) : article d'accueil, WhatsApp, e-mail de contact.
 const SETTINGS_KEY = 'site';
-const SETTINGS_DEFAULTS = { heroPrice: 19500, heroFront: '', heroBack: '', heroColor: '#2B3BFF', heroInk: '#FFFFFF', heroPrint: 'block', whatsapp: '243906049174', contactEmail: 'outfitshirt@gmail.com', texts: {} };
+const SETTINGS_DEFAULTS = { heroPrice: 19500, heroFront: '', heroBack: '', heroColor: '#2B3BFF', heroInk: '#FFFFFF', heroPrint: 'block', whatsapp: '243906049174', contactEmail: 'outfitshirt@gmail.com', texts: {}, codEnabled: true };
 const PRINTS = ['blank', 'block', 'wave', 'campus', 'stripes', 'plain'];
 function settingsFromValue(v) {
   const o = v && typeof v === 'object' && !Array.isArray(v) ? v : {}, out = { ...SETTINGS_DEFAULTS };
@@ -358,7 +362,7 @@ function parseSettings(b) {
   if (!/^\d{8,15}$/.test(whatsapp)) throw new HttpError(400, 'invalid_settings', 'Numéro WhatsApp invalide. Format international sans +, ex. 243979237585.');
   const contactEmail = normEmail(b.contactEmail);
   if (!emailOk(contactEmail)) throw new HttpError(400, 'invalid_settings', 'Adresse e-mail de contact invalide.');
-  return { heroPrice, heroFront, heroBack, heroColor, heroInk, heroPrint, whatsapp, contactEmail, texts: cleanTexts(b.texts) };
+  return { heroPrice, heroFront, heroBack, heroColor, heroInk, heroPrint, whatsapp, contactEmail, texts: cleanTexts(b.texts), codEnabled: b.codEnabled !== false };
 }
 const RESET_COOLDOWN_MS = 60_000;
 // ============================================================================
@@ -582,6 +586,7 @@ async function mpesaSession(cfg) {
 // orders.stock_state : 'reserved' (retenu, expire) · 'sold' (vendu, définitif) · 'released' (rendu au stock).
 // Les commandes antérieures à cette mise à jour reçoivent 'sold' par défaut : leur comportement et leurs données ne changent pas.
 const RESERVATION_MS = 30 * MIN; // doit rester supérieur à PAYMENT_TTL_MS (15 min)
+const liveItems = items => (Array.isArray(items) ? items : []).filter(i => !i.cancelled);
 const stockLines = items => {
   const m = new Map();
   for (const i of Array.isArray(items) ? items : []) {
@@ -636,7 +641,7 @@ async function releaseOrderStock(orderId) {
     // Jamais de libération si de l'argent peut être en route ou déjà reçu.
     const pay = await client.query("SELECT 1 FROM payments WHERE order_id=$1 AND (status='success' OR status = ANY($2::text[])) LIMIT 1", [orderId, PAYMENT_OPEN]);
     if (pay.rowCount) { await client.query('COMMIT'); return false; }
-    await returnStock(client, o.items);
+    await returnStock(client, liveItems(o.items));
     await client.query("UPDATE orders SET stock_state='released', status=CASE WHEN status='En attente' THEN 'Annulée' ELSE status END WHERE id=$1", [orderId]);
     await client.query('COMMIT');
     return true;
@@ -673,17 +678,18 @@ async function setOrderStatus(id, status) {
     const o = (await client.query('SELECT * FROM orders WHERE id=$1 FOR UPDATE', [id])).rows[0];
     if (!o) throw new HttpError(404, 'order_not_found', 'Commande introuvable.');
     let state = o.stock_state, until = o.reserved_until;
+    const cashUnpaid = o.payment_method === 'cash' && o.cash_collected_at == null; // espèces non encaissées : le stock reste réservé, sans expiration
     if (status === 'Annulée') {
       const open = await client.query('SELECT 1 FROM payments WHERE order_id=$1 AND status = ANY($2::text[]) LIMIT 1', [id, PAYMENT_OPEN]);
       if (open.rowCount) throw new HttpError(409, 'payment_open', 'Un paiement est en cours de vérification pour cette commande. Revérifie-le dans l’onglet Paiements avant d’annuler.');
-      if (state === 'reserved') { await returnStock(client, o.items); state = 'released'; }
+      if (state === 'reserved') { await returnStock(client, liveItems(o.items)); state = 'released'; }
     } else if (status === 'En attente') {
-      if (state === 'released') { await takeStock(client, o.items); state = 'reserved'; until = Date.now() + RESERVATION_MS; }
-    } else if (state === 'released') { await takeStock(client, o.items); state = 'sold'; }
-    else if (state === 'reserved') state = 'sold';
+      if (state === 'released') { await takeStock(client, liveItems(o.items)); state = 'reserved'; until = o.payment_method === 'cash' ? null : Date.now() + RESERVATION_MS; }
+    } else if (state === 'released') { await takeStock(client, liveItems(o.items)); state = cashUnpaid ? 'reserved' : 'sold'; }
+    else if (state === 'reserved') state = cashUnpaid ? 'reserved' : 'sold';
     await client.query('UPDATE orders SET status=$1, stock_state=$2, reserved_until=$3, delivered_at=CASE WHEN $1 = \'Livrée\' AND delivered_at IS NULL THEN $5::bigint ELSE delivered_at END WHERE id=$4', [status, state, until == null ? null : Number(until), id, Date.now()]);
     await client.query('COMMIT');
-    return { previous: o.status };
+    return { previous: o.status, method: o.payment_method };
   } catch (e) { try { await client.query('ROLLBACK'); } catch { destroy = true; } throw e; }
   finally { client.release(destroy); }
 }
@@ -798,9 +804,12 @@ async function handlePaymentCallback(req, url, ip) {
 const DELIVERY_STATUSES = ['En attente de préparation', 'Prête pour la livraison', 'Confiée au livreur', 'En cours de livraison', 'Livrée', 'Livraison échouée', 'Retour en cours'];
 const PART_STATUSES = ['À commander', 'Commandé', 'Prêt', 'Récupéré', 'Indisponible'];
 const PAID_ORDER_STATUSES = ['Payée', 'Expédiée', 'Livrée'];
+// Une commande payée en espèces n'est « payée » qu'une fois l'argent encaissé et enregistré (jamais d'office à la livraison).
+const orderIsPaid = r => r.payment_method === 'cash' ? r.cash_collected_at != null : PAID_ORDER_STATUSES.includes(r.status);
+const collectedOf = (o, successPaid) => Number(successPaid) > 0 ? Number(successPaid) : (orderIsPaid(o) ? (o.payment_method === 'cash' ? Number(o.cash_amount || o.total) : Number(o.total)) : 0);
 // Vue CLIENT : jamais de fournisseur, de coût d'achat ni de livreur.
 const customerItems = items => (Array.isArray(items) ? items : []).map(i => ({ id: i.id, name: i.name, size: i.size, qty: i.qty, unitPrice: i.unitPrice, total: i.total, cancelled: !!i.cancelled }));
-const orderPublic = r => { const its = customerItems(r.items), gone = its.filter(i => i.cancelled).reduce((a, i) => a + Number(i.total || 0), 0); return { id: r.id, ref: r.id.slice(0, 8).toUpperCase(), createdAt: Number(r.created_at), customerName: r.customer_name, email: r.customer_email, phone: r.phone, address: r.address, items: its, total: Number(r.total), adjustedTotal: Number(r.total) - gone, refundedAmount: Number(r.refunded_amount || 0), status: r.status, trackingCode: r.tracking_code || '', deliveryStatus: r.delivery_status || '', deliveredAt: r.delivered_at == null ? null : Number(r.delivered_at) }; };
+const orderPublic = r => { const its = customerItems(r.items), gone = its.filter(i => i.cancelled).reduce((a, i) => a + Number(i.total || 0), 0); return { id: r.id, ref: r.id.slice(0, 8).toUpperCase(), createdAt: Number(r.created_at), customerName: r.customer_name, email: r.customer_email, phone: r.phone, address: r.address, items: its, total: Number(r.total), adjustedTotal: Number(r.total) - gone, refundedAmount: Number(r.refunded_amount || 0), status: r.status, trackingCode: r.tracking_code || '', paymentMethod: r.payment_method === 'cash' ? 'cash' : 'mobile_money', cashCollected: r.cash_collected_at != null, deliveryStatus: r.delivery_status || '', deliveredAt: r.delivered_at == null ? null : Number(r.delivered_at) }; };
 // Vue ADMIN : détail complet (fournisseurs, coûts, livraison, paiements confirmés, finances, e-mail, facture).
 async function ordersAdmin(rows) {
   if (!rows.length) return [];
@@ -821,7 +830,7 @@ async function ordersAdmin(rows) {
     for (const i of items) { if (!i.supplierId || i.cancelled) continue; const g = bySup.get(i.supplierId) || { supplierId: i.supplierId, supplierName: i.supplierName, status: 'À commander', cost: 0, missingCost: 0 }; if (i.unitCost == null) g.missingCost++; else g.cost += Number(i.unitCost) * Number(i.qty); bySup.set(i.supplierId, g); }
     for (const pt of parts.rows.filter(x => x.order_id === r.id)) { const g = bySup.get(pt.supplier_id); if (g) g.status = pt.status; }
     const pa = paidMap[r.id] || 0, fin = orderFinancials(r, pa), cancelledCount = items.filter(i => i.cancelled).length, mail = mailMap[r.id];
-    return { ...orderPublic(r), items, paidAmount: pa, collected: fin.collected, fin, whatsapp: r.whatsapp || '', stockState: r.stock_state || 'sold', reservedUntil: r.reserved_until == null ? null : Number(r.reserved_until), userId: r.user_id || null,
+    return { ...orderPublic(r), items, paidAmount: pa, collected: fin.collected, fin, paid: orderIsPaid(r), cashCollectedAt: r.cash_collected_at == null ? null : Number(r.cash_collected_at), whatsapp: r.whatsapp || '', stockState: r.stock_state || 'sold', reservedUntil: r.reserved_until == null ? null : Number(r.reserved_until), userId: r.user_id || null,
       cancellation: r.status === 'Annulée' || (cancelledCount && cancelledCount === items.length) ? 'full' : cancelledCount ? 'partial' : 'none',
       emailStatus: mail ? mail.status : '', emailError: mail ? mail.last_error : '', invoiceNumber: invMap[r.id] || '',
       supplierParts: [...bySup.values()],
@@ -834,11 +843,19 @@ const deliveryRow = r => ({ id: r.id, name: r.name, phone: r.phone, whatsapp: r.
 const txt = (v, n) => typeof v === 'string' ? v.normalize('NFKC').replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, n) : '';
 const phoneOk = v => v === '' || /^\+?[0-9 ().-]{8,20}$/.test(v);
 async function supplierTotals() {
-  const due = await pool.query(`SELECT i->>'supplierId' AS sid, COALESCE(SUM((i->>'unitCost')::bigint * (i->>'qty')::int) FILTER (WHERE i->>'unitCost' IS NOT NULL),0)::bigint AS due, COUNT(*) FILTER (WHERE i->>'unitCost' IS NULL)::int AS missing FROM orders o, jsonb_array_elements(o.items) i WHERE o.status = ANY($1::text[]) AND i->>'supplierId' IS NOT NULL AND COALESCE(i->>'cancelled','false') <> 'true' GROUP BY 1`, [PAID_ORDER_STATUSES]);
+  const due = await pool.query(`SELECT i->>'supplierId' AS sid, COALESCE(SUM((i->>'unitCost')::bigint * (i->>'qty')::int) FILTER (WHERE i->>'unitCost' IS NOT NULL),0)::bigint AS due, COUNT(*) FILTER (WHERE i->>'unitCost' IS NULL)::int AS missing FROM orders o, jsonb_array_elements(o.items) i WHERE (CASE WHEN o.payment_method = 'cash' THEN o.cash_collected_at IS NOT NULL ELSE o.status = ANY($1::text[]) END) AND i->>'supplierId' IS NOT NULL AND COALESCE(i->>'cancelled','false') <> 'true' GROUP BY 1`, [PAID_ORDER_STATUSES]);
   const paid = await pool.query('SELECT supplier_id, COALESCE(SUM(amount),0)::bigint AS paid FROM supplier_payments GROUP BY 1');
   const m = {}; for (const r of due.rows) m[r.sid] = { due: Number(r.due), missing: r.missing, paid: 0 };
   for (const r of paid.rows) { m[r.supplier_id] = m[r.supplier_id] || { due: 0, missing: 0, paid: 0 }; m[r.supplier_id].paid = Number(r.paid); }
   return m;
+}
+// Collections (ex. « Crocs ») : liste enregistrée dans site_settings (clé « collections ») ; un article y appartient grâce à l'étiquette « col:<id> » dans ses tags.
+const COLLECTIONS_KEY = 'collections';
+const slugify = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40);
+async function loadCollections() {
+  const { rows } = await pool.query('SELECT value FROM site_settings WHERE key=$1', [COLLECTIONS_KEY]);
+  const items = Array.isArray(rows[0]?.value?.items) ? rows[0].value.items : [];
+  return items.filter(c => c && typeof c.id === 'string' && typeof c.name === 'string').map(c => ({ id: c.id, name: c.name, image: typeof c.image === 'string' ? c.image : '' }));
 }
 export const config = { path: '/api/*' };
 const RETURN_STATUSES = ['Demande reçue', 'En cours d’examen', 'Acceptée', 'Refusée', 'Retour en cours', 'Échange effectué', 'Remboursement effectué'];
@@ -860,14 +877,15 @@ async function logOrderEvent(orderId, kind, detail) {
 // ---------- Finances d'une commande (estimation, jamais un bénéfice net réel) ----------
 function orderFinancials(r, successPaid) {
   const all = Array.isArray(r.items) ? r.items : [], act = all.filter(i => !i.cancelled);
-  const isPaid = PAID_ORDER_STATUSES.includes(r.status), cancelledOrder = r.status === 'Annulée';
+  const isPaid = orderIsPaid(r), cancelledOrder = r.status === 'Annulée', isCash = r.payment_method === 'cash';
   const sp = Number(successPaid || 0);
-  const collected = sp > 0 ? sp : (isPaid ? Number(r.total) : 0);
+  const collected = collectedOf(r, sp);
   const itemsTotal = all.reduce((a, i) => a + Number(i.total || 0), 0);
   const cancelledTotal = all.filter(i => i.cancelled).reduce((a, i) => a + Number(i.total || 0), 0);
   const refunded = Number(r.refunded_amount || 0);
   // Ce qui doit revenir au client : tout si la commande est annulée, sinon les articles annulés (au moins ce qui est déjà remboursé).
-  const refundDue = collected > 0 ? (cancelledOrder ? collected : Math.min(collected, Math.max(refunded, cancelledTotal))) : 0;
+  // Espèces : un article annulé avant l'encaissement n'a jamais été payé, donc rien à rembourser.
+  const refundDue = collected > 0 ? (cancelledOrder ? collected : isCash ? Math.min(collected, refunded) : Math.min(collected, Math.max(refunded, cancelledTotal))) : 0;
   let productCost = 0, missing = 0;
   if (!cancelledOrder) for (const i of act) { if (i.unitCost == null) missing++; else productCost += Number(i.unitCost) * Number(i.qty); }
   const deliveryCost = Number(r.delivery_cost || 0), paymentFees = Number(r.payment_fees || 0), otherCosts = Number(r.other_costs || 0);
@@ -958,7 +976,7 @@ async function ensureInvoice(orderId) {
 async function invoicePdfFor(orderId) {
   const o = (await pool.query('SELECT * FROM orders WHERE id=$1', [orderId])).rows[0];
   if (!o) throw new HttpError(404, 'order_not_found', 'Commande introuvable.');
-  if (!PAID_ORDER_STATUSES.includes(o.status)) throw new HttpError(409, 'invoice_unavailable', 'La facture n’est disponible qu’une fois le paiement confirmé.');
+  if (!orderIsPaid(o)) throw new HttpError(409, 'invoice_unavailable', 'La facture n’est disponible qu’une fois le paiement confirmé.');
   const inv = await ensureInvoice(orderId);
   const pay = (await pool.query("SELECT provider, amount, updated_at FROM payments WHERE order_id=$1 AND status='success' ORDER BY updated_at DESC LIMIT 1", [orderId])).rows[0];
   const set = settingsFromValue((await pool.query('SELECT value FROM site_settings WHERE key=$1', [SETTINGS_KEY])).rows[0]?.value);
@@ -967,7 +985,7 @@ async function invoicePdfFor(orderId) {
   const subtotal = act.reduce((a, i) => a + Number(i.total || 0), 0), delivery = Math.max(0, Number(o.total) - itemsTotal);
   const company = { name: process.env.INVOICE_COMPANY_NAME || 'OutfiT-shirt', address: process.env.INVOICE_ADDRESS || '', phone: process.env.INVOICE_PHONE || ('+' + set.whatsapp), email: process.env.INVOICE_EMAIL || set.contactEmail, legal: process.env.INVOICE_LEGAL || '' };
   const d = { number: inv.number, issuedAt: Number(inv.issued_at), order: o, items: act, subtotal, delivery, cancelledTotal, total: subtotal + delivery, refunded: Number(o.refunded_amount || 0), company,
-    paymentStatus: 'PAYÉ', paymentDetail: pay ? `Paiement ${PROVIDER_LABELS[pay.provider] || pay.provider} confirmé le ${new Date(Number(pay.updated_at)).toLocaleDateString('fr-FR')} (${fcPdf(pay.amount)}).` : 'Paiement confirmé par la boutique.' };
+    paymentStatus: 'PAYÉ', paymentDetail: o.payment_method === 'cash' ? `Paiement en espèces reçu à la livraison le ${new Date(Number(o.cash_collected_at)).toLocaleDateString('fr-FR')} (${fcPdf(o.cash_amount || o.total)}).` : pay ? `Paiement ${PROVIDER_LABELS[pay.provider] || pay.provider} confirmé le ${new Date(Number(pay.updated_at)).toLocaleDateString('fr-FR')} (${fcPdf(pay.amount)}).` : 'Paiement confirmé par la boutique.' };
   return { pdf: renderInvoicePdf(d), number: inv.number };
 }
 // ---------- E-mail de confirmation : un seul par commande, avec nouvelle tentative possible ----------
@@ -981,14 +999,19 @@ async function sendOrderConfirmation(orderId) {
     const pay = (await pool.query("SELECT provider, amount FROM payments WHERE order_id=$1 AND status='success' ORDER BY updated_at DESC LIMIT 1", [orderId])).rows[0];
     const ref = o.id.slice(0, 8).toUpperCase(), act = (Array.isArray(o.items) ? o.items : []).filter(i => !i.cancelled);
     const itemsTotal = act.reduce((a, i) => a + Number(i.total || 0), 0), delivery = Math.max(0, Number(o.total) - (Array.isArray(o.items) ? o.items : []).reduce((a, i) => a + Number(i.total || 0), 0));
-    const paid = pay ? Number(pay.amount) : Number(o.total), fc = n => `${Number(n).toLocaleString('fr-FR')} FC`;
+    const cash = o.payment_method === 'cash', paid = pay ? Number(pay.amount) : Number(o.total), fc = n => `${Number(n).toLocaleString('fr-FR')} FC`;
+    const dueCash = itemsTotal + delivery;
     const lines = act.map(i => `• ${i.name} (taille ${i.size}) × ${i.qty} — ${fc(i.total)}`);
     const deliveryTxt = `Livraison à : ${o.address}. Délai annoncé : moins de 24 heures selon la zone. Frais de livraison : ${delivery > 0 ? fc(delivery) : 'offerts'}. Tu peux suivre l’état de ta commande dans « Mon compte » > « Commandes ».`;
-    const text = `Bonjour ${o.customer_name},\n\nMerci pour ton achat sur OutfiT-shirt ! Ta commande ${ref} est confirmée.\n\n${lines.join('\n')}\n\nSous-total articles : ${fc(itemsTotal)}\nMontant payé : ${fc(paid)}${pay ? ' par ' + (PROVIDER_LABELS[pay.provider] || pay.provider) : ''}\n\n${deliveryTxt}\nTa facture est disponible dans « Mon compte » > « Commandes » > « Facture ».\n\nL’équipe OutfiT-shirt`;
-    const html = `<p>Bonjour ${escH(o.customer_name)},</p><p>Merci pour ton achat sur <strong>OutfiT-shirt</strong> ! Ta commande <strong>${ref}</strong> est confirmée.</p><ul>${act.map(i => `<li>${escH(i.name)} (taille ${escH(i.size)}) × ${i.qty} — ${fc(i.total)}</li>`).join('')}</ul><p>Sous-total articles : ${fc(itemsTotal)}<br><strong>Montant payé : ${fc(paid)}</strong>${pay ? ' par ' + escH(PROVIDER_LABELS[pay.provider] || pay.provider) : ''}</p><p>${escH(deliveryTxt)}</p><p>Ta facture est disponible dans « Mon compte » &gt; « Commandes » &gt; « Facture ».</p><p>L’équipe OutfiT-shirt</p>`;
-    await Promise.race([brevoSend(o.customer_email, `Confirmation de ta commande ${ref} — OutfiT-shirt`, text, html), new Promise((_, rej) => setTimeout(() => rej(new Error('délai e-mail dépassé')), 8000))]);
+    const text = cash
+      ? `Bonjour ${o.customer_name},\n\nMerci pour ta commande sur OutfiT-shirt ! Elle est bien enregistrée sous le numéro ${ref}.\n\n${lines.join('\n')}\n\nSous-total articles : ${fc(itemsTotal)}\nMONTANT À PAYER EN ESPÈCES À LA RÉCEPTION : ${fc(dueCash)}\n\n${deliveryTxt}\nNous te contactons pour confirmer la livraison. Prépare si possible l’appoint pour le livreur. La facture sera disponible dans « Mon compte » après l’encaissement.\n\nL’équipe OutfiT-shirt`
+      : `Bonjour ${o.customer_name},\n\nMerci pour ton achat sur OutfiT-shirt ! Ta commande ${ref} est confirmée.\n\n${lines.join('\n')}\n\nSous-total articles : ${fc(itemsTotal)}\nMontant payé : ${fc(paid)}${pay ? ' par ' + (PROVIDER_LABELS[pay.provider] || pay.provider) : ''}\n\n${deliveryTxt}\nTa facture est disponible dans « Mon compte » > « Commandes » > « Facture ».\n\nL’équipe OutfiT-shirt`;
+    const html = cash
+      ? `<p>Bonjour ${escH(o.customer_name)},</p><p>Merci pour ta commande sur <strong>OutfiT-shirt</strong> ! Elle est bien enregistrée sous le numéro <strong>${ref}</strong>.</p><ul>${act.map(i => `<li>${escH(i.name)} (taille ${escH(i.size)}) × ${i.qty} — ${fc(i.total)}</li>`).join('')}</ul><p>Sous-total articles : ${fc(itemsTotal)}<br><strong>Montant à payer en espèces à la réception : ${fc(dueCash)}</strong></p><p>${escH(deliveryTxt)}</p><p>Nous te contactons pour confirmer la livraison. Prépare si possible l’appoint pour le livreur. La facture sera disponible dans « Mon compte » après l’encaissement.</p><p>L’équipe OutfiT-shirt</p>`
+      : `<p>Bonjour ${escH(o.customer_name)},</p><p>Merci pour ton achat sur <strong>OutfiT-shirt</strong> ! Ta commande <strong>${ref}</strong> est confirmée.</p><ul>${act.map(i => `<li>${escH(i.name)} (taille ${escH(i.size)}) × ${i.qty} — ${fc(i.total)}</li>`).join('')}</ul><p>Sous-total articles : ${fc(itemsTotal)}<br><strong>Montant payé : ${fc(paid)}</strong>${pay ? ' par ' + escH(PROVIDER_LABELS[pay.provider] || pay.provider) : ''}</p><p>${escH(deliveryTxt)}</p><p>Ta facture est disponible dans « Mon compte » &gt; « Commandes » &gt; « Facture ».</p><p>L’équipe OutfiT-shirt</p>`;
+    await Promise.race([brevoSend(o.customer_email, cash ? `Commande ${ref} enregistrée — paiement à la réception — OutfiT-shirt` : `Confirmation de ta commande ${ref} — OutfiT-shirt`, text, html), new Promise((_, rej) => setTimeout(() => rej(new Error('délai e-mail dépassé')), 8000))]);
     await pool.query("UPDATE order_emails SET status='sent', sent_at=$2, updated_at=$2, last_error='' WHERE order_id=$1", [orderId, Date.now()]);
-    await logOrderEvent(orderId, 'email', 'E-mail de confirmation envoyé au client');
+    await logOrderEvent(orderId, 'email', cash ? 'E-mail de commande (paiement à la réception) envoyé au client' : 'E-mail de confirmation envoyé au client');
     return { sent: true };
   } catch (e) {
     await pool.query("UPDATE order_emails SET status='failed', last_error=$2, updated_at=$3 WHERE order_id=$1", [orderId, String(e.message || e).slice(0, 300), Date.now()]).catch(() => {});
@@ -1012,14 +1035,16 @@ async function buildDashboard(from, to) {
   const ids = ords.map(o => o.id);
   const paid = ids.length ? (await pool.query("SELECT order_id, COALESCE(SUM(amount),0)::bigint AS paid FROM payments WHERE status='success' AND order_id=ANY($1::text[]) GROUP BY order_id", [ids])).rows : [];
   const pm = Object.fromEntries(paid.map(x => [x.order_id, Number(x.paid)]));
-  const c = { total: ords.length, awaitingPayment: 0, paid: 0, inPreparation: 0, inDelivery: 0, delivered: 0, cancelled: 0, partial: 0 };
+  const c = { total: ords.length, awaitingPayment: 0, paid: 0, inPreparation: 0, inDelivery: 0, delivered: 0, cancelled: 0, partial: 0, cashPending: 0 }; let cashToCollect = 0;
   const money = { collected: 0, refunded: 0, productCost: 0, deliveryCharged: 0, deliveryCost: 0, fees: 0, other: 0, margin: 0, ordersMissingCost: 0 };
   const byDay = new Map(), top = new Map(); const DELIV = ['Confiée au livreur', 'En cours de livraison'];
   let supplierDue = 0;
   for (const o of ords) {
-    const f = orderFinancials(o, pm[o.id] || 0), isPaid = PAID_ORDER_STATUSES.includes(o.status);
-    if (o.status === 'En attente') c.awaitingPayment++; else if (o.status === 'Annulée') c.cancelled++;
-    if (isPaid) { c.paid++; if (o.status === 'Livrée') c.delivered++; else if (o.status === 'Expédiée' || DELIV.includes(o.delivery_status)) c.inDelivery++; else c.inPreparation++; }
+    const f = orderFinancials(o, pm[o.id] || 0), isPaid = orderIsPaid(o), cod = o.payment_method === 'cash';
+    if (o.status === 'Annulée') c.cancelled++;
+    else if (!cod && o.status === 'En attente') c.awaitingPayment++;
+    else { if (isPaid) c.paid++; if (o.status === 'Livrée') c.delivered++; else if (o.status === 'Expédiée' || DELIV.includes(o.delivery_status)) c.inDelivery++; else c.inPreparation++; }
+    if (cod && !isPaid && o.status !== 'Annulée') { c.cashPending++; cashToCollect += Number(o.total) - (o.items || []).filter(i => i.cancelled).reduce((a, i) => a + Number(i.total || 0), 0); }
     if ((o.items || []).some(i => i.cancelled) && o.status !== 'Annulée') c.partial++;
     if (f.collected > 0 || isPaid) {
       money.collected += f.collected; money.refunded += f.refundDue; money.productCost += f.productCost; money.deliveryCharged += f.deliveryCharged; money.deliveryCost += f.deliveryCost; money.fees += f.paymentFees; money.other += f.otherCosts; money.margin += f.margin; if (!f.complete) money.ordersMissingCost++;
@@ -1031,7 +1056,7 @@ async function buildDashboard(from, to) {
   const prods = (await pool.query('SELECT quantity,size_stock FROM products WHERE active=TRUE')).rows;
   const available = prods.filter(inStock).length;
   const supPaid = Number((await pool.query('SELECT COALESCE(SUM(amount),0)::bigint AS n FROM supplier_payments WHERE paid_at >= $1 AND paid_at < $2', [from, to])).rows[0].n);
-  return { from, to, orders: c, money: { ...money, net: money.collected - money.refunded }, clients: { total: users.n, newInPeriod: users.fresh }, products: { available, outOfStock: prods.length - available },
+  return { from, to, orders: c, money: { ...money, net: money.collected - money.refunded, cashToCollect }, clients: { total: users.n, newInPeriod: users.fresh }, products: { available, outOfStock: prods.length - available },
     suppliers: { dueInPeriod: supplierDue, paidInPeriod: supPaid }, byDay: [...byDay.values()].sort((a, b) => a.day < b.day ? -1 : 1), top: [...top.values()].sort((a, b) => b.qty - a.qty).slice(0, 8) };
 }
 // ==== EXTRA:END
@@ -1043,10 +1068,11 @@ export default async function handler(req) {
     const auth=await currentSession(req); if(auth?.refreshCookie) cookies.push(auth.refreshCookie);
     const admin=await currentAdminSession(req);
     if(route==='GET /api/me') return json(auth?{user:publicUser(auth.row),csrfToken:auth.row.csrf}:{user:null,csrfToken:null},200,cookies);
-    if(route==='GET /api/products') { await sweepExpiredReservations(); const {rows}=await pool.query('SELECT * FROM products WHERE active=TRUE ORDER BY created_at DESC'); const rv=await pool.query("SELECT product_id, AVG(rating)::float AS avg, COUNT(*)::int AS n FROM reviews WHERE status='published' GROUP BY product_id"); const rm=Object.fromEntries(rv.rows.map(x=>[x.product_id,x])); return json({products:rows.map(r=>({...productPublic(r),rating:rm[r.id]?Math.round(rm[r.id].avg*10)/10:0,reviewCount:rm[r.id]?rm[r.id].n:0}))}); }
+    if(route==='GET /api/products') { await sweepExpiredReservations(); const {rows}=await pool.query('SELECT * FROM products WHERE active=TRUE ORDER BY created_at DESC'); const rv=await pool.query("SELECT product_id, AVG(rating)::float AS avg, COUNT(*)::int AS n FROM reviews WHERE status='published' GROUP BY product_id"); const rm=Object.fromEntries(rv.rows.map(x=>[x.product_id,x])); const sd=await pool.query("SELECT i->>'id' AS pid, COALESCE(SUM((i->>'qty')::int),0)::int AS sold FROM orders o, jsonb_array_elements(o.items) i WHERE o.status<>'Annulée' AND COALESCE(i->>'cancelled','false')<>'true' GROUP BY 1"); const sm=Object.fromEntries(sd.rows.map(x=>[x.pid,x.sold])); const rk=Object.fromEntries([...rows].sort((a,b)=>(sm[b.id]||0)-(sm[a.id]||0)).map((r,i)=>[r.id,i])); return json({products:rows.map(r=>({...productPublic(r),rating:rm[r.id]?Math.round(rm[r.id].avg*10)/10:0,reviewCount:rm[r.id]?rm[r.id].n:0,popRank:rk[r.id]}))}); }
     if(route==='GET /api/settings') { const {rows}=await pool.query('SELECT value FROM site_settings WHERE key=$1',[SETTINGS_KEY]); return json({settings:settingsFromValue(rows[0]?.value)}); }
+    if(route==='GET /api/collections') { const cols=await loadCollections(); const {rows}=await pool.query('SELECT tags FROM products WHERE active=TRUE'); const counts={}; for(const r of rows) for(const t of (Array.isArray(r.tags)?r.tags:[])) if(typeof t==='string'&&t.startsWith('col:')) counts[t]=(counts[t]||0)+1; return json({collections:cols.map(c=>({...c,count:counts['col:'+c.id]||0}))}); }
     if(route==='GET /api/my-orders') { requireAuth(req,auth,false); const {rows}=await pool.query('SELECT * FROM orders WHERE user_id=$1 ORDER BY created_at DESC LIMIT 100',[auth.row.user_id]); const ids=rows.map(r=>r.id); const rv=ids.length?(await pool.query('SELECT order_id,product_id FROM reviews WHERE user_id=$1 AND order_id=ANY($2::text[])',[auth.row.user_id,ids])).rows:[]; const seen=new Set(rv.map(x=>x.order_id+'|'+x.product_id)); const days=Number(process.env.RETURN_WINDOW_DAYS||7);
-      return json({returnWindowDays:days,orders:rows.map(r=>{const o=orderPublic(r),paid=PAID_ORDER_STATUSES.includes(r.status); return {...o,items:o.items.map(i=>({...i,reviewed:seen.has(r.id+'|'+i.id)})),invoiceAvailable:paid,canReview:paid,canReturn:r.status==='Livrée'&&Date.now()-Number(r.delivered_at||r.created_at)<=days*DAY};})}); }
+      return json({returnWindowDays:days,orders:rows.map(r=>{const o=orderPublic(r),paid=orderIsPaid(r); return {...o,items:o.items.map(i=>({...i,reviewed:seen.has(r.id+'|'+i.id)})),invoiceAvailable:paid,canReview:paid,canReturn:r.status==='Livrée'&&Date.now()-Number(r.delivered_at||r.created_at)<=days*DAY};})}); }
     if(route==='GET /api/admin/me') return json({admin:!!admin,email:admin?ADMIN_EMAIL:null,csrfToken:admin?admin.row.csrf:null},200,cookies);
     if(route==='GET /api/admin/clients') { requireAdmin(req,admin,false); const {rows}=await pool.query('SELECT id,email,first_name,last_name,post_name,phone,whatsapp,birth_date,address,created_at,last_login_at,locked_until,account_blocked FROM users WHERE deleted_at IS NULL ORDER BY created_at DESC LIMIT 1000'); return json({clients:rows.map(r=>({id:r.id,email:r.email,firstName:r.first_name,lastName:r.last_name||'',postName:r.post_name||'',phone:r.phone||'',whatsapp:r.whatsapp||'',birthDate:r.birth_date||'',address:r.address||'',createdAt:Number(r.created_at),lastLoginAt:r.last_login_at==null?null:Number(r.last_login_at),lockedUntil:Number(r.locked_until||0),blocked:!!r.account_blocked}))}); }
     if(route==='GET /api/admin/products') { requireAdmin(req,admin,false); const {rows}=await pool.query('SELECT * FROM products ORDER BY created_at DESC'); return json({products:rows.map(productAdmin)}); }
@@ -1065,7 +1091,7 @@ export default async function handler(req) {
     if(route==='GET /api/admin/dashboard') { requireAdmin(req,admin,false); const isoDay=v=>/^\d{4}-\d{2}-\d{2}$/.test(v||'')?v:null; const today=new Date(Date.now()+2*HOUR).toISOString().slice(0,10); const toD=isoDay(url.searchParams.get('to'))||today; const fromD=isoDay(url.searchParams.get('from'))||new Date(Date.parse(toD+'T00:00:00Z')-29*DAY).toISOString().slice(0,10); const from=Date.parse(fromD+'T00:00:00+02:00'), to=Date.parse(toD+'T00:00:00+02:00')+DAY; if(!Number.isFinite(from)||!Number.isFinite(to)||to<=from||to-from>370*DAY) throw new HttpError(400,'invalid_range','Période invalide (366 jours maximum).'); return json({fromDay:fromD,toDay:toD,...(await buildDashboard(from,to))}); }
     if(route==='GET /api/admin/text-keys') { requireAdmin(req,admin,false); return json({keys:TEXT_KEYS}); }
     if(route==='GET /api/admin/suppliers') { requireAdmin(req,admin,false); const {rows}=await pool.query('SELECT s.*, (SELECT COUNT(*)::int FROM products p WHERE p.supplier_id=s.id) AS products FROM suppliers s ORDER BY s.active DESC, LOWER(s.name)'); const t=await supplierTotals(); return json({suppliers:rows.map(r=>{const x=t[r.id]||{due:0,missing:0,paid:0};return {...supplierRow(r),products:r.products,due:x.due,paid:x.paid,balance:x.due-x.paid,missingCost:x.missing}})}); }
-    if(route==='GET /api/admin/supplier') { requireAdmin(req,admin,false); const id=String(url.searchParams.get('id')||'').slice(0,60); const {rows}=await pool.query('SELECT * FROM suppliers WHERE id=$1',[id]); if(!rows[0]) throw new HttpError(404,'supplier_not_found','Fournisseur introuvable.'); const [pr,pay,ord,t]=await Promise.all([pool.query('SELECT id,brand,name,price,cost_price,quantity,active FROM products WHERE supplier_id=$1 ORDER BY LOWER(name)',[id]),pool.query('SELECT id,amount,method,note,paid_at FROM supplier_payments WHERE supplier_id=$1 ORDER BY paid_at DESC',[id]),pool.query(`SELECT * FROM orders WHERE status = ANY($1::text[]) AND items @> jsonb_build_array(jsonb_build_object('supplierId',$2::text)) ORDER BY created_at DESC LIMIT 200`,[PAID_ORDER_STATUSES,id]),supplierTotals()]); const x=t[id]||{due:0,missing:0,paid:0}; const orders=(await ordersAdmin(ord.rows)).map(o=>({ref:o.ref,id:o.id,createdAt:o.createdAt,status:o.status,partStatus:(o.supplierParts.find(g=>g.supplierId===id)||{}).status||'À commander',items:o.items.filter(i=>i.supplierId===id)})); return json({supplier:supplierRow(rows[0]),products:pr.rows.map(r=>({id:r.id,name:(r.brand?r.brand+' ':'')+r.name,price:Number(r.price),costPrice:r.cost_price==null?null:Number(r.cost_price),quantity:Number(r.quantity),active:!!r.active})),payments:pay.rows.map(r=>({id:r.id,amount:Number(r.amount),method:r.method,note:r.note,paidAt:Number(r.paid_at)})),orders,due:x.due,paid:x.paid,balance:x.due-x.paid,missingCost:x.missing}); }
+    if(route==='GET /api/admin/supplier') { requireAdmin(req,admin,false); const id=String(url.searchParams.get('id')||'').slice(0,60); const {rows}=await pool.query('SELECT * FROM suppliers WHERE id=$1',[id]); if(!rows[0]) throw new HttpError(404,'supplier_not_found','Fournisseur introuvable.'); const [pr,pay,ord,t]=await Promise.all([pool.query('SELECT id,brand,name,price,cost_price,quantity,active FROM products WHERE supplier_id=$1 ORDER BY LOWER(name)',[id]),pool.query('SELECT id,amount,method,note,paid_at FROM supplier_payments WHERE supplier_id=$1 ORDER BY paid_at DESC',[id]),pool.query(`SELECT * FROM orders WHERE (CASE WHEN payment_method = 'cash' THEN cash_collected_at IS NOT NULL ELSE status = ANY($1::text[]) END) AND items @> jsonb_build_array(jsonb_build_object('supplierId',$2::text)) ORDER BY created_at DESC LIMIT 200`,[PAID_ORDER_STATUSES,id]),supplierTotals()]); const x=t[id]||{due:0,missing:0,paid:0}; const orders=(await ordersAdmin(ord.rows)).map(o=>({ref:o.ref,id:o.id,createdAt:o.createdAt,status:o.status,partStatus:(o.supplierParts.find(g=>g.supplierId===id)||{}).status||'À commander',items:o.items.filter(i=>i.supplierId===id)})); return json({supplier:supplierRow(rows[0]),products:pr.rows.map(r=>({id:r.id,name:(r.brand?r.brand+' ':'')+r.name,price:Number(r.price),costPrice:r.cost_price==null?null:Number(r.cost_price),quantity:Number(r.quantity),active:!!r.active})),payments:pay.rows.map(r=>({id:r.id,amount:Number(r.amount),method:r.method,note:r.note,paidAt:Number(r.paid_at)})),orders,due:x.due,paid:x.paid,balance:x.due-x.paid,missingCost:x.missing}); }
     if(route==='GET /api/admin/delivery-companies') { requireAdmin(req,admin,false); const {rows}=await pool.query('SELECT * FROM delivery_companies ORDER BY active DESC, LOWER(name)'); return json({companies:rows.map(deliveryRow),statuses:DELIVERY_STATUSES,partStatuses:PART_STATUSES}); }
     if(route==='GET /api/admin/client') { requireAdmin(req,admin,false); const id=String(url.searchParams.get('id')||'').slice(0,60); const {rows}=await pool.query('SELECT id,email,first_name,last_name,post_name,phone,whatsapp,birth_date,address,created_at,last_login_at,account_blocked FROM users WHERE id=$1 AND deleted_at IS NULL',[id]); const u=rows[0]; if(!u) throw new HttpError(404,'client_not_found','Client introuvable.'); const {rows:or}=await pool.query('SELECT * FROM orders WHERE user_id=$1 ORDER BY created_at DESC LIMIT 200',[id]); const orders=await ordersAdmin(or); return json({client:{id:u.id,email:u.email,firstName:u.first_name,lastName:u.last_name||'',postName:u.post_name||'',phone:u.phone||'',whatsapp:u.whatsapp||'',birthDate:u.birth_date||'',address:u.address||'',createdAt:Number(u.created_at),lastLoginAt:u.last_login_at==null?null:Number(u.last_login_at),blocked:!!u.account_blocked},orders,totalPaid:orders.reduce((a,o)=>a+o.collected-o.fin.refundDue,0)}); }
     if(route==='GET /api/admin/orders') { requireAdmin(req,admin,false); await sweepExpiredReservations(true); const {rows}=await pool.query('SELECT * FROM orders ORDER BY created_at DESC LIMIT 500'); return json({orders:await ordersAdmin(rows)}); }
@@ -1172,6 +1198,7 @@ export default async function handler(req) {
         const orderRef=String(b.orderRef||'').toUpperCase(); if(!/^[A-F0-9]{8}$/.test(orderRef)) throw new HttpError(400,'invalid_order','Commande invalide.');
         const {rows:orows}=await pool.query('SELECT * FROM orders WHERE user_id=$1 AND UPPER(LEFT(id,8))=$2 ORDER BY created_at DESC LIMIT 1',[auth.row.user_id,orderRef]);
         const order=orows[0]; if(!order) throw new HttpError(404,'order_not_found','Commande introuvable.');
+        if(order.payment_method==='cash') throw new HttpError(409,'order_cash','Cette commande se paie en espèces à la réception.');
         if(order.status!=='En attente') throw new HttpError(409,'order_not_payable','Cette commande ne peut plus être payée en ligne.');
         const amount=Number(order.total); if(!Number.isSafeInteger(amount)||amount<=0) throw new HttpError(400,'invalid_amount','Montant de commande invalide.');
         const paid=await pool.query("SELECT 1 FROM payments WHERE order_id=$1 AND status='success'",[order.id]); if(paid.rowCount) throw new HttpError(409,'already_paid','Cette commande est déjà payée.');
@@ -1201,6 +1228,23 @@ export default async function handler(req) {
         const v=await verifyPayment(p,'admin');
         return json({ok:true,payment:paymentAdmin({...p,...v})});
       }
+      case '/api/admin/order-cash-collect': {
+        const b=await readJson(req); requireAdmin(req,admin,true);
+        const client=await pool.connect(); let destroy=false, info;
+        try { await client.query('BEGIN');
+          const o=(await client.query('SELECT * FROM orders WHERE id=$1 FOR UPDATE',[String(b.id||'')])).rows[0]; if(!o) throw new HttpError(404,'order_not_found','Commande introuvable.');
+          if(o.payment_method!=='cash') throw new HttpError(409,'not_cash','Cette commande ne se paie pas en espèces.');
+          if(o.cash_collected_at!=null) throw new HttpError(409,'already_collected','L’encaissement de cette commande est déjà enregistré.');
+          if(!['Expédiée','Livrée'].includes(o.status)) throw new HttpError(409,'order_state','Passe d’abord la commande en « Expédiée » ou « Livrée » avant d’enregistrer l’encaissement.');
+          const due=Number(o.total)-(Array.isArray(o.items)?o.items:[]).filter(i=>i.cancelled).reduce((a,i)=>a+Number(i.total||0),0);
+          const amount=b.amount===''||b.amount==null?due:Number(b.amount);
+          if(!Number.isSafeInteger(amount)||amount<1||amount>due) throw new HttpError(400,'invalid_amount',`Montant invalide : il doit être entre 1 et ${due} FC (montant à encaisser).`);
+          await client.query("UPDATE orders SET cash_collected_at=$1, cash_amount=$2, stock_state=CASE WHEN stock_state IN ('reserved','released') THEN 'sold' ELSE stock_state END WHERE id=$3",[Date.now(),amount,o.id]);
+          await client.query('COMMIT'); info={amount,due};
+        } catch(e) { try { await client.query('ROLLBACK'); } catch { destroy=true; } throw e; } finally { client.release(destroy); }
+        await logOrderEvent(b.id,'cash',`Espèces encaissées à la réception : ${info.amount} FC${info.amount<info.due?` (sur ${info.due} FC à encaisser)`:''}`);
+        return json({ok:true});
+      }
       case '/api/admin/order-costs-save': {
         const b=await readJson(req); requireAdmin(req,admin,true);
         const fees=b.paymentFees===''||b.paymentFees==null?0:Number(b.paymentFees), other=b.otherCosts===''||b.otherCosts==null?0:Number(b.otherCosts);
@@ -1214,15 +1258,16 @@ export default async function handler(req) {
         const client=await pool.connect(); let destroy=false, info;
         try { await client.query('BEGIN');
           const o=(await client.query('SELECT * FROM orders WHERE id=$1 FOR UPDATE',[String(b.id||'')])).rows[0]; if(!o) throw new HttpError(404,'order_not_found','Commande introuvable.');
-          if(!['Payée','Expédiée'].includes(o.status)) throw new HttpError(409,'order_state','L’annulation d’un article n’est possible que sur une commande payée non encore livrée.');
+          const cashOrder=o.payment_method==='cash';
+          if(!(cashOrder?['En attente','Expédiée']:['Payée','Expédiée']).includes(o.status)) throw new HttpError(409,'order_state',cashOrder?'L’annulation d’un article n’est possible que sur une commande non encore livrée.':'L’annulation d’un article n’est possible que sur une commande payée non encore livrée.');
           const items=Array.isArray(o.items)?o.items:[]; const it=items[idx]; if(!Number.isInteger(idx)||!it||it.cancelled) throw new HttpError(400,'invalid_item','Article introuvable ou déjà annulé.');
           items[idx]={...it,cancelled:true,cancelledAt:Date.now(),cancelReason:reason};
-          if(b.restock===true) await returnStock(client,[it]);
+          if(b.restock===true||(cashOrder&&o.stock_state==='reserved')) await returnStock(client,[it]);
           const allGone=items.every(i=>i.cancelled);
           await client.query('UPDATE orders SET items=$1::jsonb, status=$2 WHERE id=$3',[JSON.stringify(items),allGone?'Annulée':o.status,o.id]);
           await client.query('COMMIT'); info={o,it,allGone};
         } catch(e) { try { await client.query('ROLLBACK'); } catch { destroy=true; } throw e; } finally { client.release(destroy); }
-        await logOrderEvent(info.o.id,'item_cancel',`Article annulé : ${info.it.name} (${info.it.size}) × ${info.it.qty} — ${reason}${b.restock===true?' — remis en stock':''}${info.allGone?' — commande entièrement annulée':''}`);
+        await logOrderEvent(info.o.id,'item_cancel',`Article annulé : ${info.it.name} (${info.it.size}) × ${info.it.qty} — ${reason}${b.restock===true||(info.o.payment_method==='cash'&&info.o.stock_state==='reserved')?' — remis en stock':''}${info.allGone?' — commande entièrement annulée':''}`);
         return json({ok:true,fullyCancelled:info.allGone,refundDue:Number(info.it.total)});
       }
       case '/api/admin/order-refund': {
@@ -1232,7 +1277,7 @@ export default async function handler(req) {
         try { await client.query('BEGIN');
           const o=(await client.query('SELECT * FROM orders WHERE id=$1 FOR UPDATE',[String(b.id||'')])).rows[0]; if(!o) throw new HttpError(404,'order_not_found','Commande introuvable.');
           const sp=Number((await client.query("SELECT COALESCE(SUM(amount),0)::bigint AS n FROM payments WHERE order_id=$1 AND status='success'",[o.id])).rows[0].n);
-          const collected=sp>0?sp:(PAID_ORDER_STATUSES.includes(o.status)?Number(o.total):0);
+          const collected=collectedOf(o,sp);
           if(collected<=0) throw new HttpError(409,'no_payment','Aucun paiement confirmé à rembourser pour cette commande.');
           if(Number(o.refunded_amount)+amount>collected) throw new HttpError(400,'refund_too_high','Ce remboursement dépasse le montant payé restant.');
           await client.query('UPDATE orders SET refunded_amount=refunded_amount+$1 WHERE id=$2',[amount,o.id]); await client.query('COMMIT');
@@ -1248,8 +1293,8 @@ export default async function handler(req) {
       }
       case '/api/admin/order-email-resend': {
         const b=await readJson(req); requireAdmin(req,admin,true); const id=String(b.id||'');
-        const o=(await pool.query('SELECT status FROM orders WHERE id=$1',[id])).rows[0]; if(!o) throw new HttpError(404,'order_not_found','Commande introuvable.');
-        if(!PAID_ORDER_STATUSES.includes(o.status)) throw new HttpError(409,'order_state','L’e-mail de confirmation n’est envoyé que pour une commande payée.');
+        const o=(await pool.query('SELECT status,payment_method,cash_collected_at FROM orders WHERE id=$1',[id])).rows[0]; if(!o) throw new HttpError(404,'order_not_found','Commande introuvable.');
+        if(!orderIsPaid(o)&&o.payment_method!=='cash') throw new HttpError(409,'order_state','L’e-mail de confirmation n’est envoyé que pour une commande payée.');
         const st=(await pool.query('SELECT status FROM order_emails WHERE order_id=$1',[id])).rows[0]?.status;
         if(st==='sent'&&b.force!==true) throw new HttpError(409,'already_sent','L’e-mail a déjà été envoyé. Confirme pour le renvoyer.');
         if(st==='sent') await pool.query("UPDATE order_emails SET status='failed' WHERE order_id=$1",[id]);
@@ -1266,13 +1311,13 @@ export default async function handler(req) {
         const client=await pool.connect(); let destroy=false, rid, orderRef;
         try { await client.query('BEGIN');
           const o=(await client.query('SELECT * FROM orders WHERE id=$1 FOR UPDATE',[String(b.orderId||'')])).rows[0]; if(!o) throw new HttpError(404,'order_not_found','Commande introuvable.'); orderRef=o.id;
-          if(!PAID_ORDER_STATUSES.includes(o.status)) throw new HttpError(409,'order_state','Une demande ne peut concerner qu’une commande payée.');
+          if(!orderIsPaid(o)) throw new HttpError(409,'order_state','Une demande ne peut concerner qu’une commande payée.');
           let cur=null; if(b.id){ cur=(await client.query('SELECT * FROM returns WHERE id=$1 FOR UPDATE',[String(b.id)])).rows[0]; if(!cur) throw new HttpError(404,'return_not_found','Demande introuvable.'); }
           const it=(o.items||[]).find(i=>String(i.id)===String(b.productId||cur?.product_id)&&String(i.size)===String(b.size||cur?.size)&&!i.cancelled);
           if(!cur&&!it) throw new HttpError(400,'invalid_item','Choisis un article de cette commande.');
           let applied=cur?.refund_applied===true;
           if(status==='Remboursement effectué'&&refund>0&&!applied){
-            const sp=Number((await client.query("SELECT COALESCE(SUM(amount),0)::bigint AS n FROM payments WHERE order_id=$1 AND status='success'",[o.id])).rows[0].n), collected=sp>0?sp:Number(o.total);
+            const sp=Number((await client.query("SELECT COALESCE(SUM(amount),0)::bigint AS n FROM payments WHERE order_id=$1 AND status='success'",[o.id])).rows[0].n), collected=collectedOf(o,sp);
             if(Number(o.refunded_amount)+refund>collected) throw new HttpError(400,'refund_too_high','Ce remboursement dépasse le montant payé restant.');
             await client.query('UPDATE orders SET refunded_amount=refunded_amount+$1 WHERE id=$2',[refund,o.id]); applied=true;
           }
@@ -1386,11 +1431,26 @@ export default async function handler(req) {
         if(costSet) await pool.query('UPDATE products SET cost_price=$1 WHERE id=$2',[costVal,id]);
         return json({ok:true,id});
       }
+      case '/api/admin/collections-save': {
+        const b=await readJson(req,20000); requireAdmin(req,admin,true);
+        const list=Array.isArray(b.collections)?b.collections:[]; if(list.length>40) throw new HttpError(400,'invalid_collections','40 collections maximum.');
+        const seen=new Set(), items=[];
+        for(const c of list){
+          const name=txt(c?.name,60); if(name.length<2) throw new HttpError(400,'invalid_collections','Chaque collection doit avoir un nom (2 caractères minimum).');
+          const id=slugify(c?.id||name); if(!id) throw new HttpError(400,'invalid_collections','Nom de collection invalide.');
+          if(seen.has(id)) throw new HttpError(400,'invalid_collections',`Collection en double : ${name}.`); seen.add(id);
+          const image=typeof c?.image==='string'?c.image.trim().slice(0,2000):''; if(image&&!/^https?:\/\/\S+$/i.test(image)) throw new HttpError(400,'invalid_collections','Le lien de l’image doit commencer par https://');
+          items.push({id,name,image});
+        }
+        await pool.query('INSERT INTO site_settings (key,value,updated_at) VALUES ($1,$2::jsonb,$3) ON CONFLICT (key) DO UPDATE SET value=EXCLUDED.value, updated_at=EXCLUDED.updated_at',[COLLECTIONS_KEY,JSON.stringify({items}),Date.now()]);
+        return json({ok:true,collections:items});
+      }
       case '/api/admin/product-delete': { const b=await readJson(req); requireAdmin(req,admin,true); if(typeof b.id!=='string') throw new HttpError(400,'bad_request','Article invalide.'); await pool.query('UPDATE products SET active=FALSE,updated_at=$1 WHERE id=$2',[Date.now(),b.id]); return json({ok:true}); }
       case '/api/admin/product-hard-delete': { const b=await readJson(req); requireAdmin(req,admin,true); if(typeof b.id!=='string') throw new HttpError(400,'bad_request','Article invalide.'); const used=await pool.query("SELECT 1 FROM orders WHERE items @> jsonb_build_array(jsonb_build_object('id',$1::text)) LIMIT 1",[b.id]); if(used.rowCount) throw new HttpError(409,'product_in_orders','Cet article figure dans des commandes : suppression définitive impossible pour garder l’historique et les factures. Utilise « Retirer » pour le masquer.'); await pool.query('DELETE FROM products WHERE id=$1',[b.id]); return json({ok:true}); }
       case '/api/admin/client-toggle': { const b=await readJson(req); requireAdmin(req,admin,true); if(typeof b.id!=='string'||typeof b.blocked!=='boolean') throw new HttpError(400,'bad_request','Client invalide.'); await pool.query('UPDATE users SET account_blocked=$1,failed_attempts=0 WHERE id=$2',[b.blocked,b.id]); if(b.blocked) await pool.query('DELETE FROM sessions WHERE user_id=$1',[b.id]); return json({ok:true}); }
       case '/api/admin/order-delete': { const b=await readJson(req); requireAdmin(req,admin,true); if(typeof b.id!=='string'||!b.id.trim()) throw new HttpError(400,'bad_request','Commande invalide.'); const hasPay=await pool.query('SELECT 1 FROM payments WHERE order_id=$1 LIMIT 1',[b.id]); if(hasPay.rowCount) throw new HttpError(409,'order_has_payments','Impossible de supprimer une commande qui a un historique de paiement.'); const result=await pool.query('DELETE FROM orders WHERE id=$1',[b.id]); if(!result.rowCount) throw new HttpError(404,'order_not_found','Commande introuvable.'); return json({ok:true}); }
-      case '/api/admin/order-status': { const b=await readJson(req); requireAdmin(req,admin,true); if(typeof b.id!=='string'||!ORDER_STATUSES.includes(b.status)) throw new HttpError(400,'bad_request','Statut invalide.'); if(b.status==='Payée'||b.status==='En attente'){ const {rows:pc}=await pool.query("SELECT COUNT(*)::int AS n, COUNT(*) FILTER (WHERE status='success')::int AS ok FROM payments WHERE order_id=$1",[b.id]); const n=pc[0]?.n||0, ok=pc[0]?.ok||0; if(b.status==='Payée'&&n>0&&!ok) throw new HttpError(409,'payment_not_confirmed','Le statut « Payée » est réservé aux paiements confirmés par l’opérateur. Utilise « Revérifier » dans l’onglet Paiements.'); if(b.status==='En attente'&&ok) throw new HttpError(409,'already_paid','Cette commande est déjà payée.'); } const st=await setOrderStatus(b.id,b.status); await logOrderEvent(b.id,'status',`Statut de la commande : ${st.previous} → ${b.status}`); if(st.previous==='En attente'&&PAID_ORDER_STATUSES.includes(b.status)) await sendOrderConfirmation(b.id); return json({ok:true}); }
+      case '/api/admin/order-status': { const b=await readJson(req); requireAdmin(req,admin,true); if(typeof b.id!=='string'||!ORDER_STATUSES.includes(b.status)) throw new HttpError(400,'bad_request','Statut invalide.'); { const mo=(await pool.query('SELECT payment_method FROM orders WHERE id=$1',[b.id])).rows[0]; if(mo&&mo.payment_method==='cash'&&b.status==='Payée') throw new HttpError(409,'cash_order','Cette commande se paie en espèces à la réception : passe-la en « Expédiée » puis utilise « Enregistrer l’encaissement » une fois l’argent reçu.'); }
+ if(b.status==='Payée'||b.status==='En attente'){ const {rows:pc}=await pool.query("SELECT COUNT(*)::int AS n, COUNT(*) FILTER (WHERE status='success')::int AS ok FROM payments WHERE order_id=$1",[b.id]); const n=pc[0]?.n||0, ok=pc[0]?.ok||0; if(b.status==='Payée'&&n>0&&!ok) throw new HttpError(409,'payment_not_confirmed','Le statut « Payée » est réservé aux paiements confirmés par l’opérateur. Utilise « Revérifier » dans l’onglet Paiements.'); if(b.status==='En attente'&&ok) throw new HttpError(409,'already_paid','Cette commande est déjà payée.'); } const st=await setOrderStatus(b.id,b.status); await logOrderEvent(b.id,'status',`Statut de la commande : ${st.previous} → ${b.status}`); if(st.previous==='En attente'&&st.method!=='cash'&&PAID_ORDER_STATUSES.includes(b.status)) await sendOrderConfirmation(b.id); return json({ok:true}); }
       case '/api/admin/order-tracking': { const b=await readJson(req); requireAdmin(req,admin,true); if(typeof b.id!=='string'||typeof b.trackingCode!=='string'||b.trackingCode.length>100) throw new HttpError(400,'bad_request','Code de suivi invalide.'); await pool.query('UPDATE orders SET tracking_code=$1 WHERE id=$2',[b.trackingCode.trim(),b.id]); return json({ok:true}); }
       default: break;
     }
@@ -1423,7 +1483,7 @@ export default async function handler(req) {
         const orderId=String(b.orderId||''), productId=String(b.productId||''), rating=Number(b.rating), comment=txt(b.comment,1000);
         if(!Number.isInteger(rating)||rating<1||rating>5) throw new HttpError(400,'invalid_rating','Choisis une note de 1 à 5.');
         const o=(await pool.query('SELECT * FROM orders WHERE id=$1 AND user_id=$2',[orderId,uid])).rows[0]; if(!o) throw new HttpError(404,'order_not_found','Commande introuvable.');
-        if(!PAID_ORDER_STATUSES.includes(o.status)||!(o.items||[]).some(i=>String(i.id)===productId&&!i.cancelled)) throw new HttpError(403,'not_purchased','Seuls les clients ayant acheté cet article peuvent donner leur avis.');
+        if(!orderIsPaid(o)||!(o.items||[]).some(i=>String(i.id)===productId&&!i.cancelled)) throw new HttpError(403,'not_purchased','Seuls les clients ayant acheté cet article peuvent donner leur avis.');
         const u=(await pool.query('SELECT first_name,last_name FROM users WHERE id=$1',[uid])).rows[0];
         try { await pool.query("INSERT INTO reviews (id,product_id,order_id,user_id,author,rating,comment,status,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,'published',$8)",[crypto.randomUUID(),productId,orderId,uid,reviewAuthor(u),rating,comment,Date.now()]); }
         catch(e) { if(e.code==='23505') throw new HttpError(409,'already_reviewed','Tu as déjà donné ton avis sur cet article pour cette commande.'); throw e; }
@@ -1466,6 +1526,8 @@ export default async function handler(req) {
         if(!/^\+?[0-9 ().-]{8,20}$/.test(phone)) throw new HttpError(400,'invalid_phone','Entre un numéro de téléphone valide.');
         const ownWa=(await pool.query('SELECT whatsapp FROM users WHERE id=$1',[auth.row.user_id])).rows[0]?.whatsapp||'';
         const whatsapp=normalizeWhatsapp(b.whatsapp!==undefined?b.whatsapp:ownWa);
+        const payMethod=b.paymentMethod==='cash'?'cash':'mobile_money';
+        if(payMethod==='cash'){ const set=settingsFromValue((await pool.query('SELECT value FROM site_settings WHERE key=$1',[SETTINGS_KEY])).rows[0]?.value); if(set.codEnabled===false) throw new HttpError(400,'cash_disabled','Le paiement en espèces à la réception n’est pas disponible pour le moment.'); }
         if(address.length<8) throw new HttpError(400,'invalid_address','Entre une adresse de livraison complète.');
         if(!Array.isArray(b.items)||!b.items.length||b.items.length>30) throw new HttpError(400,'invalid_cart','Ton panier est vide ou invalide.');
         await sweepExpiredReservations(true);
@@ -1485,13 +1547,14 @@ export default async function handler(req) {
         { const client=await pool.connect(); let destroy=false;
           try { await client.query('BEGIN'); await takeStock(client,items);
             const nowTs=Date.now();
-            await client.query("INSERT INTO orders (id,user_id,customer_name,customer_email,phone,address,items,total,status,created_at,stock_state,reserved_until,whatsapp) VALUES ($1,$2,$3,$4,$5,$6,$7::jsonb,$8,$9,$10,'reserved',$11,$12)",[id,auth.row.user_id,fullName,auth.row.email,phone,address,JSON.stringify(items),total,'En attente',nowTs,nowTs+RESERVATION_MS,whatsapp]);
+            await client.query("INSERT INTO orders (id,user_id,customer_name,customer_email,phone,address,items,total,status,created_at,stock_state,reserved_until,whatsapp,payment_method) VALUES ($1,$2,$3,$4,$5,$6,$7::jsonb,$8,$9,$10,'reserved',$11,$12,$13)",[id,auth.row.user_id,fullName,auth.row.email,phone,address,JSON.stringify(items),total,'En attente',nowTs,payMethod==='cash'?null:nowTs+RESERVATION_MS,whatsapp,payMethod]);
             await client.query("UPDATE users SET whatsapp=$1 WHERE id=$2 AND whatsapp=''",[whatsapp,auth.row.user_id]); await client.query('DELETE FROM carts WHERE user_id=$1',[auth.row.user_id]);
             await client.query('COMMIT'); }
           catch(e) { try { await client.query('ROLLBACK'); } catch { destroy=true; } throw e; }
           finally { client.release(destroy); } }
-        await notifyAdminOrder({ref:id.slice(0,8).toUpperCase(),customerName:fullName,email:auth.row.email,phone,address,items,total});
-        return json({ok:true,ref:id.slice(0,8).toUpperCase(),total},201,cookies);
+        await notifyAdminOrder({ref:id.slice(0,8).toUpperCase(),customerName:fullName,email:auth.row.email,phone,address,items,total,paymentMethod:payMethod});
+        if(payMethod==='cash') { await logOrderEvent(id,'order','Commande à payer en espèces à la réception'); await sendOrderConfirmation(id); }
+        return json({ok:true,ref:id.slice(0,8).toUpperCase(),total,paymentMethod:payMethod},201,cookies);
       }
       case '/api/register': {
         if(!allow('reg:'+ip,5,HOUR)) throw new HttpError(429,'rate_limited','Trop de créations de compte. Réessaie plus tard.');
