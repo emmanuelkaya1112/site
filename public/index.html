@@ -97,6 +97,7 @@
 </style>
 </head>
 <body class="antialiased">
+<div id="siteNotice" class="hidden bg-accent text-white text-center text-sm font-semibold px-4 py-2" role="status"></div>
 
 <div class="bg-accent text-white text-center text-[11px] sm:text-xs font-semibold px-4 py-1.5">Livraison gratuite sur les modèles signalés. Articles à partir de 19&nbsp;500&nbsp;FC.</div>
 
@@ -131,6 +132,10 @@
         <svg class="icon-moon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.800A9 9 0 1 1 11.200 3a7 7 0 0 0 9.800 9.800z"/></svg>
         <svg class="icon-sun" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.900 4.900l1.400 1.400M17.700 17.700l1.400 1.400M2 12h2M20 12h2M4.900 19.100l1.400-1.400M17.700 6.300l1.400-1.400"/></svg>
       </button>
+      <button id="favBtn" class="relative p-2 hover:text-accent" aria-label="Mes favoris">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-4.6-9.3-9.1C1.1 8.700 3 5 6.500 5c2 0 3.600 1.100 5.500 3 1.900-1.900 3.500-3 5.500-3C21 5 22.900 8.700 21.300 11.900 19 16.400 12 21 12 21z"/></svg>
+        <span id="favCount" class="hidden absolute -top-0.5 -right-0.5 min-w-[1.25rem] h-5 px-1 rounded-full bg-accent text-white text-xs font-bold grid place-items-center">0</span>
+      </button>
       <button id="accountBtn" class="hidden sm:block p-2 hover:text-accent" aria-label="Mon compte">
         <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.400 3.600-7 8-7s8 2.600 8 7"/></svg>
       </button>
@@ -162,9 +167,9 @@
 <section class="relative overflow-hidden">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-10 pb-14 sm:pt-16 sm:pb-20 grid lg:grid-cols-12 gap-10 items-center">
     <div class="lg:col-span-7 relative z-10">
-      <h1 class="display text-[clamp(1.6rem,7.6vw,2.4rem)] sm:text-5xl xl:text-7xl uppercase">Ton style.<br>Ton budget.</h1>
+      <h1 class="display text-[clamp(1.6rem,7.6vw,2.4rem)] sm:text-5xl xl:text-7xl uppercase" data-cms="heroTitle">Ton style.<br>Ton budget.</h1>
       <p class="mt-4 text-sm sm:text-lg max-w-md font-medium leading-snug">Vêtements tendance <span class="whitespace-nowrap">à partir de <span class="bg-accent text-white px-2 py-0.5" data-hero-price>19&nbsp;500&nbsp;FC</span></span></p>
-      <p class="mt-3 max-w-md text-muted text-[13px] sm:text-sm">Nos modèles à petit prix, et des articles Nike, Adidas, Puma et Vans.</p>
+      <p class="mt-3 max-w-md text-muted text-[13px] sm:text-sm" data-cms="heroText">Nos modèles à petit prix, et des articles Nike, Adidas, Puma et Vans.</p>
       <p class="mt-4 inline-flex items-center gap-2 bg-inv text-invink text-[12px] sm:text-[13px] font-bold px-3.5 py-1.5 rounded-full">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 6h12v10H2zM14 10h5l3 3v3h-8z"/><circle cx="7" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>
         Livraison gratuite sur les modèles signalés
@@ -229,8 +234,8 @@
 <section id="produits" class="max-w-7xl mx-auto px-3 sm:px-6 py-10 sm:py-20">
   <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-5">
     <div>
-      <h2 class="display text-2xl sm:text-4xl uppercase">Bestsellers</h2>
-      <p class="mt-1.5 sm:mt-2 text-[13px] sm:text-sm text-muted">Nos articles à petits prix : hauts, pantalons, sous-vêtements, chaussures et accessoires.</p>
+      <h2 class="display text-2xl sm:text-4xl uppercase" data-cms="productsTitle">Bestsellers</h2>
+      <p class="mt-1.5 sm:mt-2 text-[13px] sm:text-sm text-muted" data-cms="productsText">Nos articles à petits prix : hauts, pantalons, sous-vêtements, chaussures et accessoires.</p>
     </div>
     <div id="filters" class="flex gap-2 overflow-x-auto no-scrollbar -mx-3 px-3 sm:mx-0 sm:px-0" role="group" aria-label="Filtrer les produits"></div>
   </div>
@@ -249,29 +254,29 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-24">
     <div class="grid lg:grid-cols-12 gap-8 sm:gap-10">
       <div class="lg:col-span-5">
-        <h2 class="display text-2xl sm:text-4xl uppercase">Le style ne devrait pas coûter cher.</h2>
-        <p class="mt-5 text-white/70 max-w-md text-[13px] sm:text-sm">Sur outfit-shirt, on réunit des hauts (pulls, chemises, t-shirts), pantalons, sous-vêtements, chaussures et accessoires tendance à des prix doux : s'habiller streetwear sans vider son portefeuille. Pensé pour les jeunes, les étudiants et tous ceux qui vivent le style au quotidien.</p>
+        <h2 class="display text-2xl sm:text-4xl uppercase" data-cms="aboutTitle">Le style ne devrait pas coûter cher.</h2>
+        <p class="mt-5 text-white/70 max-w-md text-[13px] sm:text-sm" data-cms="aboutText">Sur outfit-shirt, on réunit des hauts (pulls, chemises, t-shirts), pantalons, sous-vêtements, chaussures et accessoires tendance à des prix doux : s'habiller streetwear sans vider son portefeuille. Pensé pour les jeunes, les étudiants et tous ceux qui vivent le style au quotidien.</p>
       </div>
 
       <div class="lg:col-span-7 grid sm:grid-cols-3 gap-3 sm:gap-4">
         <article class="rounded-3xl bg-accent p-6 flex flex-col gap-6 sm:gap-10 sm:min-h-[19rem]">
           <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="2.500" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h20v16H4zM24 17h8l4 5v6H24z"/><circle cx="12" cy="30" r="3"/><circle cx="30" cy="30" r="3"/></svg>
           <div>
-            <h3 class="display text-base uppercase">Livraison rapide</h3>
-            <p class="mt-2 text-white/90 text-[13px]">Livraison en moins de 24 h. Offerte dès 4 articles ; sinon 6 000 FC.</p>
+            <h3 class="display text-base uppercase" data-cms="about1Title">Livraison rapide</h3>
+            <p class="mt-2 text-white/90 text-[13px]" data-cms="about1Text">Livraison en moins de 24 h. Offerte dès 4 articles ; sinon 6 000 FC.</p>
           </div>
         </article>
         <article class="rounded-3xl bg-white text-black p-6 flex flex-col gap-6 sm:gap-10 sm:min-h-[19rem]">
           <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#000" stroke-width="2.500" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 5c8 6 12 12 12 19a12 12 0 0 1-24 0C8 17 12 11 20 5z"/><path d="M20 14v20M20 22l-5-4M20 27l5-4"/></svg>
           <div>
-            <h3 class="display text-base uppercase">Coton de qualité</h3>
-            <p class="mt-2 text-black/70 text-[13px]">Un tissu doux, épais et résistant au lavage. Il garde sa forme et ses couleurs.</p>
+            <h3 class="display text-base uppercase" data-cms="about2Title">Coton de qualité</h3>
+            <p class="mt-2 text-black/70 text-[13px]" data-cms="about2Text">Un tissu doux, épais et résistant au lavage. Il garde sa forme et ses couleurs.</p>
           </div>
         </article>
         <article class="rounded-3xl bg-[#E2E5EB] text-black p-6 flex flex-col gap-6 sm:gap-10 sm:min-h-[19rem]">
           <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#000" stroke-width="2.500" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="20" cy="20" r="15"/><path d="M14 22h12M14 17h12M17 12v16"/></svg>
           <div>
-            <h3 class="display text-base uppercase">Accessible à tous les budgets</h3>
+            <h3 class="display text-base uppercase" data-cms="about3Title">Accessible à tous les budgets</h3>
             <p class="mt-2 text-black/70 text-[13px]">Des prix clairs en francs congolais, dès <span data-hero-price>19 500 FC</span>. Des promos réservées aux étudiants.</p>
           </div>
         </article>
@@ -287,23 +292,23 @@
 <section id="livraison" class="border-t border-line bg-surface">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
     <p class="text-xs uppercase tracking-widest text-muted font-bold">Informations pratiques</p>
-    <h2 class="display text-3xl sm:text-4xl mt-2">Livraison & commandes</h2>
+    <h2 class="display text-3xl sm:text-4xl mt-2" data-cms="deliveryTitle">Livraison & commandes</h2>
     <div class="grid md:grid-cols-3 gap-4 mt-7">
-      <article class="rounded-2xl border border-line p-5"><h3 class="font-bold">Livraison rapide</h3><p class="text-sm text-muted mt-2">La livraison est annoncée en moins de 24 heures. Le délai peut dépendre de la zone et de la disponibilité du livreur.</p></article>
-      <article class="rounded-2xl border border-line p-5"><h3 class="font-bold">Frais de livraison</h3><p class="text-sm text-muted mt-2">À partir de 4 articles, la livraison est offerte. Pour 1 à 3 articles, les frais sont de 6 000 FC. Pour une commande de 3 articles, chaque article doit coûter au moins 19 500 FC.</p></article>
-      <article class="rounded-2xl border border-line p-5"><h3 class="font-bold">Suivi de commande</h3><p class="text-sm text-muted mt-2">Connecte-toi à ton compte puis ouvre l’onglet « Commandes » pour voir le statut et le code de suivi lorsqu’il est disponible.</p><button type="button" id="deliveryAccountBtn" class="mt-4 rounded-full bg-inv text-invink px-5 py-2 font-bold">Mon compte</button></article>
+      <article class="rounded-2xl border border-line p-5"><h3 class="font-bold" data-cms="delivery1Title">Livraison rapide</h3><p class="text-sm text-muted mt-2" data-cms="delivery1Text">La livraison est annoncée en moins de 24 heures. Le délai peut dépendre de la zone et de la disponibilité du livreur.</p></article>
+      <article class="rounded-2xl border border-line p-5"><h3 class="font-bold" data-cms="delivery2Title">Frais de livraison</h3><p class="text-sm text-muted mt-2" data-cms="delivery2Text">À partir de 4 articles, la livraison est offerte. Pour 1 à 3 articles, les frais sont de 6 000 FC. Pour une commande de 3 articles, chaque article doit coûter au moins 19 500 FC.</p></article>
+      <article class="rounded-2xl border border-line p-5"><h3 class="font-bold" data-cms="delivery3Title">Suivi de commande</h3><p class="text-sm text-muted mt-2" data-cms="delivery3Text">Connecte-toi à ton compte puis ouvre l’onglet « Commandes » pour voir le statut et le code de suivi lorsqu’il est disponible.</p><button type="button" id="deliveryAccountBtn" class="mt-4 rounded-full bg-inv text-invink px-5 py-2 font-bold">Mon compte</button></article>
     </div>
   </div>
 </section>
 <section id="faq" class="border-t border-line">
   <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
-    <p class="text-xs uppercase tracking-widest text-muted font-bold">Besoin d’aide ?</p><h2 class="display text-3xl sm:text-4xl mt-2">Questions fréquentes</h2>
+    <p class="text-xs uppercase tracking-widest text-muted font-bold">Besoin d’aide ?</p><h2 class="display text-3xl sm:text-4xl mt-2" data-cms="faqTitle">Questions fréquentes</h2>
     <div class="mt-7 divide-y divide-line border-y border-line">
-      <details class="py-4"><summary class="font-bold cursor-pointer">Comment choisir la taille ?</summary><p class="text-sm text-muted mt-3">Consulte les tailles disponibles sur la fiche de l’article. Si une taille n’apparaît pas ou est indiquée en rupture, elle n’est pas disponible à la commande.</p></details>
-      <details class="py-4"><summary class="font-bold cursor-pointer">Comment suivre ma commande ?</summary><p class="text-sm text-muted mt-3">Ouvre « Mon compte », connecte-toi puis sélectionne « Commandes ». Le statut et le code de suivi s’affichent dès que la boutique les renseigne.</p></details>
-      <details class="py-4"><summary class="font-bold cursor-pointer">Quand la livraison est-elle gratuite ?</summary><p class="text-sm text-muted mt-3">La livraison est offerte à partir de 4 articles. Pour moins de 4 articles, elle coûte 6 000 FC.</p></details>
-      <details class="py-4"><summary class="font-bold cursor-pointer">Comment demander de l’aide ?</summary><p class="text-sm text-muted mt-3">Utilise le bouton WhatsApp « Aide » affiché en bas de la page, ou écris-nous à <a data-contact-mail href="mailto:outfitshirt@gmail.com" class="underline underline-offset-4 hover:text-accent">outfitshirt@gmail.com</a>.</p></details>
-      <details class="py-4"><summary class="font-bold cursor-pointer">Que faire si ma taille est épuisée ?</summary><p class="text-sm text-muted mt-3">Choisis une autre taille disponible ou contacte le service client pour demander si un réapprovisionnement est prévu.</p></details>
+      <details class="py-4"><summary class="font-bold cursor-pointer" data-cms="faq1Q">Comment choisir la taille ?</summary><p class="text-sm text-muted mt-3" data-cms="faq1A">Consulte les tailles disponibles sur la fiche de l’article. Si une taille n’apparaît pas ou est indiquée en rupture, elle n’est pas disponible à la commande.</p></details>
+      <details class="py-4"><summary class="font-bold cursor-pointer" data-cms="faq2Q">Comment suivre ma commande ?</summary><p class="text-sm text-muted mt-3" data-cms="faq2A">Ouvre « Mon compte », connecte-toi puis sélectionne « Commandes ». Le statut et le code de suivi s’affichent dès que la boutique les renseigne.</p></details>
+      <details class="py-4"><summary class="font-bold cursor-pointer" data-cms="faq3Q">Quand la livraison est-elle gratuite ?</summary><p class="text-sm text-muted mt-3" data-cms="faq3A">La livraison est offerte à partir de 4 articles. Pour moins de 4 articles, elle coûte 6 000 FC.</p></details>
+      <details class="py-4"><summary class="font-bold cursor-pointer" data-cms="faq4Q">Comment demander de l’aide ?</summary><p class="text-sm text-muted mt-3">Utilise le bouton WhatsApp « Aide » affiché en bas de la page, ou écris-nous à <a data-contact-mail href="mailto:outfitshirt@gmail.com" class="underline underline-offset-4 hover:text-accent">outfitshirt@gmail.com</a>.</p></details>
+      <details class="py-4"><summary class="font-bold cursor-pointer" data-cms="faq5Q">Que faire si ma taille est épuisée ?</summary><p class="text-sm text-muted mt-3" data-cms="faq5A">Choisis une autre taille disponible ou contacte le service client pour demander si un réapprovisionnement est prévu.</p></details>
     </div>
   </div>
 </section>
@@ -313,7 +318,7 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-14 grid md:grid-cols-12 gap-10">
     <div class="md:col-span-5">
       <a href="#top" class="display text-xl lowercase">outfit-shirt<span class="text-accent">.</span></a>
-      <p class="mt-3 text-muted max-w-xs">Vêtements et accessoires tendance, bonne qualité, petits prix.</p>
+      <p class="mt-3 text-muted max-w-xs" data-cms="footerText">Vêtements et accessoires tendance, bonne qualité, petits prix.</p>
       <p class="mt-3 text-sm"><span class="text-muted">Nous contacter : </span><a data-contact-mail href="mailto:outfitshirt@gmail.com" class="font-semibold underline underline-offset-4 hover:text-accent">outfitshirt@gmail.com</a></p>
       <div class="mt-6 flex gap-3">
         <a href="https://www.instagram.com/outfitshirt4" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="w-11 h-11 rounded-full border-2 border-ink grid place-items-center hover:bg-inv hover:text-invink transition-colors">
@@ -376,10 +381,19 @@
       <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linecap="round"><path d="M3 3l12 12M15 3L3 15"/></svg>
     </button>
     <div class="p-4 sm:p-6">
+      <div id="vGallery" class="hidden">
+        <div id="vGalWrap" class="relative aspect-square rounded-2xl overflow-hidden tile bg-white" style="touch-action:pan-y">
+          <img id="vGalMain" src="" alt="" class="absolute inset-0 w-full h-full object-contain bg-white">
+          <button id="vGalPrev" type="button" class="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-surface/90 border border-line grid place-items-center" aria-label="Photo précédente">‹</button>
+          <button id="vGalNext" type="button" class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-surface/90 border border-line grid place-items-center" aria-label="Photo suivante">›</button>
+          <span id="vGalCount" class="absolute bottom-2 right-2 text-xs font-bold bg-surface/90 border border-line rounded-full px-2 py-0.5"></span>
+        </div>
+        <div id="vThumbs" class="mt-3 flex gap-2 overflow-x-auto pb-1"></div>
+      </div>
       <div id="vFlip" class="flipper tile relative aspect-square rounded-2xl overflow-hidden">
         <div class="flip-inner" id="vInner"></div>
       </div>
-      <div class="mt-3 flex justify-center gap-2" role="group" aria-label="Choisir la vue">
+      <div id="vSides" class="mt-3 flex justify-center gap-2" role="group" aria-label="Choisir la vue">
         <button data-side="front" aria-pressed="true" class="vSide h-10 px-6 rounded-full border-2 text-sm font-bold">Face</button>
         <button data-side="back" aria-pressed="false" class="vSide h-10 px-6 rounded-full border-2 text-sm font-bold">Dos</button>
       </div>
@@ -387,13 +401,23 @@
     <div class="p-5 sm:p-8 flex flex-col justify-center">
       <p id="vBrand" class="text-sm text-muted font-semibold"></p>
       <h2 id="vName" class="display text-xl sm:text-2xl uppercase mt-1"></h2>
+      <p id="vRating" class="mt-1 text-sm"></p>
       <p class="mt-3 flex items-baseline gap-3"><span id="vPrice" class="text-lg font-extrabold"></span><s id="vOld" class="text-sm text-muted"></s></p>
       <p id="vFree" class="hidden mt-3 self-start items-center gap-2 bg-inv text-invink text-xs font-bold px-3 py-1.5 rounded-full">Livraison gratuite</p>
-      <label for="vSize" class="mt-5 text-sm font-semibold">Taille</label>
+      <p id="vDesc" class="hidden mt-3 text-sm text-muted whitespace-pre-line"></p>
+      <label id="vSizeLabel" for="vSize" class="mt-5 text-sm font-semibold">Taille</label>
       <select id="vSize" class="mt-1 h-11 rounded-full border-2 border-line bg-surface text-base font-semibold px-4 focus:border-accent outline-none" aria-label="Choisir une taille">
         <option value="">Choisir une taille</option>
       </select>
-      <button id="vAdd" class="mt-5 h-12 rounded-full bg-inv text-invink font-bold hover:bg-accent hover:text-white transition-colors">Ajouter au panier</button>
+      <p id="vSizeInfo" class="mt-1 text-xs text-red-600 font-semibold"></p>
+      <div class="mt-5 flex gap-2">
+        <button id="vAdd" class="flex-1 h-12 rounded-full bg-inv text-invink font-bold hover:bg-accent hover:text-white transition-colors">Ajouter au panier</button>
+        <button id="vFav" type="button" data-fav="" aria-pressed="false" aria-label="Ajouter aux favoris" class="w-12 h-12 rounded-full border-2 border-line grid place-items-center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-4.6-9.3-9.1C1.1 8.700 3 5 6.500 5c2 0 3.600 1.100 5.500 3 1.900-1.900 3.500-3 5.500-3C21 5 22.900 8.700 21.300 11.900 19 16.400 12 21 12 21z"/></svg></button>
+      </div>
+    </div>
+    <div class="md:col-span-2 px-5 pb-6 sm:px-8 space-y-6">
+      <section aria-labelledby="vRevTitle"><h3 id="vRevTitle" class="font-bold">Avis des clients</h3><div id="vReviews" class="mt-2"></div></section>
+      <section id="vRelatedBox" class="hidden" aria-labelledby="vRelTitle"><h3 id="vRelTitle" class="font-bold">Tu pourrais aussi aimer</h3><div id="vRelated" class="mt-2 flex gap-3 overflow-x-auto pb-2"></div></section>
     </div>
   </div>
 </dialog>
@@ -418,7 +442,8 @@
       <div id="accountExtraWrap" class="hidden space-y-3">
       <div><label for="rLast" class="block text-sm font-semibold mb-1">Nom</label><input id="rLast" autocomplete="family-name" maxlength="60" class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
       <div><label for="rPost" class="block text-sm font-semibold mb-1">Postnom (facultatif)</label><input id="rPost" maxlength="60" class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
-      <div><label for="rPhone" class="block text-sm font-semibold mb-1">Téléphone</label><input id="rPhone" type="tel" autocomplete="tel" maxlength="30" placeholder="+243 ..." class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
+      <div><label for="rWa" class="block text-sm font-semibold mb-1">Numéro WhatsApp <span class="text-red-500" aria-hidden="true">*</span></label><div class="flex gap-2"><select id="rWaCode" aria-label="Indicatif du pays" class="h-12 rounded-xl bg-surface border border-line px-2 max-w-[9rem]"></select><input id="rWa" type="tel" inputmode="tel" autocomplete="tel-national" maxlength="20" placeholder="900 000 000" class="flex-1 min-w-0 h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div><p class="text-xs text-muted mt-1">Obligatoire : utilisé pour te contacter au sujet de tes commandes.</p></div>
+      <div><label for="rPhone" class="block text-sm font-semibold mb-1">Autre téléphone (facultatif)</label><input id="rPhone" type="tel" autocomplete="tel" maxlength="30" placeholder="+243 ..." class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
       <div><label for="rBirth" class="block text-sm font-semibold mb-1">Date de naissance (facultatif)</label><input id="rBirth" type="date" autocomplete="bday" class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
       <div><label for="rAddr" class="block text-sm font-semibold mb-1">Adresse de livraison</label><input id="rAddr" autocomplete="street-address" maxlength="300" placeholder="Avenue, numéro, quartier, commune, ville" class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
       </div>
@@ -453,6 +478,8 @@
       <div><label for="pFirst" class="block text-sm font-semibold mb-1">Prénom</label><input id="pFirst" autocomplete="given-name" maxlength="60" class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
       <div><label for="pLast" class="block text-sm font-semibold mb-1">Nom</label><input id="pLast" autocomplete="family-name" maxlength="60" class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
       <div><label for="pPost" class="block text-sm font-semibold mb-1">Postnom (facultatif)</label><input id="pPost" maxlength="60" class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
+      <p id="waBanner" class="hidden rounded-lg bg-amber-100 text-amber-900 text-sm p-3">Ajoute ton numéro WhatsApp : il est maintenant demandé à tous les clients pour le suivi des commandes.</p>
+      <div><label for="pWa" class="block text-sm font-semibold mb-1">Numéro WhatsApp</label><div class="flex gap-2"><select id="pWaCode" aria-label="Indicatif du pays" class="h-12 rounded-xl bg-surface border border-line px-2 max-w-[9rem]"></select><input id="pWa" type="tel" inputmode="tel" autocomplete="tel-national" maxlength="20" placeholder="900 000 000" class="flex-1 min-w-0 h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div><p class="text-xs text-muted mt-1">utilisé pour te contacter au sujet de tes commandes.</p></div>
       <div><label for="pPhone" class="block text-sm font-semibold mb-1">Téléphone</label><input id="pPhone" type="tel" autocomplete="tel" maxlength="30" placeholder="+243 ..." class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
       <div><label for="pBirth" class="block text-sm font-semibold mb-1">Date de naissance (facultatif)</label><input id="pBirth" type="date" autocomplete="bday" class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
       <div><label for="pAddr" class="block text-sm font-semibold mb-1">Adresse de livraison</label><input id="pAddr" autocomplete="street-address" maxlength="300" placeholder="Avenue, numéro, quartier, commune, ville" class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
@@ -475,6 +502,7 @@
       <p class="flex justify-between font-bold"><span>Total</span><span id="orderTotal"></span></p>
       <div><label for="orderName" class="block text-sm font-semibold mb-1">Nom et prénom</label><input id="orderName" autocomplete="name" maxlength="100" required class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
       <div><label for="orderPhone" class="block text-sm font-semibold mb-1">Téléphone</label><input id="orderPhone" type="tel" autocomplete="tel" maxlength="30" required placeholder="+243 ..." class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
+      <div><label for="orderWa" class="block text-sm font-semibold mb-1">Numéro WhatsApp <span class="text-red-500" aria-hidden="true">*</span></label><input id="orderWa" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" required placeholder="+243 900 000 000" class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"><p class="text-xs text-muted mt-1">Avec l’indicatif du pays. Utilisé pour te contacter au sujet de ta commande.</p></div>
       <div><label for="orderAddress" class="block text-sm font-semibold mb-1">Adresse de livraison</label><input id="orderAddress" autocomplete="street-address" maxlength="300" required placeholder="Avenue, numéro, quartier, commune, ville" class="w-full h-12 px-4 rounded-xl bg-surface border border-line outline-none focus:border-accent"></div>
       <p id="orderMessage" class="text-sm font-semibold min-h-5" role="status" aria-live="polite"></p>
       <button id="orderSubmit" type="submit" class="w-full h-12 rounded-full bg-inv text-invink font-bold hover:bg-accent hover:text-white transition-colors">Valider la commande</button>
@@ -527,6 +555,24 @@
 </dialog>
 
 
+<dialog id="favDialog" class="rounded-3xl p-0 max-w-lg w-[calc(100%-1.5rem)] bg-surface">
+  <div class="p-5 sm:p-6"><div class="flex justify-between items-center gap-4"><h2 class="display text-xl uppercase">Mes favoris</h2><button id="favClose" type="button" class="p-1 text-xl" aria-label="Fermer">✕</button></div><div id="favList" class="mt-4 space-y-2 max-h-[65vh] overflow-y-auto"></div><p class="mt-3 text-xs text-muted">Connecté(e), tes favoris sont enregistrés sur ton compte et retrouvés sur tous tes appareils.</p></div>
+</dialog>
+<dialog id="reviewDialog" class="rounded-3xl p-0 max-w-md w-[calc(100%-1.5rem)] bg-surface">
+  <form id="reviewForm" class="p-5 sm:p-6 space-y-3"><div class="flex justify-between items-start gap-4"><h2 id="reviewTitle" class="font-bold text-lg"></h2><button id="reviewClose" type="button" class="p-1 text-xl" aria-label="Fermer">✕</button></div>
+    <fieldset><legend class="text-sm font-semibold mb-1">Ta note</legend><div class="flex gap-1 flex-row-reverse justify-end text-3xl"><input type="radio" name="reviewRating" id="rv5" value="5" class="peer sr-only"><label for="rv5" class="cursor-pointer text-gray-300 peer-checked:text-amber-500 hover:text-amber-500 [&:has(~input:checked)]:text-amber-500" title="5 étoiles" aria-label="5 étoiles">★</label><input type="radio" name="reviewRating" id="rv4" value="4" class="peer sr-only"><label for="rv4" class="cursor-pointer text-gray-300 peer-checked:text-amber-500 hover:text-amber-500 [&:has(~input:checked)]:text-amber-500" title="4 étoiles" aria-label="4 étoiles">★</label><input type="radio" name="reviewRating" id="rv3" value="3" class="peer sr-only"><label for="rv3" class="cursor-pointer text-gray-300 peer-checked:text-amber-500 hover:text-amber-500 [&:has(~input:checked)]:text-amber-500" title="3 étoiles" aria-label="3 étoiles">★</label><input type="radio" name="reviewRating" id="rv2" value="2" class="peer sr-only"><label for="rv2" class="cursor-pointer text-gray-300 peer-checked:text-amber-500 hover:text-amber-500 [&:has(~input:checked)]:text-amber-500" title="2 étoiles" aria-label="2 étoiles">★</label><input type="radio" name="reviewRating" id="rv1" value="1" class="peer sr-only"><label for="rv1" class="cursor-pointer text-gray-300 peer-checked:text-amber-500 hover:text-amber-500 [&:has(~input:checked)]:text-amber-500" title="1 étoile" aria-label="1 étoile">★</label></div></fieldset>
+    <div><label for="reviewComment" class="block text-sm font-semibold mb-1">Ton commentaire (facultatif)</label><textarea id="reviewComment" rows="4" maxlength="1000" class="w-full px-4 py-3 rounded-xl bg-surface border border-line outline-none focus:border-accent"></textarea></div>
+    <p id="reviewMsg" class="text-sm font-semibold min-h-5" role="status"></p><button type="submit" class="w-full h-12 rounded-full bg-inv text-invink font-bold hover:bg-accent hover:text-white transition-colors">Publier mon avis</button><p class="text-xs text-muted">Avis vérifié : seuls les clients ayant acheté l’article peuvent en publier un, une fois par achat.</p></form>
+</dialog>
+<dialog id="returnDialog" class="rounded-3xl p-0 max-w-md w-[calc(100%-1.5rem)] bg-surface">
+  <form id="returnForm" class="p-5 sm:p-6 space-y-3"><div class="flex justify-between items-start gap-4"><h2 class="font-bold text-lg">Retour ou échange</h2><button id="returnClose" type="button" class="p-1 text-xl" aria-label="Fermer">✕</button></div>
+    <p id="returnHelp" class="text-xs text-muted"></p>
+    <div><label for="returnItem" class="block text-sm font-semibold mb-1">Article concerné</label><select id="returnItem" class="w-full h-12 px-3 rounded-xl bg-surface border border-line"></select></div>
+    <div><label for="returnKind" class="block text-sm font-semibold mb-1">Ta demande</label><select id="returnKind" class="w-full h-12 px-3 rounded-xl bg-surface border border-line"><option>Échange</option><option>Retour</option></select></div>
+    <div><label for="returnReason" class="block text-sm font-semibold mb-1">Motif (ex. taille trop petite)</label><textarea id="returnReason" rows="3" maxlength="500" required class="w-full px-4 py-3 rounded-xl bg-surface border border-line outline-none focus:border-accent"></textarea></div>
+    <p id="returnMsg" class="text-sm font-semibold min-h-5" role="status"></p><button type="submit" class="w-full h-12 rounded-full bg-inv text-invink font-bold hover:bg-accent hover:text-white transition-colors">Envoyer ma demande</button></form>
+</dialog>
+
 <dialog id="legalDialog" class="rounded-3xl p-0 max-w-lg w-[calc(100%-2rem)] bg-surface">
   <div class="p-6 sm:p-8">
     <div class="flex justify-between items-start gap-4">
@@ -558,7 +604,7 @@
       const response = await fetch('/api/products', { credentials: 'same-origin' });
       if (!response.ok) throw new Error('products');
       const data = await response.json();
-      PRODUCTS = (data.products || []).filter(p => p.active !== false).map(withTags);
+      PRODUCTS = (data.products || []).filter(p => p.active !== false).map(withTags).map(normGallery);
       productsState = 'ok';
       // Retire du panier d'anciens articles qui n'existent plus (ex. anciens modèles de démonstration).
       const kept = cart.filter(i => PRODUCTS.some(p => p.id === i.id));
@@ -627,6 +673,7 @@
   renderHero();
   function applySettings() {
     renderHero();
+    applyTexts();
     const price = fc(SITE.heroPrice);
     $$('[data-hero-price]').forEach(el => { el.textContent = price; });
     $$('[data-hero-price-num]').forEach(el => { el.textContent = price.replace(/\u00A0FC$/, ''); });
@@ -645,12 +692,15 @@
   }
 
   /* ---------- État ---------- */
+  const FAV = new Set();
+  function sizeList(p) { const base = Array.isArray(p.sizes) && p.sizes.length ? p.sizes : ['S', 'M', 'L', 'XL', 'XXL']; return base; }
+  function normGallery(p) { return (p.imgMode === 'galerie' && Array.isArray(p.gallery) && p.gallery.length) ? { ...p, img: { front: p.gallery[0], back: p.gallery[1] || p.gallery[0] } } : p; }
   let cart = [];
   let filter = 'all';
   const PAGE = 6; let shown = PAGE, lastKey = '';
   let query = '';
   try { cart = JSON.parse(localStorage.getItem('outfit-shirt-cart') || '[]'); } catch (e) { cart = []; }
-  const save = () => { try { localStorage.setItem('outfit-shirt-cart', JSON.stringify(cart)); } catch (e) {} };
+  const save = () => { try { localStorage.setItem('outfit-shirt-cart', JSON.stringify(cart)); } catch (e) {} try { syncCartSoon(); } catch (e) {} };
 
   /* ---------- Thème sombre / clair ---------- */
   function applyTheme(t) {
@@ -682,15 +732,17 @@
     $('#grid').innerHTML = list.slice(0, shown).map(p => `
       <article class="group flex flex-col min-w-0">
         <div class="relative">
-          <div class="flipper hover-flip tile relative aspect-[4/5] rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer" data-pid="${p.id}" tabindex="0" role="img" aria-label="${esc(fullName(p))}, touche pour voir le dos">
+          <div class="flipper hover-flip tile relative aspect-[4/5] rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer" data-pid="${p.id}" tabindex="0" role="img" aria-label="${esc(fullName(p))}, ouvrir la fiche de l’article">
             <div class="flip-inner">${faceHTML(p, 'front')}${faceHTML(p, 'back')}</div>
           </div>
           ${p.badge ? `<span class="absolute top-1.5 left-1.5 sm:top-3 sm:left-3 z-10 text-[10px] sm:text-xs font-bold leading-none px-2 py-1 sm:px-3 sm:py-1.5 rounded-full ${p.badge === 'Bon Plan' ? 'bg-accent text-white' : p.badge === 'Nouveau' ? 'bg-black text-white' : 'bg-white text-black border border-black'}">${p.badge}</span>` : ''}
           ${p.free ? `<div class="pointer-events-none absolute bottom-0 inset-x-0 z-10 rounded-b-2xl sm:rounded-b-3xl bg-black text-white text-[9px] sm:text-xs font-bold leading-none text-center py-1.5 sm:py-2 flex items-center justify-center gap-1"><svg class="hidden sm:block" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.500" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 6h12v10H2zM14 10h5l3 3v3h-8z"/><circle cx="7" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>Livraison gratuite</div>` : ''}
+          <button type="button" data-fav="${p.id}" aria-pressed="${FAV.has(String(p.id))}" aria-label="${FAV.has(String(p.id)) ? 'Retirer des favoris' : 'Ajouter aux favoris'}" class="absolute top-1.5 right-1.5 sm:top-3 sm:right-3 z-10 w-9 h-9 rounded-full bg-white/95 text-black border border-line grid place-items-center ${FAV.has(String(p.id)) ? 'text-accent' : ''}"><svg width="18" height="18" viewBox="0 0 24 24" fill="${FAV.has(String(p.id)) ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-4.6-9.3-9.1C1.1 8.700 3 5 6.500 5c2 0 3.600 1.100 5.500 3 1.900-1.900 3.500-3 5.500-3C21 5 22.900 8.700 21.300 11.900 19 16.400 12 21 12 21z"/></svg></button>
         </div>
         <div class="mt-2 flex-1 min-w-0">
           ${p.brand ? `<p class="text-[10px] sm:text-xs text-muted font-semibold truncate">${brandMark(p.brand)}</p>` : ''}
           <h3 class="text-[12px] sm:text-sm font-bold leading-tight">${esc(p.name)}</h3>
+          ${p.reviewCount ? `<p class="text-[10px] sm:text-xs text-muted"><span class="text-amber-500">★</span> ${p.rating} (${p.reviewCount})</p>` : ''}
           <p class="mt-1 flex flex-col sm:flex-row sm:items-baseline sm:gap-2">
             <span class="text-[12px] sm:text-sm font-extrabold whitespace-nowrap">${fc(p.price)}</span>
             ${p.old ? `<s class="text-[10px] sm:text-xs text-muted whitespace-nowrap">${fc(p.old)}</s>` : ''}
@@ -699,7 +751,7 @@
         <div class="mt-2 flex items-center gap-1.5">
           <label class="sr-only" for="size-${p.id}">Taille</label>
           <select id="size-${p.id}" class="h-7 w-[2.7rem] shrink-0 rounded-full border border-line bg-surface text-ink text-[16px] leading-none font-semibold pl-2 pr-0 focus:border-accent outline-none">
-            ${[...new Set([...(p.sizes||['S','M','L','XL','XXL']),'XXL'])].map((z,i)=>{const stock=p.sizeStock&&Object.keys(p.sizeStock).length?Number(p.sizeStock[z]||0):Number(p.quantity??1);return `<option value="${esc(z)}" ${stock<=0?'disabled':''}${stock>0&&(z==='M'||(!([...new Set([...(p.sizes||['S','M','L','XL','XXL']),'XXL'])].includes('M'))&&i===0))?' selected':''}>${esc(z)}${stock<=0?' — Rupture de stock':''}</option>`}).join('')}
+            ${sizeList(p).map((z,i)=>{const stock=p.sizeStock&&Object.keys(p.sizeStock).length?Number(p.sizeStock[z]||0):Number(p.quantity??1);return `<option value="${esc(z)}" ${stock<=0?'disabled':''}${stock>0&&(z==='M'||(!(sizeList(p).includes('M'))&&i===0))?' selected':''}>${esc(z)}${stock<=0?' — Rupture de stock':''}</option>`}).join('')}
           </select>
           <button data-add="${p.id}" ${(p.sizeStock&&Object.keys(p.sizeStock).length?Object.values(p.sizeStock).some(n=>Number(n)>0):Number(p.quantity??1)>0)?'':'disabled'} class="w-[3.2rem] h-7 shrink-0 rounded-full bg-inv text-invink grid place-items-center hover:bg-accent hover:text-white active:scale-95 transition" aria-label="Ajouter au panier" title="Ajouter au panier">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.200 11.200a2 2 0 0 1-2 1.800H8.200a2 2 0 0 1-2-1.800L5 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/><path d="M12 12v5M9.500 14.500h5"/></svg>
@@ -740,7 +792,7 @@
 
     // Les options de taille doivent être construites en JavaScript pour l’article aperçu.
     const sizeSelect = $('#vSize');
-    const sizes = [...new Set([...(Array.isArray(p.sizes) && p.sizes.length ? p.sizes : ['S', 'M', 'L', 'XL', 'XXL']), 'XXL'])];
+    const sizes = sizeList(p);
     const hasSizeStock = p.sizeStock && Object.keys(p.sizeStock).length > 0;
     sizeSelect.innerHTML = '<option value="">Choisir une taille</option>' + sizes.map(z => {
       const stock = hasSizeStock ? Number(p.sizeStock[z] || 0) : Number(p.quantity ?? 1);
@@ -753,7 +805,9 @@
     $('#vAdd').classList.toggle('opacity-50', !firstAvailable);
     $('#vAdd').textContent = firstAvailable ? 'Ajouter au panier' : 'Rupture de stock';
     setSide('front');
-    viewer.showModal();
+    enhanceViewer(p);
+    if (!viewer.open) viewer.showModal();
+    viewer.scrollTop = 0;
   }
   $$('.vSide').forEach(b => b.addEventListener('click', () => setSide(b.dataset.side)));
   $('#viewerClose').addEventListener('click', () => viewer.close());
@@ -855,7 +909,7 @@
 
     // Clic sur la photo : souris = aperçu agrandi (le dos s'affiche déjà au survol) ; tactile = bascule face / dos
     const tile = e.target.closest('.flipper[data-pid]');
-    if (tile) { canHover() ? openViewer(pid(tile.dataset.pid)) : tile.classList.toggle('is-flipped'); return; }
+    if (tile) { openViewer(pid(tile.dataset.pid)); return; }
     if (e.target.closest('#heroFlip')) { $('#heroFlip').classList.toggle('is-flipped'); return; }
 
     const f = e.target.closest('[data-f]');
@@ -912,11 +966,6 @@
     if (!response.ok) throw new Error(data.message || 'Une erreur est survenue. Réessaie.');
     return data;
   }
-  async function loadMyOrders() {
-    const panel=$('#myOrdersPanel'), list=$('#myOrdersList'); panel.classList.remove('hidden'); list.textContent='Chargement des commandes…';
-    try { const data=await accountRequest('/api/my-orders'); const orders=data.orders||[]; if(!payProviders) await loadPayProviders(); list.innerHTML=orders.length?orders.map(o=>`<article class="rounded-lg border border-line p-3"><div class="flex justify-between gap-2"><strong>Commande ${esc(o.ref)}</strong><span class="font-bold rounded-full px-2 py-1 ${({'En attente':'bg-amber-100 text-amber-800','Payée':'bg-blue-100 text-blue-800','Expédiée':'bg-violet-100 text-violet-800','Livrée':'bg-green-100 text-green-800','Annulée':'bg-red-100 text-red-800'}[o.status]||'bg-gray-100 text-gray-800')}">${esc(o.status)}</span></div><p class="text-muted mt-1">${new Date(o.createdAt).toLocaleString('fr-FR')}</p><p class="mt-2">${(o.items||[]).map(i=>`${esc(i.name)} · ${esc(i.size)} × ${i.qty}`).join('<br>')}</p><p class="font-bold mt-2">Total : ${fc(o.total)}</p>${o.status==='En attente'?`<button type="button" data-pay-order="${esc(o.ref)}" data-pay-total="${Number(o.total)}" class="mt-3 h-10 px-4 rounded-full bg-accent text-white font-bold text-sm">Payer maintenant</button>`:''}${o.status==='En attente'?'<p class="mt-2 text-amber-700">Étape 1/4 · Commande reçue, en attente de traitement.</p>':o.status==='Payée'?'<p class="mt-2 text-blue-700">Étape 2/4 · Commande confirmée, préparation en cours.</p>':o.status==='Expédiée'?`<p class="mt-2 text-violet-700">Étape 3/4 · Colis expédié.</p>${o.trackingCode?`<p class="mt-2 rounded-lg bg-surface p-2"><strong>Code de suivi :</strong> ${esc(o.trackingCode)}</p>`:'<p class="mt-2">Le code de suivi sera affiché ici dès qu’il sera ajouté par la boutique.</p>'}`:o.status==='Livrée'?`<p class="mt-2 text-green-700">Étape 4/4 · Commande livrée.</p>${o.trackingCode?`<p class="mt-2 rounded-lg bg-surface p-2"><strong>Code de suivi :</strong> ${esc(o.trackingCode)}</p>`:''}`:'<p class="mt-2 text-red-700">Cette commande a été annulée.</p>'}</article>`).join(''):'Tu n’as pas encore de commande.'; }
-    catch(e){list.textContent=e.message;}
-  }
   $('#myOrdersTab').addEventListener('click',()=>{if($('#myOrdersPanel').classList.contains('hidden'))loadMyOrders();else $('#myOrdersPanel').classList.add('hidden')});
   function renderAccount(user) {
     signedInUser = user || null;
@@ -930,10 +979,13 @@
       $('#accountWelcome').textContent = 'Bonjour ' + user.firstName + ' !';
       $('#accountEmailShown').textContent = user.email;
       $('#pFirst').value = user.firstName || ''; $('#pLast').value = user.lastName || ''; $('#pPost').value = user.postName || '';
+      { const [c, rest] = splitWa(user.whatsapp); $('#pWaCode').value = c; $('#pWa').value = user.whatsapp ? rest : ''; $('#waBanner').classList.toggle('hidden', !!user.whatsapp); }
       $('#pPhone').value = user.phone || ''; $('#pBirth').value = user.birthDate || ''; $('#pAddr').value = user.address || '';
       $('#accountBtn').textContent = 'Mon compte · ' + user.firstName;
       $('#accountBtnM').textContent = 'Mon compte · ' + user.firstName;
+      afterLogin();
     } else {
+      afterLogout();
       $('#accountBtn').textContent = 'Mon compte';
       $('#accountBtnM').textContent = 'Mon compte';
     }
@@ -985,8 +1037,9 @@
     const submit = $('#accountSubmit'); submit.disabled = true; submit.classList.add('opacity-60');
     const email = $('#accountEmail').value.trim();
     const password = $('#accountPassword').value;
+    if (accountMode === 'register' && !waOk(composeWa($('#rWaCode').value, $('#rWa').value))) { accountMessage('Entre ton numéro WhatsApp avec l’indicatif du pays (obligatoire).', true); submit.disabled = false; submit.classList.remove('opacity-60'); $('#rWa').focus(); return; }
     const body = accountMode === 'register'
-      ? { firstName: $('#accountName').value.trim(), lastName: $('#rLast').value.trim(), postName: $('#rPost').value.trim(), phone: $('#rPhone').value.trim(), birthDate: $('#rBirth').value, address: $('#rAddr').value.trim(), email, password, remember: $('#accountRemember').checked }
+      ? { firstName: $('#accountName').value.trim(), lastName: $('#rLast').value.trim(), postName: $('#rPost').value.trim(), phone: $('#rPhone').value.trim(), whatsapp: composeWa($('#rWaCode').value, $('#rWa').value), birthDate: $('#rBirth').value, address: $('#rAddr').value.trim(), email, password, remember: $('#accountRemember').checked }
       : { email, password, remember: $('#accountRemember').checked };
     try {
       const data = await accountRequest(accountMode === 'register' ? '/api/register' : '/api/login', body);
@@ -1028,7 +1081,7 @@
     if(itemCount===3 && lines.some(l=>l.p.price < 19500)){ $('#orderMessage').textContent='Pour une commande de 3 articles, chaque article doit coûter au moins 19 500 FC.'; $('#orderSubmit').disabled=true; } else { $('#orderMessage').textContent=''; $('#orderSubmit').disabled=false; }
     const u = signedInUser || {};
     $('#orderName').value = [u.firstName, u.postName, u.lastName].filter(Boolean).join(' ');
-    $('#orderPhone').value = u.phone || ''; $('#orderAddress').value = u.address || '';
+    $('#orderPhone').value = u.phone || u.whatsapp || ''; $('#orderWa').value = u.whatsapp || ''; $('#orderAddress').value = u.address || '';
     $('#orderMessage').textContent = '';
     $('#orderForm').classList.remove('hidden'); $('#orderDone').classList.add('hidden');
     closeCart(); if (!orderDialog.open) orderDialog.showModal();
@@ -1043,9 +1096,10 @@
     const btn = $('#orderSubmit'), msg = $('#orderMessage');
     btn.disabled = true; btn.classList.add('opacity-60');
     msg.className = 'text-sm font-semibold min-h-5 text-muted'; msg.textContent = 'Envoi de ta commande…';
+    if (!waOk(composeWa('+243', $('#orderWa').value))) { msg.className = 'text-sm font-semibold min-h-5 text-red-600'; msg.textContent = 'Entre ton numéro WhatsApp avec l’indicatif du pays, par exemple +243 900 000 000 (obligatoire).'; btn.disabled = false; btn.classList.remove('opacity-60'); $('#orderWa').focus(); return; }
     try {
       const data = await accountRequest('/api/orders', {
-        fullName: $('#orderName').value.trim(), phone: $('#orderPhone').value.trim(), address: $('#orderAddress').value.trim(),
+        fullName: $('#orderName').value.trim(), phone: $('#orderPhone').value.trim(), whatsapp: composeWa('+243', $('#orderWa').value), address: $('#orderAddress').value.trim(),
         items: orderLines().map(l => ({ id: l.id, size: l.size, qty: l.qty }))
       });
       cart = []; renderCart();
@@ -1153,7 +1207,7 @@
     const btn = $('#profileSave'), msg = $('#profileMessage');
     btn.disabled = true; btn.classList.add('opacity-60'); msg.className = 'text-sm font-semibold min-h-5 text-muted'; msg.textContent = 'Enregistrement…';
     try {
-      const data = await accountRequest('/api/profile', { firstName: $('#pFirst').value.trim(), lastName: $('#pLast').value.trim(), postName: $('#pPost').value.trim(), phone: $('#pPhone').value.trim(), birthDate: $('#pBirth').value, address: $('#pAddr').value.trim() });
+      const data = await accountRequest('/api/profile', { firstName: $('#pFirst').value.trim(), lastName: $('#pLast').value.trim(), postName: $('#pPost').value.trim(), phone: $('#pPhone').value.trim(), whatsapp: composeWa($('#pWaCode').value, $('#pWa').value), birthDate: $('#pBirth').value, address: $('#pAddr').value.trim() });
       renderAccount(data.user);
       msg.className = 'text-sm font-semibold min-h-5 text-accent'; msg.textContent = 'Informations enregistrées.';
     } catch (err) { msg.className = 'text-sm font-semibold min-h-5 text-red-500'; msg.textContent = err.message; }
@@ -1207,6 +1261,168 @@
   renderGrid();
   renderCart();
   loadRemoteProducts();
+
+  /* =====================================================================
+     LOT 2 : favoris, fiche produit complète, avis, factures, retours, WhatsApp, textes
+     ===================================================================== */
+  const WA_CODES = [['+243','RD Congo'],['+242','Congo-Brazzaville'],['+250','Rwanda'],['+257','Burundi'],['+256','Ouganda'],['+255','Tanzanie'],['+254','Kenya'],['+260','Zambie'],['+244','Angola'],['+27','Afrique du Sud'],['+33','France'],['+32','Belgique'],['+41','Suisse'],['+1','USA / Canada'],['+44','Royaume-Uni']];
+  $$('#rWaCode, #pWaCode').forEach(sel => { sel.innerHTML = WA_CODES.map(([c, n]) => `<option value="${c}">${c} ${esc(n)}</option>`).join(''); });
+  // Indicatif + numéro -> format international (+243900000000). Un numéro saisi avec + ou 00 est gardé tel quel.
+  function composeWa(code, raw) { let v = String(raw || '').replace(/[\s().-]/g, ''); if (!v) return ''; if (v.startsWith('00')) v = '+' + v.slice(2); if (v.startsWith('+')) return v; return code + v.replace(/^0+/, ''); }
+  const waOk = v => /^\+[1-9]\d{7,14}$/.test(v);
+  function splitWa(full) { const f = String(full || ''); const hit = [...WA_CODES].sort((a, b) => b[0].length - a[0].length).find(([c]) => f.startsWith(c)); return hit ? [hit[0], f.slice(hit[0].length)] : ['+243', f.replace(/^\+/, '')]; }
+
+  /* ---------- Textes éditables depuis l'administration ---------- */
+  function applyTexts() {
+    const t = SITE.texts || {};
+    $$('[data-cms]').forEach(el => { if (el.dataset.cmsDef === undefined) el.dataset.cmsDef = el.innerHTML; const v = t[el.dataset.cms]; el.innerHTML = v ? esc(v).replace(/\n/g, '<br>') : el.dataset.cmsDef; });
+    const n = $('#siteNotice'), m = String(t.siteNotice || '').trim(); n.textContent = m; n.classList.toggle('hidden', !m);
+  }
+
+  /* ---------- Favoris : compte connecté = serveur ; visiteur = navigateur ---------- */
+  const FAV_KEY = 'outfit-shirt-fav';
+  const favLocalLoad = () => { try { return JSON.parse(localStorage.getItem(FAV_KEY) || '[]').map(String); } catch { return []; } };
+  const favLocalSave = () => { try { localStorage.setItem(FAV_KEY, JSON.stringify([...FAV])); } catch {} };
+  function refreshFavUI() {
+    const c = $('#favCount'); c.textContent = FAV.size; c.classList.toggle('hidden', !FAV.size);
+    $$('[data-fav]').forEach(b => { const on = FAV.has(String(b.dataset.fav)); b.setAttribute('aria-pressed', on); b.setAttribute('aria-label', on ? 'Retirer des favoris' : 'Ajouter aux favoris'); b.classList.toggle('text-accent', on); const s = b.querySelector('svg'); if (s) s.setAttribute('fill', on ? 'currentColor' : 'none'); });
+  }
+  async function toggleFav(id) {
+    id = String(id); const on = !FAV.has(id); if (on) FAV.add(id); else FAV.delete(id); refreshFavUI();
+    if (signedInUser) { try { await accountRequest('/api/favorites/toggle', { productId: id, on }); } catch (e) { if (on) FAV.delete(id); else FAV.add(id); refreshFavUI(); toast(e.message); return; } } else favLocalSave();
+    toast(on ? 'Ajouté aux favoris' : 'Retiré des favoris'); if ($('#favDialog').open) renderFavs();
+  }
+  let favSyncedFor = null;
+  async function afterLogin() {
+    if (!signedInUser || favSyncedFor === signedInUser.email) return; favSyncedFor = signedInUser.email;
+    try { const d = await accountRequest('/api/favorites/sync', { ids: [...FAV] }); FAV.clear(); d.ids.forEach(i => FAV.add(String(i))); try { localStorage.removeItem(FAV_KEY); } catch {} refreshFavUI(); } catch {}
+    syncCartSoon();
+  }
+  function afterLogout() { if (!favSyncedFor) return; favSyncedFor = null; FAV.clear(); favLocalLoad().forEach(i => FAV.add(i)); refreshFavUI(); }
+  function renderFavs() {
+    const list = PRODUCTS.filter(p => FAV.has(String(p.id)));
+    $('#favList').innerHTML = list.length ? list.map(p => { const out = !inStockP(p); return `<article class="flex gap-3 items-center rounded-xl border border-line p-2">
+      <button type="button" data-open-product="${esc(p.id)}" class="w-20 h-20 shrink-0 rounded-lg overflow-hidden bg-white relative" aria-label="Voir ${esc(fullName(p))}"><div class="flip-face static p-1 w-full h-full" style="position:relative">${teeSVG(p, 'front')}${p.img && p.img.front ? `<img src="${esc(p.img.front)}" alt="" class="absolute inset-0 w-full h-full object-contain bg-white" loading="lazy" onerror="this.remove()">` : ''}</div></button>
+      <div class="min-w-0 flex-1"><p class="font-bold text-sm truncate">${esc(fullName(p))}</p><p class="text-sm font-extrabold">${fc(p.price)}</p>${out ? '<p class="text-xs text-red-600 font-semibold">Rupture de stock</p>' : ''}</div>
+      <div class="flex flex-col gap-1"><button type="button" data-open-product="${esc(p.id)}" class="h-9 px-3 rounded-full bg-inv text-invink text-xs font-bold">Voir</button><button type="button" data-fav="${esc(p.id)}" aria-pressed="true" class="h-9 px-3 rounded-full border border-line text-xs font-bold text-accent">Retirer<svg class="hidden" fill="currentColor"></svg></button></div></article>`; }).join('') : '<p class="text-muted text-sm">Tu n’as pas encore de favori. Touche le cœur d’un article pour le retrouver ici.</p>';
+  }
+  function inStockP(p) { return p.sizeStock && Object.keys(p.sizeStock).length ? Object.values(p.sizeStock).some(n => Number(n) > 0) : Number(p.quantity ?? 1) > 0; }
+  $('#favBtn').addEventListener('click', () => { renderFavs(); $('#favDialog').showModal(); });
+  $('#favClose').addEventListener('click', () => $('#favDialog').close());
+  $('#favDialog').addEventListener('click', e => { if (e.target === $('#favDialog')) $('#favDialog').close(); });
+
+  /* ---------- Panier enregistré sur le compte (visible par la boutique, pour relancer) ---------- */
+  let cartTimer;
+  function syncCartSoon() {
+    try { if (!signedInUser || !csrfToken) return; clearTimeout(cartTimer);
+      cartTimer = setTimeout(() => { accountRequest('/api/cart/sync', { items: cart.map(i => ({ id: String(i.id), size: i.size, qty: i.qty })) }).catch(() => {}); }, 1500); } catch {}
+  }
+
+  /* ---------- Fiche produit : galerie, description, tailles, avis, similaires ---------- */
+  let galList = [], galIndex = 0, galName = '';
+  function renderGal() {
+    const n = galList.length; if (!n) return; galIndex = (galIndex + n) % n;
+    $('#vGalMain').src = galList[galIndex]; $('#vGalMain').alt = `${galName} — photo ${galIndex + 1} sur ${n}`; $('#vGalCount').textContent = `${galIndex + 1} / ${n}`;
+    $('#vThumbs').innerHTML = galList.map((u, i) => `<button type="button" data-gal-i="${i}" aria-label="Photo ${i + 1}" aria-current="${i === galIndex}" class="shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 ${i === galIndex ? 'border-accent' : 'border-line'} bg-white"><img src="${esc(u)}" alt="" class="w-full h-full object-cover" loading="lazy" onerror="this.style.opacity=.3"></button>`).join('');
+    $('#vGalPrev').classList.toggle('hidden', n < 2); $('#vGalNext').classList.toggle('hidden', n < 2);
+  }
+  $('#vGalPrev').addEventListener('click', () => { galIndex--; renderGal(); });
+  $('#vGalNext').addEventListener('click', () => { galIndex++; renderGal(); });
+  $('#vThumbs').addEventListener('click', e => { const b = e.target.closest('[data-gal-i]'); if (b) { galIndex = +b.dataset.galI; renderGal(); } });
+  { let x0 = null; const m = $('#vGalWrap');
+    m.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+    m.addEventListener('touchend', e => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null; if (Math.abs(dx) > 40) { galIndex += dx < 0 ? 1 : -1; renderGal(); } }, { passive: true }); }
+  viewer.addEventListener('keydown', e => { if ($('#vGallery').classList.contains('hidden')) return; if (e.key === 'ArrowRight') { galIndex++; renderGal(); } if (e.key === 'ArrowLeft') { galIndex--; renderGal(); } });
+  const stars = n => '★'.repeat(Math.round(n)) + '☆'.repeat(5 - Math.round(n));
+  function enhanceViewer(p) {
+    const gal = p.imgMode === 'galerie' && Array.isArray(p.gallery) && p.gallery.length;
+    $('#vFlip').classList.toggle('hidden', !!gal); $('#vSides').classList.toggle('hidden', !!gal); $('#vGallery').classList.toggle('hidden', !gal);
+    if (gal) { galList = p.gallery; galIndex = 0; galName = fullName(p); renderGal(); }
+    $('#vDesc').textContent = p.description || ''; $('#vDesc').classList.toggle('hidden', !p.description);
+    $('#vRating').innerHTML = p.reviewCount ? `<span class="text-amber-500" aria-hidden="true">${stars(p.rating)}</span> <span class="font-semibold">${p.rating}</span> · ${p.reviewCount} avis` : '<span class="text-muted">Pas encore d’avis</span>';
+    const sizes = sizeList(p), has = p.sizeStock && Object.keys(p.sizeStock).length, off = sizes.filter(z => (has ? Number(p.sizeStock[z] || 0) : Number(p.quantity ?? 1)) <= 0);
+    const shoe = p.sizeType === 'shoe';
+    $('#vSizeLabel').textContent = shoe ? 'Pointure' : 'Taille';
+    $('#vSizeInfo').textContent = off.length ? (off.length > 1 ? (shoe ? 'Pointures épuisées : ' : 'Tailles épuisées : ') : (shoe ? 'Pointure épuisée : ' : 'Taille épuisée : ')) + off.join(', ') : '';
+    $('#vFav').dataset.fav = p.id; refreshFavUI();
+    loadViewerReviews(p.id); loadRelated(p.id);
+  }
+  async function loadViewerReviews(id) {
+    const box = $('#vReviews'); box.innerHTML = '<p class="text-sm text-muted">Chargement des avis…</p>';
+    try {
+      const r = await fetch('/api/reviews?productId=' + encodeURIComponent(id), { credentials: 'same-origin' }); const d = await r.json(); if (viewer.dataset.pid !== String(id)) return;
+      box.innerHTML = d.count ? `<p class="text-sm mb-2"><span class="text-amber-500">${stars(d.average)}</span> <strong>${d.average}</strong> sur 5 · ${d.count} avis</p>` + d.reviews.map(v => `<div class="border-t border-line py-2 text-sm"><p><span class="text-amber-500">${stars(v.rating)}</span> <strong>${esc(v.author || 'Client')}</strong> <span class="text-xs text-green-700 font-semibold">Achat vérifié</span> <span class="text-xs text-muted">${new Date(v.createdAt).toLocaleDateString('fr-FR')}</span></p>${v.comment ? `<p class="mt-1">${esc(v.comment)}</p>` : ''}<button type="button" data-report-review="${esc(v.id)}" class="mt-1 text-xs text-muted underline">Signaler</button></div>`).join('') : '<p class="text-sm text-muted">Pas encore d’avis. Seuls les clients ayant acheté cet article peuvent en publier un.</p>';
+    } catch { box.innerHTML = ''; }
+  }
+  async function loadRelated(id) {
+    const wrap = $('#vRelatedBox'), box = $('#vRelated'); wrap.classList.add('hidden'); box.innerHTML = '';
+    try {
+      const r = await fetch('/api/related?id=' + encodeURIComponent(id), { credentials: 'same-origin' }); const d = await r.json(); if (viewer.dataset.pid !== String(id)) return;
+      const list = (d.products || []).filter(p => inStockP(p)).map(withTags).map(normGallery); if (!list.length) return;
+      box.innerHTML = list.map(p => `<button type="button" data-open-product="${esc(p.id)}" class="text-left w-36 shrink-0"><div class="relative aspect-[4/5] rounded-xl overflow-hidden tile"><div class="flip-face static p-2 w-full h-full" style="position:relative">${teeSVG(p, 'front')}${p.img && p.img.front ? `<img src="${esc(p.img.front)}" alt="${esc(fullName(p))}" class="absolute inset-0 w-full h-full object-contain bg-white" loading="lazy" onerror="this.remove()">` : ''}</div></div><p class="mt-1 text-xs font-bold leading-tight">${esc(fullName(p))}</p><p class="text-xs font-extrabold">${fc(p.price)}</p></button>`).join('');
+      wrap.classList.remove('hidden');
+    } catch {}
+  }
+  document.addEventListener('click', async e => {
+    const open = e.target.closest('[data-open-product]');
+    if (open) { const id = pid(open.dataset.openProduct); if (PRODUCTS.some(p => p.id === id)) { if ($('#favDialog').open) $('#favDialog').close(); openViewer(id); } return; }
+    const fav = e.target.closest('[data-fav]'); if (fav) { e.preventDefault(); toggleFav(fav.dataset.fav); return; }
+    const rep = e.target.closest('[data-report-review]');
+    if (rep) { if (!signedInUser) { toast('Connecte-toi pour signaler un avis.'); return; } const reason = prompt('Pourquoi signaler cet avis ? (propos inappropriés, faux avis…)'); if (reason === null) return; try { await accountRequest('/api/reviews/report', { id: rep.dataset.reportReview, reason }); toast('Merci, l’avis a été signalé à la boutique.'); } catch (err) { toast(err.message); } return; }
+  });
+
+  /* ---------- Mes commandes : suivi, facture, avis, retours ---------- */
+  const STATUS_STYLE = { 'En attente': 'bg-amber-100 text-amber-800', 'Payée': 'bg-blue-100 text-blue-800', 'Expédiée': 'bg-violet-100 text-violet-800', 'Livrée': 'bg-green-100 text-green-800', 'Annulée': 'bg-red-100 text-red-800' };
+  let myOrdersCache = [], returnWindowDays = 7;
+  function renderMyOrders(orders) {
+    return orders.length ? orders.map(o => {
+      const gone = o.items.some(i => i.cancelled), live = o.items.filter(i => !i.cancelled);
+      const step = o.status === 'En attente' ? '<p class="mt-2 text-amber-700">Étape 1/4 · Commande reçue, en attente de paiement.</p>'
+        : o.status === 'Payée' ? '<p class="mt-2 text-blue-700">Étape 2/4 · Paiement confirmé, préparation en cours.</p>'
+        : o.status === 'Expédiée' ? '<p class="mt-2 text-violet-700">Étape 3/4 · Colis expédié.</p>'
+        : o.status === 'Livrée' ? '<p class="mt-2 text-green-700">Étape 4/4 · Commande livrée.</p>' : '<p class="mt-2 text-red-700">Cette commande a été annulée.</p>';
+      const track = ['Payée', 'Expédiée', 'Livrée'].includes(o.status) ? `<p class="mt-1">Livraison : <strong>${esc(o.deliveryStatus || 'En attente de préparation')}</strong></p>${o.trackingCode ? `<p class="mt-2 rounded-lg bg-surface p-2"><strong>Code de suivi :</strong> ${esc(o.trackingCode)}</p>` : ''}` : '';
+      return `<article class="rounded-lg border border-line p-3"><div class="flex justify-between gap-2"><strong>Commande ${esc(o.ref)}</strong><span class="font-bold rounded-full px-2 py-1 ${STATUS_STYLE[o.status] || 'bg-gray-100 text-gray-800'}">${esc(o.status)}</span></div><p class="text-muted mt-1">${new Date(o.createdAt).toLocaleString('fr-FR')}</p>
+      <ul class="mt-2 space-y-2">${o.items.map(i => `<li class="${i.cancelled ? 'opacity-60' : ''}"><span class="${i.cancelled ? 'line-through' : ''}">${esc(i.name)} · ${esc(i.size)} × ${i.qty}</span>${i.cancelled ? ' <span class="text-xs font-bold text-red-700">Annulé</span>' : ''}
+        ${!i.cancelled && o.canReview ? (i.reviewed ? '<span class="ml-2 text-xs text-green-700 font-semibold">Avis envoyé ✓</span>' : `<button type="button" data-review-order="${esc(o.id)}" data-review-product="${esc(i.id)}" data-review-name="${esc(i.name)}" class="ml-2 text-xs font-bold underline text-accent">Donner mon avis</button>`) : ''}</li>`).join('')}</ul>
+      <p class="font-bold mt-2">Total : ${fc(gone ? o.adjustedTotal : o.total)}${gone ? ` <span class="text-xs font-normal text-muted">(au lieu de ${fc(o.total)} : article(s) annulé(s))</span>` : ''}</p>${o.refundedAmount ? `<p class="text-green-700">Remboursé : ${fc(o.refundedAmount)}</p>` : ''}
+      ${o.status === 'En attente' ? `<button type="button" data-pay-order="${esc(o.ref)}" data-pay-total="${Number(o.total)}" class="mt-3 h-10 px-4 rounded-full bg-accent text-white font-bold text-sm">Payer maintenant</button>` : ''}${step}${track}
+      <div class="mt-3 flex flex-wrap gap-2">${o.invoiceAvailable ? `<a href="/api/my-invoice?id=${esc(o.id)}" target="_blank" rel="noopener" class="h-9 px-4 rounded-full border-2 border-line text-xs font-bold inline-flex items-center">Facture (PDF)</a>` : ''}${o.canReturn ? `<button type="button" data-return-order="${esc(o.id)}" class="h-9 px-4 rounded-full border-2 border-line text-xs font-bold">Retour / échange</button>` : ''}</div></article>`;
+    }).join('') : 'Tu n’as pas encore de commande.';
+  }
+  async function loadMyOrders() {
+    const panel = $('#myOrdersPanel'), list = $('#myOrdersList'); panel.classList.remove('hidden'); list.textContent = 'Chargement des commandes…';
+    try {
+      const [data, rets] = await Promise.all([accountRequest('/api/my-orders'), accountRequest('/api/my-returns').catch(() => ({ returns: [] }))]);
+      myOrdersCache = data.orders || []; returnWindowDays = data.returnWindowDays || 7; if (!payProviders) await loadPayProviders();
+      list.innerHTML = renderMyOrders(myOrdersCache) + ((rets.returns || []).length ? `<h3 class="mt-4 font-bold">Mes demandes de retour / échange</h3>` + rets.returns.map(r => `<article class="rounded-lg border border-line p-3 mt-2"><div class="flex justify-between gap-2"><strong>${esc(r.kind)} · ${esc(r.productName)} (${esc(r.size)})</strong><span class="font-bold rounded-full px-2 py-1 bg-gray-100">${esc(r.status)}</span></div><p class="text-muted mt-1">Commande ${esc(r.ref)} · ${new Date(r.createdAt).toLocaleDateString('fr-FR')}</p>${r.decision ? `<p class="mt-1">${esc(r.decision)}</p>` : ''}</article>`).join('') : '');
+    } catch (e) { list.textContent = e.message; }
+  }
+  // Avis
+  let reviewCtx = null;
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-review-order]'); if (b) { reviewCtx = { orderId: b.dataset.reviewOrder, productId: b.dataset.reviewProduct }; $('#reviewTitle').textContent = 'Ton avis : ' + b.dataset.reviewName; $('#reviewComment').value = ''; $('#reviewMsg').textContent = ''; $$('[name=reviewRating]').forEach(r => { r.checked = false; }); $('#reviewDialog').showModal(); return; }
+    const r = e.target.closest('[data-return-order]'); if (r) { const o = myOrdersCache.find(x => x.id === r.dataset.returnOrder); if (!o) return; returnCtx = { orderId: o.id }; $('#returnItem').innerHTML = o.items.filter(i => !i.cancelled).map(i => `<option value="${esc(i.id)}|${esc(i.size)}">${esc(i.name)} (${esc(i.size)})</option>`).join(''); $('#returnReason').value = ''; $('#returnMsg').textContent = ''; $('#returnHelp').textContent = `Demande possible pendant ${returnWindowDays} jours après la livraison. Chaque demande est examinée par la boutique : elle n’est pas acceptée automatiquement.`; $('#returnDialog').showModal(); }
+  });
+  $('#reviewClose').addEventListener('click', () => $('#reviewDialog').close());
+  $('#reviewForm').addEventListener('submit', async e => {
+    e.preventDefault(); const rating = Number(($('[name=reviewRating]:checked') || {}).value || 0); const msg = $('#reviewMsg');
+    if (!rating) { msg.className = 'text-sm font-semibold text-red-500'; msg.textContent = 'Choisis une note de 1 à 5 étoiles.'; return; }
+    try { await accountRequest('/api/reviews', { ...reviewCtx, rating, comment: $('#reviewComment').value.trim() }); $('#reviewDialog').close(); toast('Merci pour ton avis !'); loadMyOrders(); loadRemoteProducts(); }
+    catch (err) { msg.className = 'text-sm font-semibold text-red-500'; msg.textContent = err.message; }
+  });
+  // Retour / échange
+  let returnCtx = null;
+  $('#returnClose').addEventListener('click', () => $('#returnDialog').close());
+  $('#returnForm').addEventListener('submit', async e => {
+    e.preventDefault(); const [productId, size] = $('#returnItem').value.split('|'), msg = $('#returnMsg');
+    try { await accountRequest('/api/returns/request', { orderId: returnCtx.orderId, productId, size, kind: $('#returnKind').value, reason: $('#returnReason').value.trim() }); $('#returnDialog').close(); toast('Demande envoyée. Tu peux suivre son état dans tes commandes.'); loadMyOrders(); }
+    catch (err) { msg.className = 'text-sm font-semibold text-red-500'; msg.textContent = err.message; }
+  });
+
+  /* ---------- Initialisation ---------- */
+  favLocalLoad().forEach(i => FAV.add(i)); refreshFavUI(); applyTexts();
+
   loadSettings();
 })();
 </script>
